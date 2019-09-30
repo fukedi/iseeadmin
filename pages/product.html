@@ -3,43 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>product</title>
+    <title>ISeeAdmin 【product】 </title>
     <link rel="stylesheet" href="/static/element/index.css">
+    <link rel="stylesheet" href="/static/css/common.css">
     <script src="/static/js/menu.js"></script>
     <script src="/static/js/init.js"></script>
     <script src="/static/js/vue.js"></script>
+    <!--    <script src="/static/js/vue.min.js"></script>-->
     <!--    <script src="static/js/axios.min.js"></script>-->
     <script src="/static/element/index.js"></script>
-    <style>
-        body {
-            background-color: #DCDFE6;
-            margin: 0px;
-            padding: 0px;
-        }
-
-        .el-header {
-            background-color: #fff;
-            color: #333;
-            border-bottom: 1px solid #d8dce5;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
-        }
-
-        .el-aside {
-            /*width: 210px;*/
-            overflow: hidden;
-            background-color: #304156;
-        }
-
-
-        [v-cloak] {
-            display: none;
-        }
-    </style>
 </head>
 <body>
 <div id="app" v-cloak>
     <el-container style="height: 100%;min-height:100vh;">
         <el-aside width="210px">
+            <div class="aside-logo">
+                <img class="aside-logo-img" src="https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png"  alt=""> ISeeAdmin
+            </div>
             <el-menu @select="menuOpen" style="width: 210px;" unique-opened
                      :default-active="iseeDefaultActive"
                      background-color="#304156"
@@ -51,19 +31,22 @@
                         <el-menu-item :index="item.url"><i :class="item.icon"></i>{{item.title}}</el-menu-item>
                     </template>
                     <template v-else>
-                        <el-submenu :index="index.toString()">
-                            <template slot="title"><i class="el-icon-message"></i>{{item.title}}</template>
+                        <el-submenu :index="item.url">
+                            <template slot="title"><i :class="item.icon"></i>{{item.title}}</template>
                             <template v-for="(itemSub,indexSub) in item.children" :index="itemSub.index">
                                 <template v-if="itemSub.children.length">
-                                    <el-submenu :index="indexSub.toString()">
-                                        <span slot="title">{{ itemSub.title }}</span>
+                                    <el-submenu :index="itemSub.url">
+                                        <span slot="title"><i :class="itemSub.icon"></i>{{ itemSub.title }}</span>
                                         <template v-for="(itemSub_,indexSub_) in itemSub.children">
-                                            <el-menu-item :index="itemSub_.url">{{ itemSub_.title }}</el-menu-item>
+                                            <el-menu-item :index="itemSub_.url"><i :class="itemSub_.icon"></i>{{
+                                                itemSub_.title }}
+                                            </el-menu-item>
                                         </template>
                                     </el-submenu>
                                 </template>
                                 <template v-else>
-                                    <el-menu-item :index="itemSub.url">{{ itemSub.title }}</el-menu-item>
+                                    <el-menu-item :index="itemSub.url"><i :class="itemSub.icon"></i>{{ itemSub.title }}
+                                    </el-menu-item>
                                 </template>
                             </template>
                         </el-submenu>
@@ -84,8 +67,13 @@
                     </el-breadcrumb>
                 </div>
                 <div>
-                    <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in tagList" :key="index"
-                            @click="tagSwitch(item.url,index)" :effect="item.effect" :type="item.type" size="small"
+                    <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in tagList"
+                            :key="index"
+                            @click="tagSwitch(item.url,index)"
+                            :effect="item.effect"
+                            :type="item.type"
+                            @close="tagClose(item.url,index)"
+                            size="small"
                             :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
                     </el-tag>
                 </div>
@@ -116,46 +104,39 @@
     el: '#app',
     data: {
       tableData: Array(10).fill(item),
+      status: false,
       show: true,
       iseeDefaultActive: iseeDefaultActive,
       menu: menu,
-      tagList: iseeTagList,
-      currentTitle: 'product'
-    },
-    beforeMount() {
-      console.log('beforeMount')
-      console.log(this.$data.iseeDefaultActive)
-      this.$data.tagList.forEach((obj)=>{
-        if(obj.url==this.$data.iseeDefaultActive){
-          obj.title=this.$data.currentTitle
-
-          obj.show = true
-          obj.effect = 'dark'
-          obj.type = ''
-          localStorage.setItem('iseeTagList',JSON.stringify(this.$data.tagList))
-        }else{
-          obj.show = false
-          obj.effect = 'plain'
-          obj.type = 'info'
-        }
-      })
+      currentTitle: 'product',
+      tagList: iseeTagList
     },
     methods: {
-      tagSwitch(url,index) {
+      tagSwitch(url, index) {
         let currentUrl = this.$data.iseeDefaultActive
         if (url == currentUrl) {
           return;
         }
-        localStorage.setItem('iseeDefaultActive',url)
+        localStorage.setItem('iseeDefaultActive', url)
         window.open(url, '_self')
         console.log(index)
+      },
+
+      tagClose(url, index) {
+        this.$data.tagList.splice(index, 1);
+        localStorage.setItem('iseeTagList', JSON.stringify(this.$data.tagList))
+        // 关闭当前tag,跳转到前一个tag
+        if (url == this.$data.iseeDefaultActive) {
+          localStorage.setItem('iseeDefaultActive', this.$data.tagList[index - 1].url)
+          window.open(this.$data.tagList[index - 1].url, '_self')
+        }
       },
 
       menuOpen(key, keyPath) {
         localStorage.setItem('iseeDefaultActive', key)
         // key存在iseeTagList中,则iseeTagList无需再push
-        iseeTagList.forEach((res) => {
-          if (res.url == key) {
+        iseeTagList.forEach((obj) => {
+          if (obj.url == key) {
             this.$data.status = true
             return
           }
@@ -172,24 +153,31 @@
             effect: 'dark',
             type: '',
           }
-
           iseeTagList.push(issTag)
           localStorage.setItem('iseeTagList', JSON.stringify(iseeTagList))
         }
-
-        console.log(111111111)
-        console.log(iseeTagList.length)
-        console.log(iseeTagList)
-        console.log(44444444444)
-
         window.open(key, '_self')
-        console.log(key);
-        console.log(keyPath);
       },
     },
+    beforeMount() {
+      console.log('beforeMount')
+      console.log(this.$data.iseeDefaultActive)
+      this.$data.tagList.forEach((obj) => {
+        if (obj.url == this.$data.iseeDefaultActive) {
+          obj.title = this.$data.currentTitle
+
+          obj.show = true
+          obj.effect = 'dark'
+          obj.type = ''
+          localStorage.setItem('iseeTagList', JSON.stringify(this.$data.tagList))
+        } else {
+          obj.show = false
+          obj.effect = 'plain'
+          obj.type = 'info'
+        }
+      })
+    },
     mounted() {
-
-
       console.log(iseeTagList)
       // console.log(this.$data.tagList)
     }

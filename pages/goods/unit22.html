@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ISeeAdmin 【商品分类】 </title>
+    <title>ISeeAdmin 【商品单位22】 </title>
     <link rel="stylesheet" href="/static/element/index.css">
     <link rel="stylesheet" href="/static/css/common.css">
     <script src="/static/js/menu.js"></script>
@@ -18,7 +18,8 @@
     <el-container style="height: 100%;min-height:100vh;">
         <el-aside width="210px">
             <div class="aside-logo">
-                <img class="aside-logo-img" src="https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png"  alt=""> ISeeAdmin
+                <img class="aside-logo-img" src="https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png"
+                     alt=""> ISeeAdmin
             </div>
             <el-menu @select="menuOpen" style="width: 210px;" unique-opened
                      :default-active="iseeDefaultActive"
@@ -108,7 +109,7 @@
       show: true,
       iseeDefaultActive: iseeDefaultActive,
       menu: menu,
-      currentTitle: '商品分类',
+      currentTitle: '商品单位22',
       tagList: iseeTagList
     },
     methods: {
@@ -121,7 +122,6 @@
         window.open(url, '_self')
         console.log(index)
       },
-
       tagClose(url, index) {
         this.$data.tagList.splice(index, 1);
         localStorage.setItem('iseeTagList', JSON.stringify(this.$data.tagList))
@@ -153,10 +153,19 @@
             effect: 'dark',
             type: '',
           }
+
           iseeTagList.push(issTag)
           localStorage.setItem('iseeTagList', JSON.stringify(iseeTagList))
         }
+
+        console.log(111111111)
+        console.log(iseeTagList.length)
+        console.log(iseeTagList)
+        console.log(44444444444)
+
         window.open(key, '_self')
+        console.log(key);
+        console.log(keyPath);
       },
     },
     beforeMount() {
