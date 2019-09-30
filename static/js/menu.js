@@ -1,3 +1,9 @@
+/**
+ * 菜单
+ * @author 46914685@qq.com
+ * @date 20190930
+ * @type {*[]}
+ */
 var menu = [
     {
         title: '首页',
@@ -7,50 +13,53 @@ var menu = [
     },
     {
         title: '商品管理',
-        url: '/pages/goods',
-        icon: '',
+        url: '/pages/goods/',
+        icon: 'el-icon-message',
         children: [
             {
                 title: '商品分类',
                 url: '/pages/goods/category.html',
-                icon: '',
+                icon: 'el-icon-message',
                 children: []
             }, {
                 title: '商品单位',
-                url: '/pages/goods/unit.html',
-                icon: '',
+                url: '/pages/goods/unit',
+                icon:'el-icon-setting',
                 children: [
                     {
                         title: '商品单位12',
                         url: '/pages/goods/unit12.html',
-                        icon: '',
+                        icon:'el-icon-setting',
                         children: []
                     }, {
                         title: '商品单位22',
                         url: '/pages/goods/unit22.html',
-                        icon: '',
+                        icon:'el-icon-setting',
                         children: []
                     },
                 ]
             }, {
                 title: '商品列表',
                 url: '/pages/goods/index.html',
-                icon: '',
+                icon:'el-icon-setting',
                 children: []
             },
         ]
     },
     {
         title: '测试',
-        url: '',
+        url: 'test',
+        icon:'el-icon-message',
         children: [
             {
                 title: 'about',
                 url: '/pages/about.html',
+                icon:'el-icon-setting',
                 children: []
             }, {
                 title: 'product',
                 url: '/pages/product.html',
+                icon:'el-icon-setting',
                 children: []
             },
         ]

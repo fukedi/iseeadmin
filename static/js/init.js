@@ -1,4 +1,9 @@
-// 初始化数据
+/**
+ * 初始化数据
+ * @author 46914685@qq.com
+ * @date 20190930
+ * @type {*[]}
+ */
 // localStorage.removeItem('iseeTagList')
 var iseeTagList =JSON.parse( localStorage.getItem('iseeTagList'))
 var isseHomeTag = {

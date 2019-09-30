@@ -1,0 +1,39 @@
+/**
+ * 通常样式
+ * @author 46914685@qq.com
+ * @date 20190930
+ */
+body {
+    background-color: #DCDFE6;
+    margin: 0px;
+    padding: 0px;
+}
+
+.el-header {
+    background-color: #fff;
+    color: #333;
+    border-bottom: 1px solid #d8dce5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+}
+
+.el-aside {
+    overflow: hidden;
+    background-color: #304156;
+}
+
+.aside-logo {
+    line-height: 50px;
+    background-color: #263445;
+    color: #fff;
+    text-align: center
+}
+
+.aside-logo-img {
+    height: 32px;
+    width: 32px;
+    vertical-align: middle
+}
+
+[v-cloak] {
+    display: none;
+}

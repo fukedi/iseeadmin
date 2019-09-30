@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ISeeAdmin 【about】 </title>
+    <title>ISeeAdmin 【商品单位12】 </title>
     <link rel="stylesheet" href="/static/element/index.css">
     <link rel="stylesheet" href="/static/css/common.css">
     <script src="/static/js/menu.js"></script>
@@ -109,7 +109,7 @@
       show: true,
       iseeDefaultActive: iseeDefaultActive,
       menu: menu,
-      currentTitle: 'about',
+      currentTitle: '商品单位12',
       tagList: iseeTagList
     },
     methods: {
@@ -122,14 +122,10 @@
         window.open(url, '_self')
         console.log(index)
       },
-
       tagClose(url, index) {
-        // console.log(9999999998)
-        // console.log(index)
-        // console.log(url)
         this.$data.tagList.splice(index, 1);
         localStorage.setItem('iseeTagList', JSON.stringify(this.$data.tagList))
-        // 关闭当前tag, 跳转到前一个tag
+        // 关闭当前tag,跳转到前一个tag
         if (url == this.$data.iseeDefaultActive) {
           localStorage.setItem('iseeDefaultActive', this.$data.tagList[index - 1].url)
           window.open(this.$data.tagList[index - 1].url, '_self')
@@ -157,10 +153,19 @@
             effect: 'dark',
             type: '',
           }
+
           iseeTagList.push(issTag)
           localStorage.setItem('iseeTagList', JSON.stringify(iseeTagList))
         }
+
+        console.log(111111111)
+        console.log(iseeTagList.length)
+        console.log(iseeTagList)
+        console.log(44444444444)
+
         window.open(key, '_self')
+        console.log(key);
+        console.log(keyPath);
       },
     },
     beforeMount() {
