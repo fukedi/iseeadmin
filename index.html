@@ -16,7 +16,6 @@
             margin: 0px;
             padding: 0px;
         }
-
         .el-header {
             background-color: #fff;
             color: #333;
@@ -25,12 +24,9 @@
         }
 
         .el-aside {
-            /*width: 210px;*/
             overflow: hidden;
             background-color: #304156;
         }
-
-
         [v-cloak] {
             display: none;
         }
@@ -40,7 +36,7 @@
 <div id="app" v-cloak>
     <el-container style="height: 100%;min-height:100vh;">
         <el-aside width="210px">
-            <el-menu @select="handleOpen" style="width: 210px;" unique-opened
+            <el-menu @select="menuOpen" style="width: 210px;" unique-opened
                      :default-active="iseeDefaultActive"
                      background-color="#304156"
                      text-color="#bfcbd9"
@@ -85,7 +81,7 @@
                 </div>
                 <div>
                     <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in tagList" :key="index"
-                            @click="pageSwitch(item.url,index)" :effect="item.effect" :type="item.type" size="small"
+                            @click="tagSwitch(item.url,index)" :effect="item.effect" :type="item.type" size="small"
                             :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
                     </el-tag>
                 </div>
@@ -119,20 +115,12 @@
       status: false,
       show: true,
       iseeDefaultActive: iseeDefaultActive,
-      currentTag: {
-        title: '首页',
-        url: '/',
-        closable: false,
-        show: true,
-        effect: 'dark',
-        type: '',
-      },
       menu: menu,
       currentTitle: '首页',
       tagList: iseeTagList
     },
     methods: {
-      pageSwitch(url,index) {
+      tagSwitch(url,index) {
         let currentUrl = this.$data.iseeDefaultActive
         if (url == currentUrl) {
           return;
@@ -142,11 +130,11 @@
         console.log(index)
       },
 
-      handleOpen(key, keyPath) {
+      menuOpen(key, keyPath) {
         localStorage.setItem('iseeDefaultActive', key)
         // key存在iseeTagList中,则iseeTagList无需再push
-        iseeTagList.forEach((res) => {
-          if (res.url == key) {
+        iseeTagList.forEach((obj) => {
+          if (obj.url == key) {
             this.$data.status = true
             return
           }
