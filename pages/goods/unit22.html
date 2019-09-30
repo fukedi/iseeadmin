@@ -21,13 +21,13 @@
                 <img class="aside-logo-img" src="https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png"
                      alt=""> ISeeAdmin
             </div>
-            <el-menu @select="menuOpen" style="width: 210px;" unique-opened
-                     :default-active="iseeDefaultActive"
+            <el-menu @select="iseeMenuOpen" style="width: 210px;" unique-opened
+                     :default-active="iseeData.iseeDefaultActive"
                      background-color="#304156"
                      text-color="#bfcbd9"
                      active-text-color="#409eff">
 
-                <template v-for="(item,index) in menu">
+                <template v-for="(item,index) in iseeData.menu">
                     <template v-if="!item.children.length">
                         <el-menu-item :index="item.url"><i :class="item.icon"></i>{{item.title}}</el-menu-item>
                     </template>
@@ -62,18 +62,16 @@
             <el-header height="78px">
                 <div>
                     <el-breadcrumb style="line-height: 50px" separator="/">
-                        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-                        <el-breadcrumb-item>活动管理</el-breadcrumb-item>
-                        <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+                        <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}</el-breadcrumb-item>
                     </el-breadcrumb>
                 </div>
                 <div>
-                    <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in tagList"
+                    <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
                             :key="index"
-                            @click="tagSwitch(item.url,index)"
+                            @click="iseeTagSwitch(item.url,index)"
                             :effect="item.effect"
                             :type="item.type"
-                            @close="tagClose(item.url,index)"
+                            @close="iseeTagClose(item.url,index)"
                             size="small"
                             :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
                     </el-tag>
@@ -105,46 +103,61 @@
     el: '#app',
     data: {
       tableData: Array(10).fill(item),
-      status: false,
-      show: true,
-      iseeDefaultActive: iseeDefaultActive,
-      menu: menu,
-      currentTitle: '商品单位22',
-      tagList: iseeTagList
+
+      iseeData: {
+        status: false,
+        show: true,
+        iseeDefaultActive: iseeDefaultActive,
+        menu: iseeMenu,
+        tagList: iseeTagList,
+        currentTitle: '商品单位22',
+        breadcrumb:[{
+          url:'/',
+          title:'面板'
+        },{
+          url:'',
+          title:'商品管理'
+        },{
+          url:'',
+          title:'商品单位'
+        },{
+          url:iseeDefaultActive,
+          title:'商品单位22'
+        }
+        ]
+      },
     },
     methods: {
-      tagSwitch(url, index) {
-        let currentUrl = this.$data.iseeDefaultActive
+      iseeTagSwitch(url, index) {
+        let currentUrl = this.$data.iseeData.iseeDefaultActive
         if (url == currentUrl) {
           return;
         }
         localStorage.setItem('iseeDefaultActive', url)
         window.open(url, '_self')
-        console.log(index)
       },
-      tagClose(url, index) {
-        this.$data.tagList.splice(index, 1);
-        localStorage.setItem('iseeTagList', JSON.stringify(this.$data.tagList))
+
+      iseeTagClose(url, index) {
+        this.$data.iseeData.tagList.splice(index, 1);
+        localStorage.setItem('iseeTagList', JSON.stringify(this.$data.iseeData.tagList))
         // 关闭当前tag,跳转到前一个tag
-        if (url == this.$data.iseeDefaultActive) {
-          localStorage.setItem('iseeDefaultActive', this.$data.tagList[index - 1].url)
-          window.open(this.$data.tagList[index - 1].url, '_self')
+        if (url == this.$data.iseeData.iseeDefaultActive) {
+          localStorage.setItem('iseeDefaultActive', this.$data.iseeData.tagList[index - 1].url)
+          window.open(this.$data.iseeData.tagList[index - 1].url, '_self')
         }
       },
 
-      menuOpen(key, keyPath) {
+      iseeMenuOpen(key, keyPath) {
         localStorage.setItem('iseeDefaultActive', key)
         // key存在iseeTagList中,则iseeTagList无需再push
         iseeTagList.forEach((obj) => {
           if (obj.url == key) {
-            this.$data.status = true
+            this.$data.iseeData.status = true
             return
           }
         })
 
-        if (this.$data.status == false) {
-          console.log(222222222)
-          // this.$data.menu[]
+        if (this.$data.iseeData.status == false) {
           let issTag = {
             title: 'unknow',
             url: key,
@@ -153,32 +166,20 @@
             effect: 'dark',
             type: '',
           }
-
           iseeTagList.push(issTag)
           localStorage.setItem('iseeTagList', JSON.stringify(iseeTagList))
         }
-
-        console.log(111111111)
-        console.log(iseeTagList.length)
-        console.log(iseeTagList)
-        console.log(44444444444)
-
         window.open(key, '_self')
-        console.log(key);
-        console.log(keyPath);
       },
     },
     beforeMount() {
-      console.log('beforeMount')
-      console.log(this.$data.iseeDefaultActive)
-      this.$data.tagList.forEach((obj) => {
-        if (obj.url == this.$data.iseeDefaultActive) {
-          obj.title = this.$data.currentTitle
-
+      this.$data.iseeData.tagList.forEach((obj) => {
+        if (obj.url == this.$data.iseeData.iseeDefaultActive) {
+          obj.title = this.$data.iseeData.currentTitle
           obj.show = true
           obj.effect = 'dark'
           obj.type = ''
-          localStorage.setItem('iseeTagList', JSON.stringify(this.$data.tagList))
+          localStorage.setItem('iseeTagList', JSON.stringify(this.$data.iseeData.tagList))
         } else {
           obj.show = false
           obj.effect = 'plain'
@@ -187,8 +188,6 @@
       })
     },
     mounted() {
-      console.log(iseeTagList)
-      // console.log(this.$data.tagList)
     }
   });
 </script>
