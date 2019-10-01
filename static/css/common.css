@@ -38,6 +38,31 @@ body {
     font-size: 18px;
 }
 
+.aside-show {
+    line-height: 50px;
+    margin-right: 15px;
+    font-size: 20px;
+    cursor: pointer
+}
+
+.isee-header-div {
+    display: flex;
+    text-align: center
+}
+
+.isee-ul {
+    display: flex;
+    margin: 0;
+    line-height: 50px;
+    margin-right: 20px;
+    list-style: none;
+}
+
+.isee-li {
+    margin-right: 10px;
+    cursor: pointer
+}
+
 [v-cloak] {
     display: none;
 }

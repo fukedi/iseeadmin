@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/static/css/common.css">
     <script src="/static/js/iseeadmin.js"></script>
     <script src="/static/js/menu.js"></script>
-<!--    <script src="/static/js/init.js"></script>-->
+    <!--    <script src="/static/js/init.js"></script>-->
     <script src="/static/js/vue.js"></script>
     <!--    <script src="/static/js/vue.min.js"></script>-->
     <!--    <script src="static/js/axios.min.js"></script>-->
@@ -63,10 +63,9 @@
         <el-container>
 
             <el-header height="78px">
-                <div style="display: flex; text-align: center">
+                <div class="isee-header-div">
                     <div style="width: 100%;display: inherit;">
-                        <span @click="iseeAsideShow"
-                              style="line-height: 50px;margin-right: 15px;font-size: 20px;cursor: pointer">
+                        <span class="aside-show" @click="iseeAsideShow">
                             <i :class="iseeData.asideShowIcon"></i>
                         </span>
 
@@ -77,27 +76,22 @@
                     </div>
 
                     <div>
-                        <ul style="display: flex; margin: 0;line-height: 50px;margin-right: 20px;list-style: none;">
-                            <li @click="iseeFullScreen" style=" margin-right: 10px;cursor: pointer">
+                        <ul class="isee-ul">
+                            <li @click="iseeFullScreen" class="isee-li">
                                 <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
                             </li>
-                            <!--                            <li style=" margin-right: 10px;">-->
-                            <!--&lt;!&ndash;                                    <i class="el-icon-full-screen"></i>&ndash;&gt;-->
-                            <!--                                    <span class="iconfont" style="font-size: 20px">&#xe610;</span>-->
-                            <!--                            </li>-->
                         </ul>
-
                     </div>
                     <div>
-                        <el-dropdown>
+                        <el-dropdown @command="iseeOpenUrl">
                               <span class="el-dropdown-link">
                                   <el-avatar style="margin-top: 9px" :size="32"
                                              src="/static/images/avatar01.gif"></el-avatar>
                               </span>
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item icon="el-icon-user-solid">admin</el-dropdown-item>
-                                <el-dropdown-item icon="el-icon-edit-outline">修改密码</el-dropdown-item>
-                                <el-dropdown-item icon="el-icon-switch-button">安全退出</el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-user-solid" command="/xxx/xxx1">admin</el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-edit-outline" command="/xxx/xxx2">修改密码44</el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-switch-button" command="/xxx/xxx3">安全退出</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -106,7 +100,7 @@
                     <div style="width: 100%">
                         <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
                                 :key="index"
-                                @click="iseeTagSwitch(item.url,index)"
+                                @click="iseeTagSwitch(item.url)"
                                 :effect="item.effect"
                                 :type="item.type"
                                 @close="iseeTagClose(item.url,index)"
@@ -165,20 +159,21 @@
         defaultActive: iseeAdmin.defaultActive,
         menu: iseeMenu,
         tagList: iseeAdmin.tagList,
+
         currentTitle: '首页',
         breadcrumb: [{
           url: '',
           title: '面板'
         }, {
-          url: '/',
+          url: iseeAdmin.defaultActive,
           title: '首页'
         }
         ]
       },
     },
     methods: {
-      iseeTagSwitch(url, index) {
-        iseeAdmin.iseeTagSwitch(url, index, this.$data.iseeData)
+      iseeTagSwitch(url) {
+        iseeAdmin.iseeTagSwitch(url, this.$data.iseeData)
       },
 
       iseeTagClose(url, index) {
@@ -190,7 +185,12 @@
       },
 
       iseeMenuOpen(key, keyPath) {
-        iseeAdmin.iseeMenuOpen(key, keyPath, this.$data.iseeData)
+        console.log(1111)
+        console.log(key)
+        console.log(2222222)
+        console.log(keyPath)
+        return
+        iseeAdmin.iseeMenuOpen(key, this.$data.iseeData)
       },
 
       iseeFullScreen() {
@@ -199,6 +199,10 @@
 
       iseeAsideShow() {
         iseeAdmin.iseeAsideShow(this.$data.iseeData)
+      },
+      iseeOpenUrl(url) {
+        console.log(url)
+        iseeAdmin.iseeMenuOpen(url, this.$data.iseeData)
       }
     },
     beforeMount() {

@@ -39,7 +39,7 @@ iseeAsideShowIcon = iseeAsideShowIcon == null ? 'el-icon-s-fold' : iseeAsideShow
 var iseeAdmin = {
   tagList: iseeTagList,
   homeTag: iseeHomeTag,
-  defaultActive:iseeDefaultActive,
+  defaultActive: iseeDefaultActive,
   asideShow: iseeAsideShow,
   asideShowIcon: iseeAsideShowIcon,
   /**
@@ -123,7 +123,7 @@ var iseeAdmin = {
    * 显示隐藏侧边栏
    * @param obj
    */
-  iseeAsideShow: function (obj) {
+  iseeAsideShow(obj) {
     obj.asideShow = !obj.asideShow
     obj.asideShowIcon = obj.asideShow ? 'el-icon-s-fold' : 'el-icon-s-unfold'
     this.cacheSet('asideShow', obj.asideShow)
@@ -136,7 +136,7 @@ var iseeAdmin = {
    * @param p
    * @param o
    */
-  iseeMenuOpen: function (k, p, o) {
+  iseeMenuOpen(k, o) {
     this.cacheSet('iseeDefaultActive', k)
     // k存在iseeTagList中,则iseeTagList无需再push
     o.tagList.forEach((obj) => {
@@ -233,10 +233,9 @@ var iseeAdmin = {
   /**
    * 标签页切换
    * @param u url
-   * @param i index
    * @param o obj
    */
-  iseeTagSwitch(u, i, o) {
+  iseeTagSwitch(u, o) {
     if (u == o.defaultActive) {
       return;
     }

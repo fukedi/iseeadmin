@@ -5,9 +5,11 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>ISeeAdmin 【商品单位12】 </title>
     <link rel="stylesheet" href="/static/element/index.css">
+    <link rel="stylesheet" href="/static/iconfont/iconfont.css">
     <link rel="stylesheet" href="/static/css/common.css">
+    <script src="/static/js/iseeadmin.js"></script>
     <script src="/static/js/menu.js"></script>
-    <script src="/static/js/init.js"></script>
+    <!--    <script src="/static/js/init.js"></script>-->
     <script src="/static/js/vue.js"></script>
     <!--    <script src="/static/js/vue.min.js"></script>-->
     <!--    <script src="static/js/axios.min.js"></script>-->
@@ -16,13 +18,14 @@
 <body>
 <div id="app" v-cloak>
     <el-container style="height: 100%;min-height:100vh;">
-        <el-aside width="210px">
+        <el-aside v-show="iseeData.asideShow" width="210px">
             <div class="aside-logo">
                 <img class="aside-logo-img" src="https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png"
                      alt=""> ISeeAdmin
             </div>
-            <el-menu @select="iseeMenuOpen" style="width: 210px;" unique-opened
-                     :default-active="iseeData.iseeDefaultActive"
+            <el-menu @select="iseeMenuOpen" style="width: 210px;"
+                     unique-opened
+                     :default-active="iseeData.defaultActive"
                      background-color="#304156"
                      text-color="#bfcbd9"
                      active-text-color="#409eff">
@@ -60,21 +63,63 @@
         <el-container>
 
             <el-header height="78px">
-                <div>
-                    <el-breadcrumb style="line-height: 50px" separator="/">
-                        <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}</el-breadcrumb-item>
-                    </el-breadcrumb>
+                <div class="isee-header-div">
+                    <div style="width: 100%;display: inherit;">
+                        <span class="aside-show" @click="iseeAsideShow">
+                            <i :class="iseeData.asideShowIcon"></i>
+                        </span>
+
+                        <el-breadcrumb style="line-height: 50px" separator="/">
+                            <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+
+                    <div>
+                        <ul class="isee-ul">
+                            <li @click="iseeFullScreen" class="isee-li">
+                                <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <el-dropdown>
+                              <span class="el-dropdown-link">
+                                  <el-avatar style="margin-top: 9px" :size="32"
+                                             src="/static/images/avatar01.gif"></el-avatar>
+                              </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item icon="el-icon-user-solid">admin</el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-edit-outline">修改密码</el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-switch-button">安全退出</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                 </div>
-                <div>
-                    <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
-                            :key="index"
-                            @click="iseeTagSwitch(item.url,index)"
-                            :effect="item.effect"
-                            :type="item.type"
-                            @close="iseeTagClose(item.url,index)"
-                            size="small"
-                            :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
-                    </el-tag>
+                <div style="display: flex">
+                    <div style="width: 100%">
+                        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
+                                :key="index"
+                                @click="iseeTagSwitch(item.url,index)"
+                                :effect="item.effect"
+                                :type="item.type"
+                                @close="iseeTagClose(item.url,index)"
+                                size="small"
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                        </el-tag>
+                    </div>
+                    <div style="float: right;">
+                        <el-dropdown @command="iseeTagCommandClose">
+                          <span class="el-dropdown-link">
+                              <i class="el-icon-arrow-down el-icon--right"></i>
+                          </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
                 </div>
             </el-header>
 
@@ -107,9 +152,14 @@
       iseeData: {
         status: false,
         show: true,
-        iseeDefaultActive: iseeDefaultActive,
+        asideShow: iseeAdmin.asideShow,
+        asideShowIcon: iseeAdmin.asideShowIcon,
+        fullscreen: false,
+        fullscreenIcon: '&#xe610;',
+        defaultActive: iseeAdmin.defaultActive,
         menu: iseeMenu,
-        tagList: iseeTagList,
+        tagList: iseeAdmin.tagList,
+
         currentTitle: '商品单位12',
         breadcrumb:[{
           url:'/',
@@ -129,69 +179,34 @@
     },
     methods: {
       iseeTagSwitch(url, index) {
-        let currentUrl = this.$data.iseeData.iseeDefaultActive
-        if (url == currentUrl) {
-          return;
-        }
-        localStorage.setItem('iseeDefaultActive', url)
-        window.open(url, '_self')
+        iseeAdmin.iseeTagSwitch(url, index, this.$data.iseeData)
       },
 
       iseeTagClose(url, index) {
-        this.$data.iseeData.tagList.splice(index, 1);
-        localStorage.setItem('iseeTagList', JSON.stringify(this.$data.iseeData.tagList))
-        // 关闭当前tag,跳转到前一个tag
-        if (url == this.$data.iseeData.iseeDefaultActive) {
-          localStorage.setItem('iseeDefaultActive', this.$data.iseeData.tagList[index - 1].url)
-          window.open(this.$data.iseeData.tagList[index - 1].url, '_self')
-        }
+        iseeAdmin.iseeTagClose(url, index, this.$data.iseeData)
+      },
+
+      iseeTagCommandClose(command) {
+        iseeAdmin.iseeTagCommandClose(command, this.$data.iseeData)
       },
 
       iseeMenuOpen(key, keyPath) {
-        localStorage.setItem('iseeDefaultActive', key)
-        // key存在iseeTagList中,则iseeTagList无需再push
-        iseeTagList.forEach((obj) => {
-          if (obj.url == key) {
-            this.$data.iseeData.status = true
-            return
-          }
-        })
-
-        if (this.$data.iseeData.status == false) {
-          let issTag = {
-            title: '',
-            url: key,
-            closable: true,
-            show: true,
-            effect: 'dark',
-            type: '',
-          }
-          iseeTagList.push(issTag)
-          localStorage.setItem('iseeTagList', JSON.stringify(iseeTagList))
-        }
-        window.open(key, '_self')
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.$data.iseeData)
       },
+
+      iseeFullScreen() {
+        iseeAdmin.iseeFullScreen(this.$data.iseeData)
+      },
+
+      iseeAsideShow() {
+        iseeAdmin.iseeAsideShow(this.$data.iseeData)
+      }
     },
     beforeMount() {
-      this.$data.iseeData.tagList.forEach((obj) => {
-        if (obj.url == this.$data.iseeData.iseeDefaultActive) {
-          obj.title = this.$data.iseeData.currentTitle
-          obj.show = true
-          obj.effect = 'dark'
-          obj.type = ''
-          localStorage.setItem('iseeTagList', JSON.stringify(this.$data.iseeData.tagList))
-        } else {
-          obj.show = false
-          obj.effect = 'plain'
-          obj.type = 'info'
-        }
-      })
+      iseeAdmin.init(this.$data.iseeData)
     },
     mounted() {
-      var fruits = ["Banana", "Orange", "Apple", "Mango"];
-      var shift_=fruits.shift()
-      console.log(99999999)
-      console.log(shift_)
+
     }
   });
 </script>
