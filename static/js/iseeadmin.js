@@ -8,14 +8,30 @@
  */
 
 // localStorage.removeItem('iseeTagList')
+// localStorage.removeItem('iseeBreadcrumb')
+
+let iseeIndex = '0'
+let iseeTitle = '首页'
+let iseeUrl = '/'
+
 var iseeTagList = JSON.parse(localStorage.getItem('iseeTagList'))
 var iseeHomeTag = {
-  title: '首页',
-  url: '/',
+  index: iseeIndex,
+  title: iseeTitle,
+  url: iseeUrl,
   closable: false,
   show: true,
   effect: 'dark',
   type: '',
+  breadcrumb: [{
+    index: '',
+    title: '面板',
+    url: ''
+  }, {
+    index: iseeIndex,
+    title: iseeTitle,
+    url: iseeUrl
+  }]
 }
 if (iseeTagList == null) {
   iseeTagList = [iseeHomeTag]
@@ -23,7 +39,7 @@ if (iseeTagList == null) {
 
 var iseeDefaultActive = localStorage.getItem('iseeDefaultActive')
 if (iseeDefaultActive == null) {
-  iseeDefaultActive = iseeHomeTag.url
+  iseeDefaultActive = iseeHomeTag.index
 }
 
 var iseeAsideShow = localStorage.getItem('asideShow')
@@ -36,20 +52,26 @@ if (iseeAsideShow == null) {
 var iseeAsideShowIcon = localStorage.getItem('asideShowIcon')
 iseeAsideShowIcon = iseeAsideShowIcon == null ? 'el-icon-s-fold' : iseeAsideShowIcon
 
+var iseeBreadcrumb = JSON.parse(localStorage.getItem('iseeBreadcrumb'))
+if (iseeBreadcrumb == null) {
+  iseeBreadcrumb = iseeHomeTag.breadcrumb
+}
+
 var iseeAdmin = {
   tagList: iseeTagList,
   homeTag: iseeHomeTag,
   defaultActive: iseeDefaultActive,
   asideShow: iseeAsideShow,
   asideShowIcon: iseeAsideShowIcon,
+  breadcrumb: iseeBreadcrumb,
+
   /**
    * 初始化
    * @param o
    */
   init(o) {
     o.tagList.forEach((obj) => {
-      if (obj.url == o.defaultActive) {
-        obj.title = o.currentTitle
+      if (obj.index == o.defaultActive) {
         obj.show = true
         obj.effect = 'dark'
         obj.type = ''
@@ -136,29 +158,113 @@ var iseeAdmin = {
    * @param p
    * @param o
    */
-  iseeMenuOpen(k, o) {
-    this.cacheSet('iseeDefaultActive', k)
+  iseeMenuOpen(k, p, o) {
+    console.log(k)
+    console.log(p)
+    let url = ''
+    let b = [{
+      index: '',
+      title: '面板',
+      url: ''
+    }]
+
     // k存在iseeTagList中,则iseeTagList无需再push
     o.tagList.forEach((obj) => {
-      if (obj.url == k) {
+      if (obj.index == k) {
         o.status = true
+        // o.status = false
+        b.push({
+          index: k,
+          title: obj.title,
+          url: obj.url
+        })
+        url = obj.url
         return
       }
     })
 
     if (o.status == false) {
+      let len = p.length
+      let title = ''
+
+      let m, i, j
+      console.log(9999999999999)
+      console.log(len)
+      switch (len) {
+        case 1:
+          m = o.menu[p[0]]
+          b.push({
+            index: k,
+            title: m.title,
+            url: m.url
+          })
+          // console.log(m)
+          // console.log(title)
+          break
+        case 2:
+          i = p[1].split('-')[1]
+          // console.log(77777777777)
+          // console.log(i)
+          b.push({
+            index: p[0],
+            title: o.menu[p[0]].title,
+            url: o.menu[p[0]].url
+          })
+          m = o.menu[p[0]].children[i]
+          b.push({
+            index: k,
+            title: m.title,
+            url: m.url
+          })
+          // console.log(m)
+          break
+        case 3:
+          i = p[1].split('-')[1]
+          j = p[2].split('-')[2]
+          b.push({
+            index: p[0],
+            title: o.menu[p[0]].title,
+            url: o.menu[p[0]].url
+          }, {
+            index: p[1],
+            title: o.menu[p[0]].children[i].title,
+            url: o.menu[p[0]].children[i].url
+          })
+          m = o.menu[p[0]].children[i].children[j]
+          b.push({
+            index: k,
+            title: m.title,
+            url: m.url
+          })
+          break
+
+      }
+      title = m.title
+      url = m.url
+      console.log(3333333333)
+      console.log(m)
+
       let issTag = {
-        title: '',
-        url: k,
+        index: k,
+        title: title,
+        url: url,
         closable: true,
         show: true,
         effect: 'dark',
         type: '',
+        breadcrumb: b
       }
+      console.log(88888888)
+      console.log(issTag)
       o.tagList.push(issTag)
+      o.breadcrumb = b
       this.cacheSet('iseeTagList', o.tagList, 2)
+      this.cacheSet('iseeBreadcrumb', o.breadcrumb, 2)
     }
-    window.open(k, '_self')
+    this.cacheSet('iseeDefaultActive', k)
+    console.log(5555)
+    console.log(url)
+    window.open(url, '_self')
   },
 
   /**
@@ -235,11 +341,14 @@ var iseeAdmin = {
    * @param u url
    * @param o obj
    */
-  iseeTagSwitch(u, o) {
-    if (u == o.defaultActive) {
+  iseeTagSwitch(u, i, b, o) {
+    if (i == o.defaultActive) {
       return;
     }
-    this.cacheSet('iseeDefaultActive', u)
+    this.cacheSet('iseeDefaultActive', i)
+    o.breadcrumb=b
+    this.cacheSet('iseeBreadcrumb', b, 2)
+    console.log(b)
     window.open(u, '_self')
   },
 

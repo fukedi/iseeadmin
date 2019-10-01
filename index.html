@@ -32,24 +32,25 @@
 
                 <template v-for="(item,index) in iseeData.menu">
                     <template v-if="!item.children.length">
-                        <el-menu-item :index="item.url"><i :class="item.icon"></i>{{item.title}}</el-menu-item>
+                        <el-menu-item :index="item.index"><i :class="item.icon"></i>{{item.title}}</el-menu-item>
                     </template>
                     <template v-else>
-                        <el-submenu :index="item.url">
+                        <el-submenu :index="item.index">
                             <template slot="title"><i :class="item.icon"></i>{{item.title}}</template>
                             <template v-for="(itemSub,indexSub) in item.children" :index="itemSub.index">
                                 <template v-if="itemSub.children.length">
-                                    <el-submenu :index="itemSub.url">
+                                    <el-submenu :index="itemSub.index">
                                         <span slot="title"><i :class="itemSub.icon"></i>{{ itemSub.title }}</span>
                                         <template v-for="(itemSub_,indexSub_) in itemSub.children">
-                                            <el-menu-item :index="itemSub_.url"><i :class="itemSub_.icon"></i>{{
+                                            <el-menu-item :index="itemSub_.index"><i :class="itemSub_.icon"></i>{{
                                                 itemSub_.title }}
                                             </el-menu-item>
                                         </template>
                                     </el-submenu>
                                 </template>
                                 <template v-else>
-                                    <el-menu-item :index="itemSub.url"><i :class="itemSub.icon"></i>{{ itemSub.title }}
+                                    <el-menu-item :index="itemSub.index"><i :class="itemSub.icon"></i>{{ itemSub.title
+                                        }}
                                     </el-menu-item>
                                 </template>
                             </template>
@@ -90,8 +91,10 @@
                               </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item icon="el-icon-user-solid" command="/xxx/xxx1">admin</el-dropdown-item>
-                                <el-dropdown-item icon="el-icon-edit-outline" command="/xxx/xxx2">修改密码44</el-dropdown-item>
-                                <el-dropdown-item icon="el-icon-switch-button" command="/xxx/xxx3">安全退出</el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-edit-outline" command="/xxx/xxx2">修改密码44
+                                </el-dropdown-item>
+                                <el-dropdown-item icon="el-icon-switch-button" command="/xxx/xxx3">安全退出
+                                </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -100,7 +103,7 @@
                     <div style="width: 100%">
                         <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
                                 :key="index"
-                                @click="iseeTagSwitch(item.url)"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
                                 :effect="item.effect"
                                 :type="item.type"
                                 @close="iseeTagClose(item.url,index)"
@@ -159,21 +162,12 @@
         defaultActive: iseeAdmin.defaultActive,
         menu: iseeMenu,
         tagList: iseeAdmin.tagList,
-
-        currentTitle: '首页',
-        breadcrumb: [{
-          url: '',
-          title: '面板'
-        }, {
-          url: iseeAdmin.defaultActive,
-          title: '首页'
-        }
-        ]
+        breadcrumb: iseeAdmin.breadcrumb
       },
     },
     methods: {
-      iseeTagSwitch(url) {
-        iseeAdmin.iseeTagSwitch(url, this.$data.iseeData)
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.$data.iseeData)
       },
 
       iseeTagClose(url, index) {
@@ -185,12 +179,7 @@
       },
 
       iseeMenuOpen(key, keyPath) {
-        console.log(1111)
-        console.log(key)
-        console.log(2222222)
-        console.log(keyPath)
-        return
-        iseeAdmin.iseeMenuOpen(key, this.$data.iseeData)
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.$data.iseeData)
       },
 
       iseeFullScreen() {
@@ -201,7 +190,6 @@
         iseeAdmin.iseeAsideShow(this.$data.iseeData)
       },
       iseeOpenUrl(url) {
-        console.log(url)
         iseeAdmin.iseeMenuOpen(url, this.$data.iseeData)
       }
     },
@@ -209,7 +197,7 @@
       iseeAdmin.init(this.$data.iseeData)
     },
     mounted() {
-
+      console.log(this.$data.iseeData.tagList)
     }
   });
 </script>
