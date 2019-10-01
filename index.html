@@ -62,7 +62,8 @@
             <el-header height="78px">
                 <div>
                     <el-breadcrumb style="line-height: 50px" separator="/">
-                        <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}</el-breadcrumb-item>
+                        <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                        </el-breadcrumb-item>
                     </el-breadcrumb>
                 </div>
                 <div style="display: flex">
@@ -77,15 +78,15 @@
                                 :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
                         </el-tag>
                     </div>
-                    <div  style="float: right;">
-                        <el-dropdown>
+                    <div style="float: right;">
+                        <el-dropdown @command="iseeTagCommandClose">
                           <span class="el-dropdown-link">
                               <i class="el-icon-arrow-down el-icon--right"></i>
                           </span>
-                            <el-dropdown-menu slot="dropdown" >
-                                <el-dropdown-item>关闭当前标签页</el-dropdown-item>
-                                <el-dropdown-item>关闭其它标签页</el-dropdown-item>
-                                <el-dropdown-item>关闭全部标签页</el-dropdown-item>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -125,12 +126,12 @@
         menu: iseeMenu,
         tagList: iseeTagList,
         currentTitle: '首页',
-        breadcrumb:[{
-          url:'',
-          title:'面板'
-        },{
-          url:'/',
-          title:'首页'
+        breadcrumb: [{
+          url: '',
+          title: '面板'
+        }, {
+          url: '/',
+          title: '首页'
         }
         ]
       },
@@ -155,10 +156,58 @@
         }
       },
 
+      iseeTagCommandClose(command) {
+        switch (command) {
+          //关闭当前tag
+          case '1':
+            if (iseeHomeUrl != this.$data.iseeData.defaultActive) {
+              this.$data.iseeData.tagList.forEach((obj, index) => {
+                if (obj.url == this.$data.iseeData.defaultActive) {
+                  this.$data.iseeData.tagList.splice(index, 1);
+                  localStorage.setItem('iseeDefaultActive', this.$data.iseeData.tagList[index - 1].url)
+                  localStorage.setItem('iseeTagList', JSON.stringify(this.$data.iseeData.tagList))
+                  window.open(this.$data.iseeData.tagList[index - 1].url, '_self')
+                }
+              })
+            }
+            break
+          //关闭其它tag
+          case '2':
+            //当前tag在首页上
+            let tagListTemp = [isseHomeTag]
+            if (iseeHomeUrl == this.$data.iseeData.defaultActive) {
+              this.$data.iseeData.tagList = tagListTemp
+            } else {
+              tagListTemp[0].show = false
+              tagListTemp[0].effect = 'plain'
+              tagListTemp[0].type = 'info'
+              this.$data.iseeData.tagList.forEach((obj) => {
+                if (obj.url == this.$data.iseeData.defaultActive && obj.url != iseeHomeUrl) {
+                  tagListTemp.push(obj)
+                  return
+                }
+              })
+              this.$data.iseeData.tagList = tagListTemp
+            }
+            localStorage.setItem('iseeTagList', JSON.stringify(this.$data.iseeData.tagList))
+            break
+          //关闭全部tag
+          case '3':
+            this.$data.iseeData.tagList = [isseHomeTag]
+            localStorage.setItem('iseeTagList', JSON.stringify(this.$data.iseeData.tagList))
+            // 当前tag不是首页
+            if (iseeHomeUrl != this.$data.iseeData.defaultActive) {
+              localStorage.setItem('iseeDefaultActive', iseeHomeUrl)
+              window.open(iseeHomeUrl, '_self')
+            }
+            break
+        }
+      },
+
       iseeMenuOpen(key, keyPath) {
         localStorage.setItem('iseeDefaultActive', key)
         // key存在iseeTagList中,则iseeTagList无需再push
-        iseeTagList.forEach((obj) => {
+        this.$data.iseeData.tagList.forEach((obj) => {
           if (obj.url == key) {
             this.$data.iseeData.status = true
             return
@@ -167,15 +216,15 @@
 
         if (this.$data.iseeData.status == false) {
           let issTag = {
-            title: 'unknow',
+            title: '',
             url: key,
             closable: true,
             show: true,
             effect: 'dark',
             type: '',
           }
-          iseeTagList.push(issTag)
-          localStorage.setItem('iseeTagList', JSON.stringify(iseeTagList))
+          this.$data.iseeData.tagList.push(issTag)
+          localStorage.setItem('iseeTagList', JSON.stringify(this.$data.iseeData.tagList))
         }
         window.open(key, '_self')
       },

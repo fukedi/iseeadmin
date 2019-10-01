@@ -7,9 +7,10 @@
  */
 // localStorage.removeItem('iseeTagList')
 var iseeTagList =JSON.parse( localStorage.getItem('iseeTagList'))
+const iseeHomeUrl='/'
 var isseHomeTag = {
   title: '首页',
-  url: '/',
+  url: iseeHomeUrl,
   closable: false,
   show: true,
   effect: 'dark',
@@ -18,9 +19,10 @@ var isseHomeTag = {
 if (iseeTagList == null) {
   iseeTagList = []
   iseeTagList.push(isseHomeTag)
+
 }
 
 var iseeDefaultActive = localStorage.getItem('iseeDefaultActive')
 if (iseeDefaultActive == null) {
-  iseeDefaultActive = '/'
+  iseeDefaultActive = iseeHomeUrl
 }

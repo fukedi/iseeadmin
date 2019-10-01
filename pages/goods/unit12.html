@@ -159,7 +159,7 @@
 
         if (this.$data.iseeData.status == false) {
           let issTag = {
-            title: 'unknow',
+            title: '',
             url: key,
             closable: true,
             show: true,
@@ -188,6 +188,10 @@
       })
     },
     mounted() {
+      var fruits = ["Banana", "Orange", "Apple", "Mango"];
+      var shift_=fruits.shift()
+      console.log(99999999)
+      console.log(shift_)
     }
   });
 </script>
