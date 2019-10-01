@@ -1,7 +1,8 @@
 /**
  * 菜单
- * @author Ahello
+ * @author youge
  * @email 46914685@qq.com
+ * @git https://gitee.com/youge/iseeadmin.git
  * @date 20190930
  * @type {*[]}
  */
