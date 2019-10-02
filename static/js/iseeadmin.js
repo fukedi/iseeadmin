@@ -64,7 +64,7 @@ if (iseeBreadcrumb == 'undefined') {
 }
 
 var iseeAdmin = {
-  version:iseeVersion,
+  version: iseeVersion,
   tagList: iseeTagList,
   homeTag: iseeHomeTag,
   defaultActive: iseeDefaultActive,
@@ -169,88 +169,21 @@ var iseeAdmin = {
     if (k == '' || p == '') {
       return
     }
-
-    let url = ''
-    let b = [{
-      index: '',
-      title: '面板',
-      url: ''
-    }]
-
+    let b = this.iseeGetBreadcrumb(o.menu, p)
+    let b_=b[b.length-1]
     // k存在iseeTagList中,则iseeTagList无需再push
-    o.tagList.forEach((obj) => {
-      if (obj.index == k) {
+    o.tagList.forEach((o_) => {
+      if (o_.index == k) {
         o.status = true
-        // o.status = false
-        // b.push({
-        //   index: k,
-        //   title: obj.title,
-        //   url: obj.url
-        // })
-        b = obj.breadcrumb
-        url = obj.url
         return
       }
     })
 
-    // return
-
     if (o.status == false) {
-      let len = p.length
-      let title = ''
-
-      let m, i, j
-      switch (len) {
-        case 1:
-          m = o.menu[p[0]]
-          b.push({
-            index: k,
-            title: m.title,
-            url: m.url
-          })
-          break
-        case 2:
-          i = p[1].split('-')[1]
-          b.push({
-            index: p[0],
-            title: o.menu[p[0]].title,
-            url: o.menu[p[0]].url
-          })
-          m = o.menu[p[0]].children[i]
-          b.push({
-            index: k,
-            title: m.title,
-            url: m.url
-          })
-          break
-        case 3:
-          i = p[1].split('-')[1]
-          j = p[2].split('-')[2]
-          b.push({
-            index: p[0],
-            title: o.menu[p[0]].title,
-            url: o.menu[p[0]].url
-          }, {
-            index: p[1],
-            title: o.menu[p[0]].children[i].title,
-            url: o.menu[p[0]].children[i].url
-          })
-          m = o.menu[p[0]].children[i].children[j]
-          b.push({
-            index: k,
-            title: m.title,
-            url: m.url
-          })
-          break
-
-      }
-      title = m.title
-      url = m.url
-
       let issTag = {
         index: k,
-        title: title,
-        url: url,
+        title: b_.title,
+        url: b_.url,
         closable: true,
         show: true,
         effect: 'dark',
@@ -263,7 +196,7 @@ var iseeAdmin = {
     o.breadcrumb = b
     this.cacheSet('iseeBreadcrumb', o.breadcrumb, 2)
     this.cacheSet('iseeDefaultActive', k)
-    window.open(url, '_self')
+    window.open(b_.url, '_self')
   },
 
   /**
@@ -351,5 +284,35 @@ var iseeAdmin = {
     this.cacheSet('iseeBreadcrumb', b, 2)
     window.open(u, '_self')
   },
+
+  /**
+   * 通过 keyPath 层层查找对应的菜单 返回面包屑
+   * @param m
+   * @param k keyPath
+   */
+  iseeGetBreadcrumb(m, k) {
+    let b = [{
+      index: '',
+      title: '面板',
+      url: ''
+    }]
+    let m_ = []
+    this.cacheSet('iseeMenuTemp', m_, 2)
+    k.forEach((k_) => {
+      m_ = this.cacheGet('iseeMenuTemp', 2)
+      m_.length > 0 ? m = m_ : ''
+      m.forEach((o, i) => {
+        if (k_ == o.index) {
+          b.push({
+            index: o.index,
+            title: o.title,
+            url: o.url
+          })
+          this.cacheSet('iseeMenuTemp', m[i].children, 2)
+        }
+      })
+    })
+    return b
+  }
 
 }

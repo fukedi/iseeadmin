@@ -83,7 +83,7 @@
                             <li @click="iseeFullScreen" class="isee-li">
                                 <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
                             </li>
-                            <li class="isee-li">
+                            <li class="isee-li" @click="iseeData.drawer = true">
                                 <span class="iconfont" style="font-size: 20px">&#xe602;</span>
                             </li>
                         </ul>
@@ -128,6 +128,46 @@
                         </el-dropdown>
                     </div>
                 </div>
+
+
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">https://gitee.com/youge/iseeadmin
+                                </el-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+                </el-drawer>
             </el-header>
 
             <el-main>
@@ -151,13 +191,19 @@
     name: '王小虎',
     address: '上海市普陀区金沙江路 1518 弄'
   };
-  const userName = 'admin1'
+
+  const userName = 'admin'
+  const avatarUrl = '/static/images/avatar01.gif'
   var app = new Vue({
     el: '#app',
     data: {
       tableData: Array(10).fill(item),
 
       iseeData: {
+        version: iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
         status: false,
         show: true,
         asideShow: iseeAdmin.asideShow,
@@ -165,11 +211,11 @@
         fullscreen: false,
         fullscreenIcon: '&#xe610;',
         defaultActive: iseeAdmin.defaultActive,
-        menu: iseeMenu,
         tagList: iseeAdmin.tagList,
         breadcrumb: iseeAdmin.breadcrumb,
+        menu: iseeMenu,
         avatar: {
-          url: '/static/images/avatar01.gif',
+          url: avatarUrl,
           size: 32,
           list: [
             {
@@ -227,7 +273,8 @@
       },
       iseeOpenUrl(command) {
         iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
-      }
+      },
+
     },
     beforeMount() {
       iseeAdmin.init(this.$data.iseeData)

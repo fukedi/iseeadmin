@@ -1,28 +1,36 @@
 # iseeAdmin
 
 #### 介绍
-iseeAdmin是一款基于vue和element开发的web后台管理系统
-最懂后端的前端后台管理系统 
-让后端更注重业务逻辑开发，
-全栈开发更加轻松
-加快项目开发速度
-一样的功能，更少的代码
 
-iseeAdmin参照了[vue-element-admin](https://panjiachen.github.io/vue-element-admin-site/zh/)和[layuiAdmin](https://www.layui.com/admin/std/dist/views/)页面布局
+iseeAdmin是一个基于vue和element UI实现的后台前端解决方案，特别针对后端人员设计的一款后台前端产品，让后端人员更注重业务逻辑开发，项目开发更快。欢迎使用本项目！
 
 
-上手难度:  vue-element-admin > iseeAdmin > layuiAdmin
 
-[https://gitee.com/youge/iseeadmin](https://gitee.com/youge/iseeadmin)
+#### 基本情况
+1. iseeAdmin基于vue和element UI开发
+2. 使用对象：主要是后端人员，要求掌握vue基本技能
+3. iseeAdmin参考了[vue-element-admin](https://panjiachen.github.io/vue-element-admin-site/zh/)和[layuiAdmin](https://www.layui.com/admin/std/dist/views/)页面布局
+4. 下载地址：[https://gitee.com/youge/iseeadmin](https://gitee.com/youge/iseeadmin)
 
-#### 软件架构
-基于vue和element
 
+###  特 点
+上手难度 vue-element-admin > iseeAdmin > layuiAdmin
+
+vue-element-admin和iseeAdmin都是基于vue和element UI开发，但vue-element-admin是用vue-cli脚手架（采用脚手架开发是主流）开发的，这要求使用者需要比较专业的前端技能知识，但很多后端人员并不具备。iseeAdmin是直接引入式开发，使用者只需要掌握vue或MVVM模式的基本知识，就能快速开发，相对来说，难度低很多。
+
+layuiAdmin和iseeAdmin都是采用直接引入式开发的，layuiAdmin只需要使用者掌握传统的javascript知识就能开发，但iseeAdmin除此之外，还要求掌握vue或MVVM模式的知识，所以难度增加。
+
+那么问题来了！既然layuiAdmin上手难度是最低的，为什么还要使用vue-element-admin和iseeAdmin？
+1. 使用MVVM模式进行前端开发的快乐是传统前端开发无法比拟的
+2. layuiAdmin是收费的，vue-element-admin和iseeAdmin都开源，可免费使用
 
 #### 安装教程
 
-1. xxxx
-2. xxxx
+1. 下载
+
+ git clone https://gitee.com/youge/iseeadmin.git
+ 
+2. 目录文件
 3. xxxx
 
 #### 使用说明
@@ -37,13 +45,3 @@ iseeAdmin参照了[vue-element-admin](https://panjiachen.github.io/vue-element-a
 2. 新建 Feat_xxx 分支
 3. 提交代码
 4. 新建 Pull Request
-
-
-#### 码云特技
-
-1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5. 码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)

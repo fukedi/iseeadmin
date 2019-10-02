@@ -148,8 +148,10 @@
                                 基于框架：vue v2.6.10，element v2.12.0
                             </li>
                             <li>
-                                下载地址：<el-link type="primary" href="https://gitee.com/youge/iseeadmin" target="_blank">https://gitee.com/youge/iseeadmin</el-link>
-<!--                                <a href="https://gitee.com/youge/iseeadmin" target="_blank">https://gitee.com/youge/iseeadmin</a>-->
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">https://gitee.com/youge/iseeadmin
+                                </el-link>
                             </li>
                         </ul>
                     </div>
@@ -165,54 +167,7 @@
                             </li>
                         </ul>
                     </div>
-
-                    <!--                    <el-card class="box-card">-->
-                    <!--                        <div slot="header" class="clearfix">-->
-                    <!--                            <span>版本信息</span>-->
-                    <!--                        </div>-->
-                    <!--                        <div>-->
-                    <!--                            当前版本:-->
-                    <!--                        </div>-->
-                    <!--                        <div>-->
-                    <!--                            111444-->
-                    <!--                        </div>-->
-                    <!--                        <div>-->
-                    <!--                            111444-->
-                    <!--                        </div>-->
-                    <!--                    </el-card>-->
-
-                    <!--                    <el-card class="box-card">-->
-                    <!--                        <div slot="header" class="clearfix">-->
-                    <!--                            <span>关于版权</span>-->
-                    <!--                        </div>-->
-                    <!--                        <div>-->
-                    <!--                            iseeAdmin完全开源，可免费使用-->
-                    <!--                        </div>-->
-                    <!--                        <div>-->
-                    <!--                            111444-->
-                    <!--                        </div>-->
-                    <!--                        <div>-->
-                    <!--                            111444-->
-                    <!--                        </div>-->
-                    <!--                    </el-card>-->
                 </el-drawer>
-
-                <!--                <el-drawer-->
-                <!--                        title="我是外面的 Drawer"-->
-                <!--                        :visible.sync="drawer"-->
-                <!--                        size="50%">-->
-                <!--                    <div>-->
-                <!--                        <el-button @click="innerDrawer = true">打开里面的!</el-button>-->
-                <!--                        <el-drawer-->
-                <!--                                title="我是里面的"-->
-                <!--                                :append-to-body="true"-->
-                <!--                                :before-close="handleClose"-->
-                <!--                                :visible.sync="innerDrawer">-->
-                <!--                            <p>_(:зゝ∠)_</p>-->
-                <!--                        </el-drawer>-->
-                <!--                    </div>-->
-                <!--                </el-drawer>-->
-
             </el-header>
 
             <el-main>
@@ -236,15 +191,16 @@
     name: '王小虎',
     address: '上海市普陀区金沙江路 1518 弄'
   };
-  const userName = 'admin1'
-  const avatarUrl='/static/images/avatar01.gif'
+
+  const userName = 'admin'
+  const avatarUrl = '/static/images/avatar01.gif'
   var app = new Vue({
     el: '#app',
     data: {
       tableData: Array(10).fill(item),
 
       iseeData: {
-        version:iseeAdmin.version,
+        version: iseeAdmin.version,
         drawer: false,
         direction: 'rtl',
         showClose: false,
@@ -255,9 +211,9 @@
         fullscreen: false,
         fullscreenIcon: '&#xe610;',
         defaultActive: iseeAdmin.defaultActive,
-        menu: iseeMenu,
         tagList: iseeAdmin.tagList,
         breadcrumb: iseeAdmin.breadcrumb,
+        menu: iseeMenu,
         avatar: {
           url: avatarUrl,
           size: 32,
@@ -319,14 +275,6 @@
         iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
       },
 
-      handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done();
-          })
-          .catch(_ => {
-          });
-      }
     },
     beforeMount() {
       iseeAdmin.init(this.$data.iseeData)
