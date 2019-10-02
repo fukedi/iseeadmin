@@ -38,23 +38,28 @@ if (iseeTagList == null) {
 }
 
 var iseeDefaultActive = localStorage.getItem('iseeDefaultActive')
-if (iseeDefaultActive == null) {
+if (iseeDefaultActive == null || iseeDefaultActive == 'undefined') {
+
   iseeDefaultActive = iseeHomeTag.index
 }
 
+
 var iseeAsideShow = localStorage.getItem('asideShow')
-if (iseeAsideShow == null) {
+if (iseeAsideShow == null || iseeAsideShow == 'undefined') {
   iseeAsideShow = true
 } else {
   iseeAsideShow = iseeAsideShow == 'true' ? true : false
 }
 
+
 var iseeAsideShowIcon = localStorage.getItem('asideShowIcon')
 iseeAsideShowIcon = iseeAsideShowIcon == null ? 'el-icon-s-fold' : iseeAsideShowIcon
 
-var iseeBreadcrumb = JSON.parse(localStorage.getItem('iseeBreadcrumb'))
-if (iseeBreadcrumb == null) {
+var iseeBreadcrumb = localStorage.getItem('iseeBreadcrumb')
+if (iseeBreadcrumb == 'undefined') {
   iseeBreadcrumb = iseeHomeTag.breadcrumb
+} else {
+  iseeBreadcrumb = JSON.parse(iseeBreadcrumb)
 }
 
 var iseeAdmin = {
@@ -159,7 +164,7 @@ var iseeAdmin = {
    * @param o
    */
   iseeMenuOpen(k, p, o) {
-    if(k==''||p==''){
+    if (k == '' || p == '') {
       return
     }
 
