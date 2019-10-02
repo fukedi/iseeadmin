@@ -10,9 +10,10 @@
 // localStorage.removeItem('iseeTagList')
 // localStorage.removeItem('iseeBreadcrumb')
 
-let iseeIndex = '0'
-let iseeTitle = '首页'
-let iseeUrl = '/'
+const iseeVersion = '1.0.0'
+const iseeIndex = '0'
+const iseeTitle = '首页'
+const iseeUrl = '/'
 
 var iseeTagList = JSON.parse(localStorage.getItem('iseeTagList'))
 var iseeHomeTag = {
@@ -63,6 +64,7 @@ if (iseeBreadcrumb == 'undefined') {
 }
 
 var iseeAdmin = {
+  version:iseeVersion,
   tagList: iseeTagList,
   homeTag: iseeHomeTag,
   defaultActive: iseeDefaultActive,

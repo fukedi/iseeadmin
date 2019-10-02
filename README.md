@@ -1,12 +1,22 @@
-# iseeadmin
+# iseeAdmin
 
 #### 介绍
-{**以下是码云平台说明，您可以替换此简介**
-码云是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用码云实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+iseeAdmin是一款基于vue和element开发的web后台管理系统
+最懂后端的前端后台管理系统 
+让后端更注重业务逻辑开发，
+全栈开发更加轻松
+加快项目开发速度
+一样的功能，更少的代码
+
+iseeAdmin参照了[vue-element-admin](https://panjiachen.github.io/vue-element-admin-site/zh/)和[layuiAdmin](https://www.layui.com/admin/std/dist/views/)页面布局
+
+
+上手难度:  vue-element-admin > iseeAdmin > layuiAdmin
+
+[https://gitee.com/youge/iseeadmin](https://gitee.com/youge/iseeadmin)
 
 #### 软件架构
-软件架构说明
+基于vue和element
 
 
 #### 安装教程

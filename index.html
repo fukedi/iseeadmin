@@ -83,7 +83,7 @@
                             <li @click="iseeFullScreen" class="isee-li">
                                 <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
                             </li>
-                            <li class="isee-li">
+                            <li class="isee-li" @click="iseeData.drawer = true">
                                 <span class="iconfont" style="font-size: 20px">&#xe602;</span>
                             </li>
                         </ul>
@@ -130,13 +130,89 @@
                 </div>
 
 
-<!--                <el-drawer-->
-<!--                        title="我是标题"-->
-<!--                        :visible.sync="drawer"-->
-<!--                        :direction="direction"-->
-<!--                        :before-close="handleClose">-->
-<!--                    <span>我来啦!</span>-->
-<!--                </el-drawer>-->
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：<el-link type="primary" href="https://gitee.com/youge/iseeadmin" target="_blank">https://gitee.com/youge/iseeadmin</el-link>
+<!--                                <a href="https://gitee.com/youge/iseeadmin" target="_blank">https://gitee.com/youge/iseeadmin</a>-->
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!--                    <el-card class="box-card">-->
+                    <!--                        <div slot="header" class="clearfix">-->
+                    <!--                            <span>版本信息</span>-->
+                    <!--                        </div>-->
+                    <!--                        <div>-->
+                    <!--                            当前版本:-->
+                    <!--                        </div>-->
+                    <!--                        <div>-->
+                    <!--                            111444-->
+                    <!--                        </div>-->
+                    <!--                        <div>-->
+                    <!--                            111444-->
+                    <!--                        </div>-->
+                    <!--                    </el-card>-->
+
+                    <!--                    <el-card class="box-card">-->
+                    <!--                        <div slot="header" class="clearfix">-->
+                    <!--                            <span>关于版权</span>-->
+                    <!--                        </div>-->
+                    <!--                        <div>-->
+                    <!--                            iseeAdmin完全开源，可免费使用-->
+                    <!--                        </div>-->
+                    <!--                        <div>-->
+                    <!--                            111444-->
+                    <!--                        </div>-->
+                    <!--                        <div>-->
+                    <!--                            111444-->
+                    <!--                        </div>-->
+                    <!--                    </el-card>-->
+                </el-drawer>
+
+                <!--                <el-drawer-->
+                <!--                        title="我是外面的 Drawer"-->
+                <!--                        :visible.sync="drawer"-->
+                <!--                        size="50%">-->
+                <!--                    <div>-->
+                <!--                        <el-button @click="innerDrawer = true">打开里面的!</el-button>-->
+                <!--                        <el-drawer-->
+                <!--                                title="我是里面的"-->
+                <!--                                :append-to-body="true"-->
+                <!--                                :before-close="handleClose"-->
+                <!--                                :visible.sync="innerDrawer">-->
+                <!--                            <p>_(:зゝ∠)_</p>-->
+                <!--                        </el-drawer>-->
+                <!--                    </div>-->
+                <!--                </el-drawer>-->
+
             </el-header>
 
             <el-main>
@@ -161,12 +237,17 @@
     address: '上海市普陀区金沙江路 1518 弄'
   };
   const userName = 'admin1'
+  const avatarUrl='/static/images/avatar01.gif'
   var app = new Vue({
     el: '#app',
     data: {
       tableData: Array(10).fill(item),
 
       iseeData: {
+        version:iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
         status: false,
         show: true,
         asideShow: iseeAdmin.asideShow,
@@ -178,7 +259,7 @@
         tagList: iseeAdmin.tagList,
         breadcrumb: iseeAdmin.breadcrumb,
         avatar: {
-          url: '/static/images/avatar01.gif',
+          url: avatarUrl,
           size: 32,
           list: [
             {
@@ -236,6 +317,15 @@
       },
       iseeOpenUrl(command) {
         iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
+      },
+
+      handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {
+          });
       }
     },
     beforeMount() {

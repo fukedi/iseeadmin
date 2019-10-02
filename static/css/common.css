@@ -67,6 +67,23 @@ body {
     cursor: pointer
 }
 
+.isee-drawer-info {
+    width: 380px !important;
+}
+
+.isee-title {
+    font-weight: bold;
+    padding-left: 15px;
+    color: #409EFF;
+}
+.isee-drawer-ul{
+    margin: 0;
+    list-style: none;
+}
+.isee-drawer-ul li{
+    line-height: 30px;
+}
+
 [v-cloak] {
     display: none;
 }
