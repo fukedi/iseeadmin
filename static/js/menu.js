@@ -75,5 +75,32 @@ var iseeMenu = [
                 children: []
             },
         ]
+    },
+    {
+        index:'3',
+        title: '管理员管理',
+        url: '/pages/manage/',
+        icon:'el-icon-user',
+        children: [
+            {
+                index:'3-0',
+                title: '基本资料',
+                url: '/pages/manage/profile.html',
+                icon:'el-icon-tickets',
+                children: []
+            }, {
+                index:'3-1',
+                title: '修改密码',
+                url: '/pages/manage/modify.html',
+                icon:'el-icon-edit-outline',
+                children: []
+            }, {
+                index:'3-2',
+                title: '安全退出',
+                url: '/pages/manage/logout.html',
+                icon:'el-icon-switch-button',
+                children: []
+            }
+        ]
     }
 ]

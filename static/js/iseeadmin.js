@@ -159,8 +159,10 @@ var iseeAdmin = {
    * @param o
    */
   iseeMenuOpen(k, p, o) {
-    console.log(k)
-    console.log(p)
+    if(k==''||p==''){
+      return
+    }
+
     let url = ''
     let b = [{
       index: '',
@@ -173,23 +175,24 @@ var iseeAdmin = {
       if (obj.index == k) {
         o.status = true
         // o.status = false
-        b.push({
-          index: k,
-          title: obj.title,
-          url: obj.url
-        })
+        // b.push({
+        //   index: k,
+        //   title: obj.title,
+        //   url: obj.url
+        // })
+        b = obj.breadcrumb
         url = obj.url
         return
       }
     })
+
+    // return
 
     if (o.status == false) {
       let len = p.length
       let title = ''
 
       let m, i, j
-      console.log(9999999999999)
-      console.log(len)
       switch (len) {
         case 1:
           m = o.menu[p[0]]
@@ -198,13 +201,9 @@ var iseeAdmin = {
             title: m.title,
             url: m.url
           })
-          // console.log(m)
-          // console.log(title)
           break
         case 2:
           i = p[1].split('-')[1]
-          // console.log(77777777777)
-          // console.log(i)
           b.push({
             index: p[0],
             title: o.menu[p[0]].title,
@@ -216,7 +215,6 @@ var iseeAdmin = {
             title: m.title,
             url: m.url
           })
-          // console.log(m)
           break
         case 3:
           i = p[1].split('-')[1]
@@ -241,8 +239,6 @@ var iseeAdmin = {
       }
       title = m.title
       url = m.url
-      console.log(3333333333)
-      console.log(m)
 
       let issTag = {
         index: k,
@@ -254,16 +250,12 @@ var iseeAdmin = {
         type: '',
         breadcrumb: b
       }
-      console.log(88888888)
-      console.log(issTag)
       o.tagList.push(issTag)
-      o.breadcrumb = b
       this.cacheSet('iseeTagList', o.tagList, 2)
-      this.cacheSet('iseeBreadcrumb', o.breadcrumb, 2)
     }
+    o.breadcrumb = b
+    this.cacheSet('iseeBreadcrumb', o.breadcrumb, 2)
     this.cacheSet('iseeDefaultActive', k)
-    console.log(5555)
-    console.log(url)
     window.open(url, '_self')
   },
 
@@ -276,11 +268,12 @@ var iseeAdmin = {
     switch (c) {
       //关闭当前tag
       case '1':
-        if (this.homeTag.url != o.defaultActive) {
+        if (this.homeTag.index != o.defaultActive) {
           o.tagList.forEach((obj, index) => {
-            if (obj.url == o.defaultActive) {
+            if (obj.index == o.defaultActive) {
               o.tagList.splice(index, 1);
-              this.cacheSet('iseeDefaultActive', o.tagList[index - 1].url)
+              this.cacheSet('iseeDefaultActive', o.tagList[index - 1].index)
+              this.cacheSet('iseeBreadcrumb', o.tagList[index - 1].breadcrumb, 2)
               this.cacheSet('iseeTagList', o.tagList, 2)
               window.open(o.tagList[index - 1].url, '_self')
             }
@@ -291,14 +284,14 @@ var iseeAdmin = {
       case '2':
         //当前tag在首页上
         let tagListTemp = [this.homeTag]
-        if (this.homeTag.url == o.defaultActive) {
+        if (this.homeTag.index == o.defaultActive) {
           o.tagList = tagListTemp
         } else {
           tagListTemp[0].show = false
           tagListTemp[0].effect = 'plain'
           tagListTemp[0].type = 'info'
           o.tagList.forEach((obj) => {
-            if (obj.url == o.defaultActive && obj.url != this.homeTag.url) {
+            if (obj.index == o.defaultActive && obj.url != this.homeTag.url) {
               tagListTemp.push(obj)
               return
             }
@@ -312,8 +305,9 @@ var iseeAdmin = {
         o.tagList = [this.homeTag]
         this.cacheSet('iseeTagList', o.tagList, 2)
         // 当前tag不是首页
-        if (this.homeTag.url != o.defaultActive) {
-          this.cacheSet('iseeDefaultActive', this.homeTag.url)
+        if (this.homeTag.index != o.defaultActive) {
+          this.cacheSet('iseeDefaultActive', this.homeTag.index)
+          this.cacheSet('iseeBreadcrumb', this.homeTag.breadcrumb, 2)
           window.open(this.homeTag.url, '_self')
         }
         break
@@ -327,11 +321,11 @@ var iseeAdmin = {
    * @param o obj 对象
    */
   iseeTagClose(u, i, o) {
-    o.tagList.splice(i, 1);
+    let t = o.tagList.splice(i, 1);
     this.cacheSet('iseeTagList', o.tagList, 2)
     // 关闭当前tag,跳转到前一个tag
-    if (u == o.defaultActive) {
-      this.cacheSet('iseeDefaultActive', o.tagList[i - 1].url)
+    if (t[0].index == o.defaultActive) {
+      this.cacheSet('iseeDefaultActive', o.tagList[i - 1].index)
       window.open(o.tagList[i - 1].url, '_self')
     }
   },
@@ -346,9 +340,8 @@ var iseeAdmin = {
       return;
     }
     this.cacheSet('iseeDefaultActive', i)
-    o.breadcrumb=b
+    o.breadcrumb = b
     this.cacheSet('iseeBreadcrumb', b, 2)
-    console.log(b)
     window.open(u, '_self')
   },
 
