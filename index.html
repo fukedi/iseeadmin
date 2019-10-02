@@ -83,6 +83,9 @@
                             <li @click="iseeFullScreen" class="isee-li">
                                 <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
                             </li>
+                            <li class="isee-li">
+                                <span class="iconfont" style="font-size: 20px">&#xe602;</span>
+                            </li>
 
                         </ul>
                     </div>
@@ -126,6 +129,15 @@
                         </el-dropdown>
                     </div>
                 </div>
+
+
+<!--                <el-drawer-->
+<!--                        title="我是标题"-->
+<!--                        :visible.sync="drawer"-->
+<!--                        :direction="direction"-->
+<!--                        :before-close="handleClose">-->
+<!--                    <span>我来啦!</span>-->
+<!--                </el-drawer>-->
             </el-header>
 
             <el-main>
