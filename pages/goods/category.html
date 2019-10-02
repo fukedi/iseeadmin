@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="/static/css/common.css">
     <script src="/static/js/iseeadmin.js"></script>
     <script src="/static/js/menu.js"></script>
-    <!--    <script src="/static/js/init.js"></script>-->
     <script src="/static/js/vue.js"></script>
     <!--    <script src="/static/js/vue.min.js"></script>-->
     <!--    <script src="static/js/axios.min.js"></script>-->
@@ -32,24 +31,25 @@
 
                 <template v-for="(item,index) in iseeData.menu">
                     <template v-if="!item.children.length">
-                        <el-menu-item :index="item.url"><i :class="item.icon"></i>{{item.title}}</el-menu-item>
+                        <el-menu-item :index="item.index"><i :class="item.icon"></i>{{item.title}}</el-menu-item>
                     </template>
                     <template v-else>
-                        <el-submenu :index="item.url">
+                        <el-submenu :index="item.index">
                             <template slot="title"><i :class="item.icon"></i>{{item.title}}</template>
                             <template v-for="(itemSub,indexSub) in item.children" :index="itemSub.index">
                                 <template v-if="itemSub.children.length">
-                                    <el-submenu :index="itemSub.url">
+                                    <el-submenu :index="itemSub.index">
                                         <span slot="title"><i :class="itemSub.icon"></i>{{ itemSub.title }}</span>
                                         <template v-for="(itemSub_,indexSub_) in itemSub.children">
-                                            <el-menu-item :index="itemSub_.url"><i :class="itemSub_.icon"></i>{{
+                                            <el-menu-item :index="itemSub_.index"><i :class="itemSub_.icon"></i>{{
                                                 itemSub_.title }}
                                             </el-menu-item>
                                         </template>
                                     </el-submenu>
                                 </template>
                                 <template v-else>
-                                    <el-menu-item :index="itemSub.url"><i :class="itemSub.icon"></i>{{ itemSub.title }}
+                                    <el-menu-item :index="itemSub.index"><i :class="itemSub.icon"></i>{{ itemSub.title
+                                        }}
                                     </el-menu-item>
                                 </template>
                             </template>
@@ -62,7 +62,7 @@
 
         <el-container>
 
-            <el-header height="78px">
+            <el-header height="83px">
                 <div class="isee-header-div">
                     <div style="width: 100%;display: inherit;">
                         <span class="aside-show" @click="iseeAsideShow">
@@ -77,21 +77,26 @@
 
                     <div>
                         <ul class="isee-ul">
+                            <li class="isee-li">
+                                <i style="font-size: 20px" class="el-icon-bell"></i>
+                            </li>
                             <li @click="iseeFullScreen" class="isee-li">
                                 <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
                             </li>
+
                         </ul>
                     </div>
                     <div>
                         <el-dropdown @command="iseeOpenUrl">
                               <span class="el-dropdown-link">
-                                  <el-avatar style="margin-top: 9px" :size="32"
-                                             src="/static/images/avatar01.gif"></el-avatar>
+                                  <el-avatar style="margin-top: 9px" :size="iseeData.avatar.size"
+                                             :src="iseeData.avatar.url"></el-avatar>
                               </span>
+
                             <el-dropdown-menu slot="dropdown">
-                                <el-dropdown-item icon="el-icon-user-solid" command="/xxx/xxx1">admin</el-dropdown-item>
-                                <el-dropdown-item icon="el-icon-edit-outline" command="/xxx/xxx2">修改密码44</el-dropdown-item>
-                                <el-dropdown-item icon="el-icon-switch-button" command="/xxx/xxx3">安全退出</el-dropdown-item>
+                                <el-dropdown-item v-for="(item,index) in iseeData.avatar.list" :icon="item.icon"
+                                                  :key="index" :command="index">{{item.title}}
+                                </el-dropdown-item>
                             </el-dropdown-menu>
                         </el-dropdown>
                     </div>
@@ -100,18 +105,18 @@
                     <div style="width: 100%">
                         <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
                                 :key="index"
-                                @click="iseeTagSwitch(item.url)"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
                                 :effect="item.effect"
                                 :type="item.type"
                                 @close="iseeTagClose(item.url,index)"
-                                size="small"
+                                size="medium"
                                 :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
                         </el-tag>
                     </div>
                     <div style="float: right;">
                         <el-dropdown @command="iseeTagCommandClose">
                           <span class="el-dropdown-link">
-                              <i class="el-icon-arrow-down el-icon--right"></i>
+                              <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
                           </span>
                             <el-dropdown-menu slot="dropdown">
                                 <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
@@ -144,6 +149,7 @@
     name: '王小虎',
     address: '上海市普陀区金沙江路 1518 弄'
   };
+  const userName = 'admin1'
   var app = new Vue({
     el: '#app',
     data: {
@@ -159,24 +165,43 @@
         defaultActive: iseeAdmin.defaultActive,
         menu: iseeMenu,
         tagList: iseeAdmin.tagList,
-
-        currentTitle: '商品分类',
-        breadcrumb: [{
-          url: '',
-          title: '面板'
-        }, {
-          url: '/goods/',
-          title: '商品管理'
-        }, {
-          url: iseeAdmin.defaultActive,
-          title: '商品分类'
+        breadcrumb: iseeAdmin.breadcrumb,
+        avatar: {
+          url: '/static/images/avatar01.gif',
+          size: 32,
+          list: [
+            {
+              index: '',
+              indexPath: [],
+              icon: 'el-icon-user-solid',
+              url: '',
+              title: userName,
+            }, {
+              index: '3-0',
+              indexPath: ['3', '3-0'],
+              icon: 'el-icon-tickets',
+              url: '/manage/profile.html',
+              title: '基本资料',
+            }, {
+              index: '3-1',
+              indexPath: ['3', '3-1'],
+              icon: 'el-icon-edit-outline',
+              url: '/manage/modify.html',
+              title: '修改密码',
+            }, {
+              index: '3-2',
+              indexPath: ['3', '3-2'],
+              icon: 'el-icon-switch-button',
+              url: '/manage/modify.html',
+              title: '安全退出',
+            },
+          ]
         }
-        ]
       },
     },
     methods: {
-      iseeTagSwitch(url) {
-        iseeAdmin.iseeTagSwitch(url, this.$data.iseeData)
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.$data.iseeData)
       },
 
       iseeTagClose(url, index) {
@@ -188,7 +213,7 @@
       },
 
       iseeMenuOpen(key, keyPath) {
-        iseeAdmin.iseeMenuOpen(key, this.$data.iseeData)
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.$data.iseeData)
       },
 
       iseeFullScreen() {
@@ -198,9 +223,8 @@
       iseeAsideShow() {
         iseeAdmin.iseeAsideShow(this.$data.iseeData)
       },
-      iseeOpenUrl(url) {
-        console.log(url)
-        iseeAdmin.iseeMenuOpen(url, this.$data.iseeData)
+      iseeOpenUrl(command) {
+        iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
       }
     },
     beforeMount() {
