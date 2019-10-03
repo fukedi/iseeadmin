@@ -52,12 +52,11 @@ if (iseeAsideShow == null || iseeAsideShow == 'undefined') {
   iseeAsideShow = iseeAsideShow == 'true' ? true : false
 }
 
-
 var iseeAsideShowIcon = localStorage.getItem('asideShowIcon')
 iseeAsideShowIcon = iseeAsideShowIcon == null ? 'el-icon-s-fold' : iseeAsideShowIcon
 
 var iseeBreadcrumb = localStorage.getItem('iseeBreadcrumb')
-if (iseeBreadcrumb == 'undefined') {
+if (iseeBreadcrumb == 'undefined' || iseeBreadcrumb == null) {
   iseeBreadcrumb = iseeHomeTag.breadcrumb
 } else {
   iseeBreadcrumb = JSON.parse(iseeBreadcrumb)
@@ -172,7 +171,7 @@ var iseeAdmin = {
       return
     }
     let b = this.iseeGetBreadcrumb(o.menu, p)
-    let b_=b[b.length-1]
+    let b_ = b[b.length - 1]
     // k存在iseeTagList中,则iseeTagList无需再push
     o.tagList.forEach((o_) => {
       if (o_.index == k) {
