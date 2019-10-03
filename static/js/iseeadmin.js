@@ -65,6 +65,8 @@ if (iseeBreadcrumb == 'undefined') {
 
 var iseeAdmin = {
   version: iseeVersion,
+  author: 'youge',
+  email: '46914685@qq.com',
   tagList: iseeTagList,
   homeTag: iseeHomeTag,
   defaultActive: iseeDefaultActive,
