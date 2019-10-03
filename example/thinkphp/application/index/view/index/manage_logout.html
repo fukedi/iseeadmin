@@ -1,0 +1,45 @@
+{extend name="layouts/app" /}
+{block name="isee_title"}{$title}{/block}
+{block name="isee_content"}
+<el-table :data="tableData">
+    <el-table-column prop="date" label="日期" width="140">
+    </el-table-column>
+    <el-table-column prop="name" label="姓名" width="120">
+    </el-table-column>
+    <el-table-column prop="address" label="地址">
+    </el-table-column>
+</el-table>
+{/block}
+{block name="isee_script"}
+<script>
+  const item = {
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+  };
+
+  const userName = 'admin'
+  const avatarUrl = '/static/images/avatar01.gif'
+  var app = new Vue({
+    el: '#app',
+    data: {
+      tableData: Array(10).fill(item),
+        {include file="layouts/data" /}
+    },
+    methods: {
+        test(){
+        console.log('test 000')
+      },
+        {include file="layouts/methods" /}
+
+    },
+    beforeMount() {
+        {include file="layouts/beforeMount" /}
+    },
+    mounted() {
+        this.test()
+    }
+  });
+</script>
+{/block}
+
