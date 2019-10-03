@@ -1,0 +1,89 @@
+/**
+ * 通常样式
+ * @author 46914685@qq.com
+ * @date 20190930
+ */
+body {
+    background-color: #DCDFE6;
+    margin: 0px;
+    padding: 0px;
+}
+
+.el-header {
+    background-color: #fff;
+    color: #333;
+    border-bottom: 1px solid #d8dce5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+}
+
+.el-aside {
+    overflow: hidden;
+    background-color: #304156;
+}
+
+.aside-logo {
+    line-height: 50px;
+    background-color: #263445;
+    color: #fff;
+    text-align: center
+}
+
+.aside-logo-img {
+    height: 32px;
+    width: 32px;
+    vertical-align: middle
+}
+
+.el-icon-arrow-down {
+    font-size: 18px;
+}
+
+.isee-el-icon-arrow-down {
+    font-size: 20px;
+    margin-top: 5px
+}
+
+.aside-show {
+    line-height: 50px;
+    margin-right: 15px;
+    font-size: 20px;
+    cursor: pointer
+}
+
+.isee-header-div {
+    display: flex;
+    text-align: center
+}
+
+.isee-ul {
+    display: flex;
+    margin: 0;
+    line-height: 50px;
+    list-style: none;
+}
+
+.isee-li {
+    margin-right: 10px;
+    cursor: pointer
+}
+
+.isee-drawer-info {
+    width: 380px !important;
+}
+
+.isee-title {
+    font-weight: bold;
+    padding-left: 15px;
+    color: #409EFF;
+}
+.isee-drawer-ul{
+    margin: 0;
+    list-style: none;
+}
+.isee-drawer-ul li{
+    line-height: 30px;
+}
+
+[v-cloak] {
+    display: none;
+}
