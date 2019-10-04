@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ISeeAdmin 【后台登陆】 </title>
+    <!--    <link rel="stylesheet" href="/static/element/index.css">-->
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <!--    <link rel="stylesheet" href="/static/iconfont/iconfont.css">-->
+    <script src="/static/iconfont/iconfont.js"></script>
+    <link rel="stylesheet" href="/static/css/common.css">
+    <!--    开发环境-->
+    <!--    <script src="/static/js/iseeadmin.js"></script>-->
+    <!--    正式环境-->
+    <script src="/static/js/iseeadmin.min.js"></script>
+    <script src="/static/js/menu.js"></script>
+    <!--    开发环境-->
+    <!--    <script src="/static/js/vue.js"></script>-->
+    <!--    正式环境-->
+    <!--        <script src="/static/js/vue.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="/static/element/index.js"></script>-->
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="static/js/axios.min.js"></script>-->
+    <style>
+        .icon {
+            width: 2em;
+            height: 2em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+            cursor: pointer;
+            padding-right: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="app" style="display: flex;align-items: center;justify-content: center;margin: 0 auto;min-height:100vh;">
+    <div style="width: 360px">
+        <el-card class="box-card">
+            <div slot="header"
+                 style="color: #409EFF;font-size: 25px;font-weight: bold;vertical-align:middle;text-align: center;">
+                <span>iseeAdmin 后台登陆</span>
+            </div>
+            <div>
+                <el-form :model="loginData" status-icon :rules="rules" ref="loginFrom">
+                    <el-form-item prop="account">
+                        <el-input prefix-icon="el-icon-user-solid" v-model="loginData.account" type="text" placeholder="请输入账户"
+                                  autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="pass">
+                        <el-input prefix-icon="el-icon-lock" type="password" v-model="loginData.pass" placeholder="请输入密码"
+                                  autocomplete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button icon="el-icon-switch-button" type="primary" @click="submitForm('loginFrom')"
+                                   style="width: 100%">登陆
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+            <el-divider></el-divider>
+            <div style="text-align: center">
+                <svg @click="iseeQuickLogin('QQ')" class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-QQ"></use>
+                </svg>
+                <svg @click="iseeQuickLogin('weixin')" class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-weixin"></use>
+                </svg>
+                <svg @click="iseeQuickLogin('weibo')" class="icon" aria-hidden="true">
+                    <use xlink:href="#icon-weibo"></use>
+                </svg>
+            </div>
+        </el-card>
+    </div>
+
+</div>
+
+<script>
+  var vm = new Vue({
+    el: '#app',
+    data() {
+      var checkAccount = (rule, value, callback) => {
+        if (!value) {
+          return callback(new Error('账户不能为空'));
+        }
+        callback();
+      };
+      var checkPass = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        }
+        callback();
+      };
+      return {
+        loginData: {
+          account: '',
+          pass: '',
+        },
+        rules: {
+          account: [
+            {validator: checkAccount, trigger: 'blur'}
+          ],
+          pass: [
+            {validator: checkPass, trigger: 'blur'}
+          ]
+        }
+      };
+    },
+    methods: {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            console.log(this.$data.loginData)
+            this.$message('验证通过，可以提交');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      iseeQuickLogin(mode) {
+        switch (mode) {
+          case 'QQ':
+            console.log(mode)
+            break
+          case 'weixin':
+            console.log(mode)
+            break
+          case 'weibo':
+            console.log(mode)
+            break
+        }
+
+      }
+    }
+  })
+</script>
+</body>
+</html>

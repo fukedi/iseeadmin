@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="/static/iconfont/iconfont.css">
     <link rel="stylesheet" href="/static/css/common.css">
     <!--    开发环境-->
-    <!--    <script src="/static/js/iseeadmin.js"></script>-->
+<!--        <script src="/static/js/iseeadmin.js"></script>-->
     <!--    正式环境-->
     <script src="/static/js/iseeadmin.min.js"></script>
     <script src="/static/js/menu.js"></script>
@@ -289,24 +289,28 @@
         indexPath: [],
         icon: 'el-icon-user-solid',
         url: '',
+        target: '_self',
         title: 'admin',
       }, {
         index: '3-0',
         indexPath: ['3', '3-0'],
         icon: 'el-icon-tickets',
         url: '/manage/profile.html',
+        target: '_self',
         title: '基本资料',
       }, {
         index: '3-1',
         indexPath: ['3', '3-1'],
         icon: 'el-icon-edit-outline',
         url: '/manage/modify.html',
+        target: '_self',
         title: '修改密码',
       }, {
         index: '3-2',
         indexPath: ['3', '3-2'],
         icon: 'el-icon-switch-button',
         url: '/manage/modify.html',
+        target: '_self',
         title: '安全退出',
       },
     ]
