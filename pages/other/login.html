@@ -21,7 +21,7 @@
     <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
     <!--    <script src="/static/element/index.js"></script>-->
     <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
-    <!--    <script src="static/js/axios.min.js"></script>-->
+    <script src="/static/js/axios.min.js"></script>
     <style>
         .icon {
             width: 2em;
@@ -45,15 +45,17 @@
             <div>
                 <el-form :model="loginData" status-icon :rules="rules" ref="loginFrom">
                     <el-form-item prop="account">
-                        <el-input prefix-icon="el-icon-user-solid" v-model="loginData.account" type="text" placeholder="请输入账户"
+                        <el-input prefix-icon="el-icon-user-solid" v-model="loginData.account" type="text"
+                                  placeholder="请输入账户"
                                   autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item prop="pass">
-                        <el-input prefix-icon="el-icon-lock" type="password" v-model="loginData.pass" placeholder="请输入密码"
+                        <el-input prefix-icon="el-icon-lock" type="password" v-model="loginData.pass"
+                                  placeholder="请输入密码"
                                   autocomplete="off"></el-input>
                     </el-form-item>
                     <el-form-item>
-                        <el-button icon="el-icon-switch-button" type="primary" @click="submitForm('loginFrom')"
+                        <el-button icon="el-icon-switch-button" type="primary" @click="iseeLogin('loginFrom')"
                                    style="width: 100%">登陆
                         </el-button>
                     </el-form-item>
@@ -108,19 +110,26 @@
       };
     },
     methods: {
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
+      iseeLogin(obj) {
+        this.$refs[obj].validate((valid) => {
           if (valid) {
-            console.log(this.$data.loginData)
-            this.$message('验证通过，可以提交');
+            axios.get('/data/login.json', {
+              account: this.$data.loginData.account,
+              pass: this.$data.loginData.pass,
+            }).then(res => {
+              console.log(res.data)
+              window.location.href = "/";
+            }).catch(err => {
+              console.log(err)
+            })
+
+
+            // this.$message('验证通过，可以提交');
           } else {
-            console.log('error submit!!');
+            this.$message('可输入任意账户和密码');
             return false;
           }
         });
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
       },
       iseeQuickLogin(mode) {
         switch (mode) {
