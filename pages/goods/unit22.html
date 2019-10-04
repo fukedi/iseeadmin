@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ISeeAdmin 【商品单位22】 </title>
+    <!--    <link rel="stylesheet" href="/static/element/index.css">-->
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/iconfont/iconfont.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <!--    开发环境-->
+    <!--    <script src="/static/js/iseeadmin.js"></script>-->
+    <!--    正式环境-->
+    <script src="/static/js/iseeadmin.min.js"></script>
+    <script src="/static/js/menu.js"></script>
+    <!--    开发环境-->
+    <!--    <script src="/static/js/vue.js"></script>-->
+    <!--    正式环境-->
+    <!--        <script src="/static/js/vue.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="/static/element/index.js"></script>-->
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="static/js/axios.min.js"></script>-->
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container style="height: 100%;min-height:100vh;">
+        <el-aside v-show="iseeData.asideShow" width="210px">
+            <!--            左侧logo 开始-->
+            <div class="aside-logo">
+                <img class="aside-logo-img" src="/static/images/logo.png"
+                     alt=""> ISeeAdmin
+            </div>
+            <!--            左侧logo 结束-->
+            <!--            左侧菜单 开始-->
+            <el-menu @select="iseeMenuOpen" style="width: 210px;"
+                     unique-opened
+                     :default-active="iseeData.defaultActive"
+                     background-color="#304156"
+                     text-color="#bfcbd9"
+                     active-text-color="#409eff">
+
+                <template v-for="(item,index) in iseeData.menu">
+                    <template v-if="!item.children.length">
+                        <el-menu-item :index="item.index"><i :class="item.icon"></i>{{item.title}}</el-menu-item>
+                    </template>
+                    <template v-else>
+                        <el-submenu :index="item.index">
+                            <template slot="title"><i :class="item.icon"></i>{{item.title}}</template>
+                            <template v-for="(itemSub,indexSub) in item.children" :index="itemSub.index">
+                                <template v-if="itemSub.children.length">
+                                    <el-submenu :index="itemSub.index">
+                                        <span slot="title"><i :class="itemSub.icon"></i>{{ itemSub.title }}</span>
+                                        <template v-for="(itemSub_,indexSub_) in itemSub.children">
+                                            <el-menu-item :index="itemSub_.index"><i :class="itemSub_.icon"></i>{{
+                                                itemSub_.title }}
+                                            </el-menu-item>
+                                        </template>
+                                    </el-submenu>
+                                </template>
+                                <template v-else>
+                                    <el-menu-item :index="itemSub.index"><i :class="itemSub.icon"></i>{{ itemSub.title
+                                        }}
+                                    </el-menu-item>
+                                </template>
+                            </template>
+                        </el-submenu>
+                    </template>
+                </template>
+
+            </el-menu>
+            <!--            左侧菜单 结束-->
+        </el-aside>
+
+        <el-container>
+            <el-header height="83px">
+                <div class="isee-header-div">
+                    <!--                    面包屑 开始-->
+                    <div style="width: 100%;display: inherit;">
+                        <span class="aside-show" @click="iseeAsideShow">
+                            <i :class="iseeData.asideShowIcon"></i>
+                        </span>
+
+                        <el-breadcrumb style="line-height: 50px" separator="/">
+                            <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <!--                    面包屑 结束-->
+                    <!--                    icon功能列表，可根据需要修改 开始-->
+                    <div>
+                        <ul class="isee-ul">
+                            <li class="isee-li">
+                                <i style="font-size: 20px" class="el-icon-bell"></i>
+                            </li>
+                            <li @click="iseeFullScreen" class="isee-li">
+                                <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
+                            </li>
+                            <li class="isee-li" @click="iseeData.drawer = true">
+                                <span class="iconfont" style="font-size: 20px">&#xe602;</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--                    icon功能列表，可根据需要修改 结束-->
+                    <!--                    avatar显示 开始-->
+                    <div>
+                        <el-dropdown @command="iseeOpenUrl">
+                              <span class="el-dropdown-link">
+                                  <el-avatar style="margin-top: 9px" :size="iseeData.avatar.size"
+                                             :src="iseeData.avatar.url"></el-avatar>
+                              </span>
+
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(item,index) in iseeData.avatar.list" :icon="item.icon"
+                                                  :key="index" :command="index">{{item.title}}
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    avatar显示 结束-->
+                </div>
+                <div style="display: flex">
+                    <!--                    标签页列表 开始-->
+                    <div style="width: 100%">
+                        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
+                                :key="index"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
+                                :effect="item.effect"
+                                :type="item.type"
+                                @close="iseeTagClose(item.url,index)"
+                                size="medium"
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                        </el-tag>
+                    </div>
+                    <!--                    标签页列表 结束-->
+                    <!--                    标签页集中操作 开始-->
+                    <div style="float: right;">
+                        <el-dropdown @command="iseeTagCommandClose">
+                          <span class="el-dropdown-link">
+                              <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
+                          </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    标签页集中操作 结束-->
+                </div>
+
+                <!--抽屉式展示-->
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">https://gitee.com/youge/iseeadmin
+                                </el-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+                </el-drawer>
+                <!--抽屉式展示 结束-->
+            </el-header>
+
+            <el-main>
+                <!--                主内容展示-->
+                <el-table :data="tableData">
+                    <el-table-column prop="date" label="日期" width="140">
+                    </el-table-column>
+                    <el-table-column prop="name" label="姓名" width="120">
+                    </el-table-column>
+                    <el-table-column prop="address" label="地址">
+                    </el-table-column>
+                </el-table>
+                <!--                主内容展示 结束-->
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+
+<script>
+  const item = {
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+  };
+
+  const iseeAvatar = {
+    url: '/static/images/avatar01.gif',
+    size: 32,
+    list: [
+      {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-user-solid',
+        url: '',
+        title: 'admin',
+      }, {
+        index: '3-0',
+        indexPath: ['3', '3-0'],
+        icon: 'el-icon-tickets',
+        url: '/manage/profile.html',
+        title: '基本资料',
+      }, {
+        index: '3-1',
+        indexPath: ['3', '3-1'],
+        icon: 'el-icon-edit-outline',
+        url: '/manage/modify.html',
+        title: '修改密码',
+      }, {
+        index: '3-2',
+        indexPath: ['3', '3-2'],
+        icon: 'el-icon-switch-button',
+        url: '/manage/modify.html',
+        title: '安全退出',
+      },
+    ]
+  }
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      tableData: Array(10).fill(item),
+
+      iseeData: {
+        version: iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
+        status: false,
+        show: true,
+        asideShow: iseeAdmin.asideShow,
+        asideShowIcon: iseeAdmin.asideShowIcon,
+        fullscreen: false,
+        fullscreenIcon: '&#xe610;',
+        defaultActive: iseeAdmin.defaultActive,
+        tagList: iseeAdmin.tagList,
+        breadcrumb: iseeAdmin.breadcrumb,
+        menu: [],
+        avatar: iseeAvatar
+      },
+    },
+    methods: {
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.$data.iseeData)
+      },
+
+      iseeTagClose(url, index) {
+        iseeAdmin.iseeTagClose(url, index, this.$data.iseeData)
+      },
+
+      iseeTagCommandClose(command) {
+        iseeAdmin.iseeTagCommandClose(command, this.$data.iseeData)
+      },
+
+      iseeMenuOpen(key, keyPath) {
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.$data.iseeData)
+      },
+
+      iseeFullScreen() {
+        iseeAdmin.iseeFullScreen(this.$data.iseeData)
+      },
+
+      iseeAsideShow() {
+        iseeAdmin.iseeAsideShow(this.$data.iseeData)
+      },
+      iseeOpenUrl(command) {
+        iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
+      },
+
+    },
+    beforeMount() {
+      iseeAdmin.init(this.$data.iseeData)
+      this.$data.iseeData.menu = iseeMenu
+    },
+    mounted() {
+
+
+    }
+  });
+</script>
+</body>
+
+</html>
+

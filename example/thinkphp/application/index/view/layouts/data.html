@@ -1,0 +1,17 @@
+iseeData: {
+version: iseeAdmin.version,
+drawer: false,
+direction: 'rtl',
+showClose: false,
+status: false,
+show: true,
+asideShow: iseeAdmin.asideShow,
+asideShowIcon: iseeAdmin.asideShowIcon,
+fullscreen: false,
+fullscreenIcon: '&#xe610;',
+defaultActive: iseeAdmin.defaultActive,
+tagList: iseeAdmin.tagList,
+breadcrumb: iseeAdmin.breadcrumb,
+menu: [],
+avatar: iseeAvatar
+},

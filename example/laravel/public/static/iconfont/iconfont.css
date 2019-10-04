@@ -1,0 +1,29 @@
+@font-face {font-family: "iconfont";
+  src: url('iconfont.eot?t=1569998994747'); /* IE9 */
+  src: url('iconfont.eot?t=1569998994747#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('data:application/x-font-woff2;charset=utf-8;base64,d09GMgABAAAAAAOIAAsAAAAAB+wAAAM7AAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHEIGVgCDHAqDHIJxATYCJAMQCwoABCAFhG0HURvsBhEVnIvIfibYthayyWPRJCOPjMJnpDXBw6szvyw50RHhVACwc4AlJmctwl5+e28sglMegeNX255soW8oaGQ69G8deYedzd4iP2uDnwPgfy6nd1c9D2x+yxIJfe3NR70ojrcGtie2OZEC6SWYiDaMXdASD0MAoWRSjhg0ZJSFRmGOEoCYO2vGJHRGg2rIF2gEnoqFCnEQE23sMu4RcSB4v/hMIzQYmBJz4rjpg6fSL2AEUuXG4EbaPQTudCaALQMJlAMKxMxKy2RkFClHEqp2VzQCGo0BU7VFB1KDQcQ7ikRbf3kgMJAgPJi54QDUo6iEgOEwISAQLaYoTYU5SIAPskADUcBy4DSmIn0ap0KHQNT7xWFhSoWHK3Peptu7b268teeODIsXNPma7Caj1UeuE2H4ui2fJSOsFtuyw6U9RTiJobuPJtjH/G32Hn+izzmK8RsXNo231kywxs8N2+MXYpMTbx09NomNx5Ka/E6o5RydPtEet2yir3TcCJHl9D/b91x//8lsVMwKJk1ynAEDnNikSd6fQaEXVnRNNNgmdm3A6Xo39HhAdwx2A/b3O+ffCrKR7brWfS3epph3z5+/d/5CzZaQ53iHnuGTXHO6+V67g913dtfZO+/oE1yrU781+i3/2/Ps/PnnXfOeHzo0/TkegCBjlBwJIDdKILi8JAt/3mdYffvn+66oXt90mALg8fVZhwNPkGJYVGNAZ+6v4nYsURrf1CqlCByOnq3oi4Y7VxFq6eEHJSCWF1PIEjqTQcgSEjDwkgESTT6qSOVgEkY9eND0hVDKGLo8jDgWIxEqBChlGwBBNNfAIJI7IImmB1Wk52CSyFfwEC0khOITcRuGUSg0WzyQMQhmGv+0Tc4qWy9xmP/CcuqB0/yA8gOHzU91UeXjPSx4iinhWhoRRYqdoQ4cB60deXY7JilWEd+Wpap6UDE5E8UMZAyCmcY/bZOzyqsuceH1LyynHrgBV2X9gcPWOdVF1QHtJbYT7lZOCdfSiChS7Ax1wARtRRz56n47JinWASHflqic6ioplpeZN1wDhGLeXQlDSKGEScg8x8gn5//J9FPrPEwM2Gz+wOzuXG8WuYsiAA==') format('woff2'),
+  url('iconfont.woff?t=1569998994747') format('woff'),
+  url('iconfont.ttf?t=1569998994747') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+ */
+  url('iconfont.svg?t=1569998994747#iconfont') format('svg'); /* iOS 4.1- */
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-more-copy:before {
+  content: "\e602";
+}
+
+.icon-full-screen:before {
+  content: "\e610";
+}
+
+.icon-narrow-line-o:before {
+  content: "\e61a";
+}
+
