@@ -298,9 +298,7 @@ var iseeAdmin = {
       url: ''
     }]
     let m_ = []
-    this.cacheSet('iseeMenuTemp', m_, 2)
     k.forEach((k_) => {
-      m_ = this.cacheGet('iseeMenuTemp', 2)
       m_.length > 0 ? m = m_ : ''
       m.forEach((o, i) => {
         if (k_ == o.index) {
@@ -309,7 +307,7 @@ var iseeAdmin = {
             title: o.title,
             url: o.url
           })
-          this.cacheSet('iseeMenuTemp', m[i].children, 2)
+          m_ = m[i].children
         }
       })
     })
