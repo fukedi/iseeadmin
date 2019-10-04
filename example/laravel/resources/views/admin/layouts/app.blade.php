@@ -9,15 +9,19 @@
         @show
     </title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <link rel="stylesheet" href="{{ asset('static/element/index.css') }}">
+{{--    <link rel="stylesheet" href="{{ asset('static/element/index.css') }}">--}}
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('static/iconfont/iconfont.css') }}">
     <link rel="stylesheet" href="{{ asset('static/css/common.css') }}">
-    <script src="{{ asset('/static/js/iseeadmin.js') }}"></script>
+{{--    <script src="{{ asset('/static/js/iseeadmin.js') }}"></script>--}}
+    <script src="{{ asset('/static/js/iseeadmin.min.js') }}"></script>
     <script src="{{ asset('static/js/menu.js') }}"></script>
 {{--    <script src="{{ asset('static/js/vue.js') }}"></script>--}}
-    <script src="{{ asset('static/js/vue.min.js') }}"></script>
+{{--    <script src="{{ asset('static/js/vue.min.js') }}"></script>--}}
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
     <!--    <script src="static/js/axios.min.js"></script>-->
-    <script src="{{ asset('static/element/index.js') }}"></script>
+{{--    <script src="{{ asset('static/element/index.js') }}"></script>--}}
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
 
     @section('isee_asset_head')
     @show
@@ -185,6 +189,42 @@
     </el-container>
 </div>
 
+<<<<<<< HEAD
+=======
+<script>
+  const iseeAvatar = {
+    url: '/static/images/avatar01.gif',
+    size: 32,
+    list: [
+      {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-user-solid',
+        url: '',
+        title: 'admin',
+      }, {
+        index: '3-0',
+        indexPath: ['3', '3-0'],
+        icon: 'el-icon-tickets',
+        url: '/manage/profile.html',
+        title: '基本资料',
+      }, {
+        index: '3-1',
+        indexPath: ['3', '3-1'],
+        icon: 'el-icon-edit-outline',
+        url: '/manage/modify.html',
+        title: '修改密码',
+      }, {
+        index: '3-2',
+        indexPath: ['3', '3-2'],
+        icon: 'el-icon-switch-button',
+        url: '/manage/modify.html',
+        title: '安全退出',
+      },
+    ]
+  }
+</script>
+>>>>>>> dev
 
 @section('isee_script')
 

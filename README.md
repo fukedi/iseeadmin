@@ -24,3 +24,7 @@ layuiAdmin和iseeAdmin都是采用直接引入式开发的，layuiAdmin只需要
 那么问题来了！既然layuiAdmin上手难度是最低的，为什么还要使用vue-element-admin和iseeAdmin？
 1. 使用MVVM模式进行前端开发的快乐是传统前端开发无法比拟的
 2. layuiAdmin是收费的，vue-element-admin和iseeAdmin都开源，可免费使用
+
+### 注意事项
+
+本项目不兼容IE8。

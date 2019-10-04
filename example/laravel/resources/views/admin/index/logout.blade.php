@@ -19,8 +19,6 @@
         name: '王小虎',
         address: '上海市普陀区金沙江路 1518 弄'
       };
-      const userName = 'admin'
-      const avatarUrl = '/static/images/avatar01.gif'
       var vm = new Vue({
         el: '#app',
         data: {
@@ -29,7 +27,7 @@
         },
         methods: {
             @include('admin.layouts.methods')
-            test3() {
+            test() {
               console.log(9999999999)
             }
         },
@@ -37,7 +35,7 @@
             @include('admin.layouts.beforeMount')
         },
         mounted() {
-
+          this.test()
         }
       })
     </script>

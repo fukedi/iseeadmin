@@ -29,7 +29,11 @@
         },
         methods: {
             @include('admin.layouts.methods')
+<<<<<<< HEAD
             test3() {
+=======
+            test() {
+>>>>>>> dev
               console.log(9999999999)
             }
         },
@@ -37,7 +41,11 @@
             @include('admin.layouts.beforeMount')
         },
         mounted() {
+<<<<<<< HEAD
 
+=======
+          this.test()
+>>>>>>> dev
         }
       })
     </script>
