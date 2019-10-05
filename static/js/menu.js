@@ -139,9 +139,16 @@ var iseeMenu = [
             target: '_self',
             icon: 'el-icon-tickets',
             children: []
+          },{
+            index: '5-0-1',
+            title: 'radio单选框',
+            url: '/pages/component/form/radio.html',
+            target: '_self',
+            icon: 'el-icon-tickets',
+            children: []
           },
           {
-            index: '5-0-1',
+            index: '5-0-2',
             title: '表单元素',
             url: '/pages/component/form/element.html',
             target: '_self',
