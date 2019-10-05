@@ -137,29 +137,36 @@ var iseeMenu = [
             title: 'input输入框',
             url: '/pages/component/form/input.html',
             target: '_self',
-            icon: 'el-icon-tickets',
+            icon: '',
             children: []
           },{
             index: '5-0-1',
             title: 'radio单选框',
             url: '/pages/component/form/radio.html',
             target: '_self',
-            icon: 'el-icon-tickets',
+            icon: '',
             children: []
           },{
             index: '5-0-2',
             title: 'checkbox多选框',
             url: '/pages/component/form/checkbox.html',
             target: '_self',
-            icon: 'el-icon-tickets',
+            icon: '',
+            children: []
+          },{
+            index: '5-0-3',
+            title: 'inputnumber计数器',
+            url: '/pages/component/form/inputnumber.html',
+            target: '_self',
+            icon: '',
             children: []
           },
           {
-            index: '5-0-3',
+            index: '5-0-4',
             title: '表单元素',
             url: '/pages/component/form/element.html',
             target: '_self',
-            icon: 'el-icon-tickets',
+            icon: '',
             children: []
           },
           // {
