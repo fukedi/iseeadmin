@@ -40,35 +40,7 @@
                      background-color="#304156"
                      text-color="#bfcbd9"
                      active-text-color="#409eff">
-
-                <template v-for="(item,index) in iseeData.menu">
-                    <template v-if="!item.children.length">
-                        <el-menu-item :index="item.index"><i :class="item.icon"></i>@{{item.title}}</el-menu-item>
-                    </template>
-                    <template v-else>
-                        <el-submenu :index="item.index">
-                            <template slot="title"><i :class="item.icon"></i>@{{item.title}}</template>
-                            <template v-for="(itemSub,indexSub) in item.children" :index="itemSub.index">
-                                <template v-if="itemSub.children.length">
-                                    <el-submenu :index="itemSub.index">
-                                        <span slot="title"><i :class="itemSub.icon"></i>@{{ itemSub.title }}</span>
-                                        <template v-for="(itemSub_,indexSub_) in itemSub.children">
-                                            <el-menu-item :index="itemSub_.index"><i :class="itemSub_.icon"></i>@{{
-                                                itemSub_.title }}
-                                            </el-menu-item>
-                                        </template>
-                                    </el-submenu>
-                                </template>
-                                <template v-else>
-                                    <el-menu-item :index="itemSub.index"><i :class="itemSub.icon"></i>@{{ itemSub.title
-                                        }}
-                                    </el-menu-item>
-                                </template>
-                            </template>
-                        </el-submenu>
-                    </template>
-                </template>
-
+                <iseemenu :menu="iseeData.menu"></iseemenu>
             </el-menu>
         </el-aside>
 

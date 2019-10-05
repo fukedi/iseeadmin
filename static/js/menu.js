@@ -34,15 +34,22 @@ var iseeMenu = [
         title: '商品单位',
         url: '/pages/goods/unit',
         target: '_self',
-        icon: 'el-icon-setting',
+        icon: '',
         children: [
           {
             index: '1-1-0',
-            title: '商品单位12',
+            title: '商品单位120',
             url: '/pages/goods/unit12.html',
             target: '_self',
-            icon: 'el-icon-setting',
-            children: []
+            icon: '',
+            children: [{
+              index: '1-1-0-0',
+              title: '商品单位12-0',
+              url: '/pages/goods/unit22.html',
+              target: '_self',
+              icon: '',
+              children: []
+            }]
           }, {
             index: '1-1-1',
             title: '商品单位22',

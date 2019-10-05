@@ -12,6 +12,6 @@ fullscreenIcon: '&#xe610;',
 defaultActive: iseeAdmin.defaultActive,
 tagList: iseeAdmin.tagList,
 breadcrumb: iseeAdmin.breadcrumb,
-menu: [],
+menu: iseeMenu,
 avatar: iseeAvatar
 },

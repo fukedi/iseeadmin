@@ -81,6 +81,9 @@
     <script>
       var vm = new Vue({
         el: '#app',
+        components: {
+          iseemenu
+        },
         data: {
             @include('admin.layouts.data')
         },

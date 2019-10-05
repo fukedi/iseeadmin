@@ -23,6 +23,9 @@
       const avatarUrl = '/static/images/avatar01.gif'
       var vm = new Vue({
         el: '#app',
+        components: {
+          iseemenu
+        },
         data: {
           tableData: Array(10).fill(item),
             @include('admin.layouts.data')
