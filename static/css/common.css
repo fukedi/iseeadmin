@@ -83,6 +83,13 @@ body {
 .isee-drawer-ul li{
     line-height: 30px;
 }
+ .box-card {
+     width: 100%;
+     margin: 0 10px 10px 0;
+ }
+ .el-divider-span{
+     color: #F56C6C;font-size: 15px;font-weight: bold
+ }
 
 [v-cloak] {
     display: none;

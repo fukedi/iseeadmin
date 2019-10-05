@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ISeeAdmin 【表单元素】 </title>
+    <!--    <link rel="stylesheet" href="/static/element/index.css">-->
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/iconfont/iconfont.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <!--    开发环境-->
+    <!--        <script src="/static/js/iseeadmin.js"></script>-->
+    <!--    正式环境-->
+    <script src="/static/js/iseeadmin.min.js"></script>
+    <script src="/static/js/menu.js"></script>
+    <!--    开发环境-->
+    <!--    <script src="/static/js/vue.js"></script>-->
+    <!--    正式环境-->
+    <!--        <script src="/static/js/vue.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="/static/element/index.js"></script>-->
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="/static/js/axios.min.js"></script>-->
+    <style>
+        .box-card {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container style="height: 100%;min-height:100vh;">
+        <el-aside v-show="iseeData.asideShow" width="210px">
+            <!--            左侧logo 开始-->
+            <div class="aside-logo">
+                <img class="aside-logo-img" src="/static/images/logo.png"
+                     alt=""> ISeeAdmin
+            </div>
+            <!--            左侧logo 结束-->
+            <!--            左侧菜单 开始-->
+            <el-menu @select="iseeMenuOpen" style="width: 210px;"
+                     unique-opened
+                     :default-active="iseeData.defaultActive"
+                     background-color="#304156"
+                     text-color="#bfcbd9"
+                     active-text-color="#409eff">
+
+                <template v-for="(item,index) in iseeData.menu">
+                    <template v-if="!item.children.length">
+                        <el-menu-item :index="item.index"><i :class="item.icon"></i>{{item.title}}</el-menu-item>
+                    </template>
+                    <template v-else>
+                        <el-submenu :index="item.index">
+                            <template slot="title"><i :class="item.icon"></i>{{item.title}}</template>
+                            <template v-for="(itemSub,indexSub) in item.children" :index="itemSub.index">
+                                <template v-if="itemSub.children.length">
+                                    <el-submenu :index="itemSub.index">
+                                        <span slot="title"><i :class="itemSub.icon"></i>{{ itemSub.title }}</span>
+                                        <template v-for="(itemSub_,indexSub_) in itemSub.children">
+                                            <el-menu-item :index="itemSub_.index"><i :class="itemSub_.icon"></i>{{
+                                                itemSub_.title }}
+                                            </el-menu-item>
+                                        </template>
+                                    </el-submenu>
+                                </template>
+                                <template v-else>
+                                    <el-menu-item :index="itemSub.index"><i :class="itemSub.icon"></i>{{ itemSub.title
+                                        }}
+                                    </el-menu-item>
+                                </template>
+                            </template>
+                        </el-submenu>
+                    </template>
+                </template>
+
+            </el-menu>
+            <!--            左侧菜单 结束-->
+        </el-aside>
+
+        <el-container>
+            <el-header height="83px">
+                <div class="isee-header-div">
+                    <!--                    面包屑 开始-->
+                    <div style="width: 100%;display: inherit;">
+                        <span class="aside-show" @click="iseeAsideShow">
+                            <i :class="iseeData.asideShowIcon"></i>
+                        </span>
+
+                        <el-breadcrumb style="line-height: 50px" separator="/">
+                            <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <!--                    面包屑 结束-->
+                    <!--                    icon功能列表，可根据需要修改 开始-->
+                    <div>
+                        <ul class="isee-ul">
+                            <li class="isee-li">
+                                <i style="font-size: 20px" class="el-icon-bell"></i>
+                            </li>
+                            <li @click="iseeFullScreen" class="isee-li">
+                                <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
+                            </li>
+                            <li class="isee-li" @click="iseeData.drawer = true">
+                                <span class="iconfont" style="font-size: 20px">&#xe602;</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--                    icon功能列表，可根据需要修改 结束-->
+                    <!--                    avatar显示 开始-->
+                    <div>
+                        <el-dropdown @command="iseeOpenUrl">
+                              <span class="el-dropdown-link">
+                                  <el-avatar style="margin-top: 9px" :size="iseeData.avatar.size"
+                                             :src="iseeData.avatar.url"></el-avatar>
+                              </span>
+
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(item,index) in iseeData.avatar.list" :icon="item.icon"
+                                                  :key="index" :command="index">{{item.title}}
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    avatar显示 结束-->
+                </div>
+                <div style="display: flex">
+                    <!--                    标签页列表 开始-->
+                    <div style="width: 100%">
+                        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
+                                :key="index"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
+                                :effect="item.effect"
+                                :type="item.type"
+                                @close="iseeTagClose(item.url,index)"
+                                size="medium"
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                        </el-tag>
+                    </div>
+                    <!--                    标签页列表 结束-->
+                    <!--                    标签页集中操作 开始-->
+                    <div style="float: right;">
+                        <el-dropdown @command="iseeTagCommandClose">
+                          <span class="el-dropdown-link">
+                              <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
+                          </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    标签页集中操作 结束-->
+                </div>
+
+                <!--抽屉式展示-->
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">https://gitee.com/youge/iseeadmin
+                                </el-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+                </el-drawer>
+                <!--抽屉式展示 结束-->
+            </el-header>
+
+            <el-main>
+                <!--                主内容展示-->
+                <div style="display: flex;margin-bottom: 10px">
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <span>输入框 <el-link type="primary" target="_blank"
+                                               href="https://element.eleme.cn/#/zh-CN/component/input">官方文档</el-link></span>
+                        </div>
+                        <div>
+                            <el-divider content-position="left">基础用法、可清空</el-divider>
+                            <el-input v-model="input" placeholder="请输入内容1" clearable></el-input>
+                            <el-divider content-position="left">禁用状态</el-divider>
+                            <el-input placeholder="请输入内容2" disabled></el-input>
+                            <el-divider content-position="left">密码框</el-divider>
+                            <el-input placeholder="请输入密码" v-model="input" show-password></el-input>
+                            <el-divider content-position="left">带 icon 的输入框</el-divider>
+                            <el-row>
+                                <el-col :span="4">
+                                        <span style="line-height: 40px">
+                                            属性方式：
+                                        </span>
+                                </el-col>
+                                <el-col :span="8" :gutter="1">
+                                    <el-input
+                                            placeholder="请选择日期"
+                                            suffix-icon="el-icon-date"
+                                            v-model="input1">
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="8" :offset="1">
+                                    <el-input
+                                            placeholder="请输入内容"
+                                            prefix-icon="el-icon-search"
+                                            v-model="input2">
+                                    </el-input>
+                                </el-col>
+                            </el-row>
+                            <el-row style="margin-top: 10px">
+                                <el-col :span="4">
+                                        <span style="line-height: 40px">
+                                            slot 方式：
+                                        </span>
+                                </el-col>
+                                <el-col :span="8" :gutter="1">
+                                    <el-input
+                                            placeholder="请选择日期"
+                                            v-model="input3">
+                                        <i slot="suffix" class="el-input__icon el-icon-date"></i>
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="8" :offset="1">
+                                    <el-input
+                                            placeholder="请输入内容"
+                                            v-model="input4">
+                                        <i slot="prefix" class="el-input__icon el-icon-search"></i>
+                                    </el-input>
+                                </el-col>
+                            </el-row>
+                            <el-divider content-position="left">文本域</el-divider>
+                            <el-input
+                                    type="textarea"
+                                    :rows="2"
+                                    placeholder="请输入内容"
+                                    v-model="textarea">
+                            </el-input>
+                            <el-divider content-position="left">可自适应文本高度的文本域</el-divider>
+                            <el-input
+                                    type="textarea"
+                                    autosize
+                                    placeholder="请输入内容"
+                                    v-model="textarea1">
+                            </el-input>
+                            <div style="margin: 10px 0;"></div>
+                            <el-input
+                                    type="textarea"
+                                    :autosize="{ minRows: 2, maxRows: 4}"
+                                    placeholder="请输入内容"
+                                    v-model="textarea2">
+                            </el-input>
+                            <el-divider content-position="left">复合型输入框</el-divider>
+                            <div>
+                                <el-input placeholder="请输入内容" v-model="input1">
+                                    <template slot="prepend">Http://</template>
+                                </el-input>
+                            </div>
+                            <div style="margin-top: 15px;">
+                                <el-input placeholder="请输入内容" v-model="input2">
+                                    <template slot="append">.com</template>
+                                </el-input>
+                            </div>
+                            <div style="margin-top: 15px;">
+                                <el-input placeholder="请输入内容" v-model="input3" class="input-with-select">
+                                    <el-select v-model="select" slot="prepend" placeholder="请选择">
+                                        <el-option label="餐厅名" value="1"></el-option>
+                                        <el-option label="订单号" value="2"></el-option>
+                                        <el-option label="用户电话" value="3"></el-option>
+                                    </el-select>
+                                    <el-button slot="append" icon="el-icon-search"></el-button>
+                                </el-input>
+                            </div>
+                            <el-divider content-position="left">尺寸</el-divider>
+                            <el-row style="margin-top: 10px">
+                                <el-col :span="11" :gutter="1">
+                                    <el-input
+                                            placeholder="请输入内容"
+                                            suffix-icon="el-icon-date"
+                                            v-model="input1">
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="11" :offset="1">
+                                    <el-input
+                                            size="medium"
+                                            placeholder="请输入内容"
+                                            suffix-icon="el-icon-date"
+                                            v-model="input2">
+                                    </el-input>
+                                </el-col>
+                            </el-row>
+                            <el-row style="margin-top: 10px">
+                                <el-col :span="11" :gutter="1">
+                                    <el-input
+                                            size="small"
+                                            placeholder="请输入内容"
+                                            suffix-icon="el-icon-date"
+                                            v-model="input3">
+                                    </el-input>
+                                </el-col>
+                                <el-col :span="11" :offset="1">
+                                    <el-input
+                                            size="mini"
+                                            placeholder="请输入内容"
+                                            suffix-icon="el-icon-date"
+                                            v-model="input4">
+                                    </el-input>
+                                </el-col>
+                            </el-row>
+                        </div>
+                    </el-card>
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <span>下拉选择框 <el-link type="primary" target="_blank"
+                                                 href="https://element.eleme.cn/#/zh-CN/component/select">官方文档</el-link></span>
+                        </div>
+                        <div>
+                            <el-divider content-position="left">单选、选项禁用、可清空单选、可搜索</el-divider>
+                            <template>
+                                <el-select v-model="value" clearable filterable placeholder="请选择">
+                                    <el-option
+                                            v-for="item in options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                            :disabled="item.disabled">
+                                    </el-option>
+                                </el-select>
+                            </template>
+                            <el-divider content-position="left">选择器禁用</el-divider>
+                            <template>
+                                <template>
+                                    <el-select v-model="value" disabled placeholder="请选择">
+                                        <el-option
+                                                v-for="item in options"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </template>
+                            </template>
+                            <el-divider content-position="left">多选</el-divider>
+                            <template>
+                                <el-select v-model="value1" multiple placeholder="请选择">
+                                    <el-option
+                                            v-for="item in options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                                <el-select
+                                        v-model="value2"
+                                        multiple
+                                        collapse-tags
+                                        style="margin-left: 20px;"
+                                        placeholder="请选择">
+                                    <el-option
+                                            v-for="item in options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </template>
+                            <el-divider content-position="left">自定义模板</el-divider>
+                            <template>
+                                <el-select v-model="value" placeholder="请选择">
+                                    <el-option
+                                            v-for="item in cities"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                        <span style="float: left">{{ item.label }}</span>
+                                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.value }}</span>
+                                    </el-option>
+                                </el-select>
+                            </template>
+                            <el-divider content-position="left">分组</el-divider>
+                            <template>
+                                <el-select v-model="value" placeholder="请选择">
+                                    <el-option-group
+                                            v-for="group in options1"
+                                            :key="group.label"
+                                            :label="group.label">
+                                        <el-option
+                                                v-for="item in group.options"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-option-group>
+                                </el-select>
+                            </template>
+                            <el-divider content-position="left">远程搜索</el-divider>
+                            <template>
+                                <el-select
+                                        v-model="value"
+                                        multiple
+                                        filterable
+                                        remote
+                                        reserve-keyword
+                                        placeholder="请输入关键词"
+                                        :remote-method="remoteMethod"
+                                        :loading="loading">
+                                    <el-option
+                                            v-for="item in options2"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-select>
+                            </template>
+                            <el-divider content-position="left">创建条目</el-divider>
+                            <template>
+                                <template>
+                                    <el-select
+                                            v-model="value"
+                                            multiple
+                                            filterable
+                                            allow-create
+                                            default-first-option
+                                            placeholder="请选择文章标签">
+                                        <el-option
+                                                v-for="item in options"
+                                                :key="item.value"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </template>
+                            </template>
+                        </div>
+
+                    </el-card>
+
+                    <el-card class="box-card" style="margin-bottom: 10px">
+                        <div slot="header" class="clearfix">
+                            <span>特点对比</span>
+                        </div>
+                        <div style="padding-left: 40px">
+                        </div>
+                    </el-card>
+                </div>
+
+                <div style="display: flex;margin-bottom: 10px">
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <span>行内表单</span>
+                        </div>
+                        <div>
+                            <el-form inline :model="formInline" class="demo-form-inline">
+                                <el-form-item label="审批人">
+                                    <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+                                </el-form-item>
+                                <el-form-item label="活动区域">
+                                    <el-select v-model="formInline.region" placeholder="活动区域">
+                                        <el-option label="区域一" value="shanghai"></el-option>
+                                        <el-option label="区域二" value="beijing"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="primary" @click="onSubmit">查询</el-button>
+                                </el-form-item>
+                            </el-form>
+                        </div>
+                    </el-card>
+                    <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                            <span>对齐方式</span>
+                        </div>
+                        <div>
+                            <el-radio-group v-model="labelPosition" size="small">
+                                <el-radio-button label="left">左对齐</el-radio-button>
+                                <el-radio-button label="right">右对齐</el-radio-button>
+                                <el-radio-button label="top">顶部对齐</el-radio-button>
+                            </el-radio-group>
+                            <div style="margin: 20px;"></div>
+                            <el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+                                <el-form-item label="名称">
+                                    <el-input v-model="formLabelAlign.name"></el-input>
+                                </el-form-item>
+                                <el-form-item label="活动区域">
+                                    <el-input v-model="formLabelAlign.region"></el-input>
+                                </el-form-item>
+                                <el-form-item label="活动形式">
+                                    <el-input v-model="formLabelAlign.type"></el-input>
+                                </el-form-item>
+                            </el-form>
+                        </div>
+                    </el-card>
+                </div>
+
+                <!--                主内容展示 结束-->
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+
+<script>
+  const iseeAvatar = {
+    url: '/static/images/avatar01.gif',
+    size: 32,
+    list: [
+      {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-user-solid',
+        url: '',
+        target: '_self',
+        title: 'admin',
+      }, {
+        index: '3-0',
+        indexPath: ['3', '3-0'],
+        icon: 'el-icon-tickets',
+        url: '/manage/profile.html',
+        target: '_self',
+        title: '基本资料',
+      }, {
+        index: '3-1',
+        indexPath: ['3', '3-1'],
+        icon: 'el-icon-edit-outline',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '修改密码',
+      }, {
+        index: '3-2',
+        indexPath: ['3', '3-2'],
+        icon: 'el-icon-switch-button',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '安全退出',
+      },
+    ]
+  }
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      iseeData: {
+        version: iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
+        status: false,
+        show: true,
+        asideShow: iseeAdmin.asideShow,
+        asideShowIcon: iseeAdmin.asideShowIcon,
+        fullscreen: false,
+        fullscreenIcon: '&#xe610;',
+        defaultActive: iseeAdmin.defaultActive,
+        tagList: iseeAdmin.tagList,
+        breadcrumb: iseeAdmin.breadcrumb,
+        menu: [],
+        avatar: iseeAvatar
+      },
+      input: '',
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      formInline: {
+        user: '',
+        region: ''
+      },
+      labelPosition: 'right',
+      formLabelAlign: {
+        name: '',
+        region: '',
+        type: ''
+      },
+      options: [{
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶',
+        disabled: true,
+      }, {
+        value: '选项3',
+        label: '蚵仔煎'
+      }, {
+        value: '选项4',
+        label: '龙须面'
+      }, {
+        value: '选项5',
+        label: '北京烤鸭'
+      }],
+      cities: [{
+        value: 'Beijing',
+        label: '北京'
+      }, {
+        value: 'Shanghai',
+        label: '上海'
+      }, {
+        value: 'Nanjing',
+        label: '南京'
+      }, {
+        value: 'Chengdu',
+        label: '成都'
+      }, {
+        value: 'Shenzhen',
+        label: '深圳'
+      }, {
+        value: 'Guangzhou',
+        label: '广州'
+      }],
+      options1: [{
+        label: '热门城市',
+        options: [{
+          value: 'Shanghai',
+          label: '上海'
+        }, {
+          value: 'Beijing',
+          label: '北京'
+        }]
+      }, {
+        label: '城市名',
+        options: [{
+          value: 'Chengdu',
+          label: '成都'
+        }, {
+          value: 'Shenzhen',
+          label: '深圳'
+        }, {
+          value: 'Guangzhou',
+          label: '广州'
+        }, {
+          value: 'Dalian',
+          label: '大连'
+        }]
+      }],
+      value: '选项5',
+      value1: [],
+      value2: [],
+      options2: [],
+      list: [],
+      loading: false,
+      states: ["Alabama", "Alaska", "Arizona",
+        "Arkansas", "California", "Colorado",
+        "Connecticut", "Delaware", "Florida",
+        "Georgia", "Hawaii", "Idaho", "Illinois",
+        "Indiana", "Iowa", "Kansas", "Kentucky",
+        "Louisiana", "Maine", "Maryland",
+        "Massachusetts", "Michigan", "Minnesota",
+        "Mississippi", "Missouri", "Montana",
+        "Nebraska", "Nevada", "New Hampshire",
+        "New Jersey", "New Mexico", "New York",
+        "North Carolina", "North Dakota", "Ohio",
+        "Oklahoma", "Oregon", "Pennsylvania",
+        "Rhode Island", "South Carolina",
+        "South Dakota", "Tennessee", "Texas",
+        "Utah", "Vermont", "Virginia",
+        "Washington", "West Virginia", "Wisconsin",
+        "Wyoming"],
+      input1: '',
+      input2: '',
+      input3: '',
+      input4: '',
+      textarea:'',
+      textarea1: '',
+      textarea2: '',
+      select:'',
+    },
+    methods: {
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.$data.iseeData)
+      },
+
+      iseeTagClose(url, index) {
+        iseeAdmin.iseeTagClose(url, index, this.$data.iseeData)
+      },
+
+      iseeTagCommandClose(command) {
+        iseeAdmin.iseeTagCommandClose(command, this.$data.iseeData)
+      },
+
+      iseeMenuOpen(key, keyPath) {
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.$data.iseeData)
+      },
+
+      iseeFullScreen() {
+        iseeAdmin.iseeFullScreen(this.$data.iseeData)
+      },
+
+      iseeAsideShow() {
+        iseeAdmin.iseeAsideShow(this.$data.iseeData)
+      },
+      iseeOpenUrl(command) {
+        iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
+      },
+      /*----------------------------自定义方法-----------------------------------*/
+      onSubmit() {
+        console.log('submit!');
+      },
+      remoteMethod(query) {
+        if (query !== '') {
+          this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+            this.options2 = this.list.filter(item => {
+              return item.label.toLowerCase()
+                .indexOf(query.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.options2 = [];
+        }
+      }
+
+    },
+    beforeMount() {
+      iseeAdmin.init(this.$data.iseeData)
+      this.$data.iseeData.menu = iseeMenu
+    },
+    mounted() {
+      this.list = this.states.map(item => {
+        return {value: item, label: item};
+      });
+
+    }
+  });
+</script>
+</body>
+
+</html>
+

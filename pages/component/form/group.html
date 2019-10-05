@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ISeeAdmin 【首页】 </title>
+    <title>ISeeAdmin 【表单组合】 </title>
     <!--    <link rel="stylesheet" href="/static/element/index.css">-->
     <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/iconfont/iconfont.css">
     <link rel="stylesheet" href="/static/css/common.css">
     <!--    开发环境-->
-<!--        <script src="/static/js/iseeadmin.js"></script>-->
+    <!--        <script src="/static/js/iseeadmin.js"></script>-->
     <!--    正式环境-->
     <script src="/static/js/iseeadmin.min.js"></script>
     <script src="/static/js/menu.js"></script>
@@ -274,6 +274,12 @@
 
 
 <script>
+  const item = {
+    date: '2016-05-02',
+    name: '王小虎',
+    address: '上海市普陀区金沙江路 1518 弄'
+  };
+
   const iseeAvatar = {
     url: '/static/images/avatar01.gif',
     size: 32,
@@ -313,6 +319,8 @@
   var app = new Vue({
     el: '#app',
     data: {
+      tableData: Array(10).fill(item),
+
       iseeData: {
         version: iseeAdmin.version,
         drawer: false,
@@ -330,7 +338,6 @@
         menu: [],
         avatar: iseeAvatar
       },
-      /*your data*/
     },
     methods: {
       iseeTagSwitch(url, index, breadcrumb) {
@@ -359,13 +366,11 @@
       iseeOpenUrl(command) {
         iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
       },
-      /*your methods*/
 
     },
     beforeMount() {
       iseeAdmin.init(this.$data.iseeData)
       this.$data.iseeData.menu = iseeMenu
-      /*your beforeMount*/
     },
     mounted() {
 

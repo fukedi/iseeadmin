@@ -107,6 +107,56 @@ var iseeMenu = [
         target: '_blank',
         icon: 'el-icon-tickets',
         children: []
+      },
+      {
+        index: '4-1',
+        title: '空白模板',
+        url: '/pages/other/blank.html',
+        target: '_self',
+        icon: 'el-icon-tickets',
+        children: []
+      }
+    ]
+  },
+  {
+    index: '5',
+    title: '组件',
+    url: '/pages/component',
+    target: '_self',
+    icon: 'el-icon-menu',
+    children: [
+      {
+        index: '5-0',
+        title: '表单',
+        url: '/pages/component/form',
+        target: '_self',
+        icon: 'el-icon-tickets',
+        children: [
+          {
+            index: '5-0-0',
+            title: 'input输入框',
+            url: '/pages/component/form/input.html',
+            target: '_self',
+            icon: 'el-icon-tickets',
+            children: []
+          },
+          {
+            index: '5-0-1',
+            title: '表单元素',
+            url: '/pages/component/form/element.html',
+            target: '_self',
+            icon: 'el-icon-tickets',
+            children: []
+          },
+          // {
+          //   index: '5-0-2',
+          //   title: '表单组合',
+          //   url: '/pages/component/form/group.html',
+          //   target: '_self',
+          //   icon: 'el-icon-tickets',
+          //   children: []
+          // }
+        ]
       }
     ]
   }
