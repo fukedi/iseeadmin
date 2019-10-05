@@ -146,9 +146,16 @@ var iseeMenu = [
             target: '_self',
             icon: 'el-icon-tickets',
             children: []
+          },{
+            index: '5-0-2',
+            title: 'checkbox多选框',
+            url: '/pages/component/form/checkbox.html',
+            target: '_self',
+            icon: 'el-icon-tickets',
+            children: []
           },
           {
-            index: '5-0-2',
+            index: '5-0-3',
             title: '表单元素',
             url: '/pages/component/form/element.html',
             target: '_self',

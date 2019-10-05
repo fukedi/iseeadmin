@@ -241,7 +241,9 @@
 
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">输入长度限制</span></el-divider>
+                                class="el-divider-span">输入长度限制 <el-tooltip
+                                content="maxlength 和 minlength 是原生属性，用来限制输入框的字符长度，其中字符长度是用 Javascript 的字符串长度统计的。对于类型为 text 或 textarea 的输入框，在使用 maxlength 属性限制最大输入长度的同时，可通过设置 show-word-limit 属性来展示字数统计" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <el-input
                                 type="text"
                                 placeholder="请输入内容"
@@ -263,7 +265,9 @@
                     </el-card>
                     <el-card class="box-card">
                         <el-divider content-position="left"><span
-                                class="el-divider-span">带 icon 的输入框</span></el-divider>
+                                class="el-divider-span">带 icon 的输入框 <el-tooltip
+                                content="带有图标标记输入类型" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <el-row>
                             <el-col :span="4">
                                         <span style="line-height: 40px">
@@ -308,7 +312,9 @@
                         </el-row>
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">文本域</span></el-divider>
+                                class="el-divider-span">文本域 <el-tooltip
+                                content="用于输入多行文本信息，通过将 type 属性的值指定为 textarea。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <el-input
                                 type="textarea"
                                 :rows="2"
@@ -317,7 +323,9 @@
                         </el-input>
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">可自适应文本高度的文本域</span></el-divider>
+                                class="el-divider-span">可自适应文本高度的文本域 <el-tooltip
+                                content="通过设置 autosize 属性可以使得文本域的高度能够根据文本内容自动进行调整，并且 autosize 还可以设定为一个对象，指定最小行数和最大行数" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <el-input
                                 type="textarea"
                                 autosize
@@ -333,7 +341,9 @@
                         </el-input>
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">复合型输入框</span></el-divider>
+                                class="el-divider-span">复合型输入框 <el-tooltip
+                                content="可前置或后置元素，一般为标签或按钮" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <div>
                             <el-input placeholder="请输入内容" v-model="input1">
                                 <template slot="prepend">Http://</template>
@@ -396,7 +406,9 @@
                             </el-col>
                         </el-row>
 
-                        <el-divider content-position="left"><span class="el-divider-span">带输入建议</span></el-divider>
+                        <el-divider content-position="left"><span class="el-divider-span">带输入建议 <el-tooltip
+                                content="根据输入内容提供对应的输入建议" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         </el-divider>
                         <el-row>
                             <el-col :span="7">
@@ -435,7 +447,9 @@
 
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">自定义模板</span></el-divider>
+                                class="el-divider-span">自定义模板 <el-tooltip
+                                content="可自定义输入建议的显示" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <el-autocomplete
                                 popper-class="my-autocomplete"
                                 v-model="state"
@@ -454,7 +468,9 @@
                         </el-autocomplete>
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">远程搜索</span></el-divider>
+                                class="el-divider-span">远程搜索 <el-tooltip
+                                content="从服务端搜索数据" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <el-autocomplete
                                 v-model="state"
                                 :fetch-suggestions="querySearchAsync"

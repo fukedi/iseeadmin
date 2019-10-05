@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ISeeAdmin 【radio单选框】 </title>
+    <title>ISeeAdmin 【checkbox多选框】 </title>
     <!--    <link rel="stylesheet" href="/static/element/index.css">-->
     <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/iconfont/iconfont.css">
     <link rel="stylesheet" href="/static/css/common.css">
     <!--    开发环境-->
-<!--        <script src="/static/js/iseeadmin.js"></script>-->
+    <!--        <script src="/static/js/iseeadmin.js"></script>-->
     <!--    正式环境-->
     <script src="/static/js/iseeadmin.min.js"></script>
     <script src="/static/js/menu.js"></script>
@@ -195,9 +195,10 @@
                 <!--                主内容展示-->
                 <div style="margin-right: 10px">
                     <el-card class="box-card">
-                        radio单选框
-                        <el-link type="primary" target="_blank" href="https://element.eleme.cn/#/zh-CN/component/radio">
-                            官方文档 https://element.eleme.cn/#/zh-CN/component/radio
+                        checkbox多选框
+                        <el-link type="primary" target="_blank"
+                                 href="https://element.eleme.cn/#/zh-CN/component/checkbox">
+                            官方文档 https://element.eleme.cn/#/zh-CN/component/checkbox
                         </el-link>
                     </el-card>
                 </div>
@@ -207,93 +208,119 @@
                         <el-divider content-position="left"><span
                                 class="el-divider-span">基础用法</span></el-divider>
                         <template>
-                            <el-radio v-model="radio" @change="changeRadio" label="1">备选项1</el-radio>
-                            <el-radio v-model="radio" @change="changeRadio" label="2">备选项2</el-radio>
+                            <!-- `checked` 为 true 或 false -->
+                            <el-checkbox v-model="checked1">备选项1</el-checkbox>
+                            <el-checkbox v-model="checked2">备选项2</el-checkbox>
                         </template>
 
                         <el-divider content-position="left"><span
                                 class="el-divider-span">禁用状态</span></el-divider>
                         <template>
-                            <el-radio v-model="radio1" disabled label="1">备选项3</el-radio>
-                            <el-radio v-model="radio1" disabled label="2">备选项4</el-radio>
+                            <el-checkbox v-model="checked3" disabled>备选项1</el-checkbox>
+                            <el-checkbox v-model="checked4" disabled>备选项</el-checkbox>
                         </template>
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">单选框组</span></el-divider>
+                                class="el-divider-span">多选框组</span></el-divider>
                         <template>
-                            <el-radio-group v-model="radio2">
-                                <el-radio :label="3">备选项</el-radio>
-                                <el-radio :label="6">备选项</el-radio>
-                                <el-radio :label="9">备选项</el-radio>
-                            </el-radio-group>
+                            <el-checkbox-group v-model="checkList">
+                                <el-checkbox label="复选框 A"></el-checkbox>
+                                <el-checkbox label="复选框 B"></el-checkbox>
+                                <el-checkbox label="复选框 C"></el-checkbox>
+                                <el-checkbox label="禁用" disabled></el-checkbox>
+                                <el-checkbox label="选中且禁用" disabled></el-checkbox>
+                            </el-checkbox-group>
                         </template>
+
+                        <el-divider content-position="left">
+                            <span class="el-divider-span">indeterminate 状态 <el-tooltip
+                                    content="indeterminate 属性用以表示 checkbox 的不确定状态，一般用于实现全选的效果" placement="top" effect="light"><i
+                                    class="el-icon-info" style="color: gray"></i></el-tooltip> </span>
+                        </el-divider>
+
+                        <template>
+                            <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll"
+                                         @change="handleCheckAllChange">全选
+                            </el-checkbox>
+                            <div style="margin: 15px 0;"></div>
+                            <el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+                                <el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
+                            </el-checkbox-group>
+                        </template>
+
 
                     </el-card>
                     <el-card class="box-card">
+                        <el-divider content-position="left">
+                            <span class="el-divider-span">可选项目数量的限制 <el-tooltip
+                                    content="使用 min 和 max 属性能够限制可以被勾选的项目的数量。" placement="top" effect="light"><i
+                                    class="el-icon-info" style="color: gray"></i></el-tooltip> </span>
+                        </el-divider>
+                        <template>
+                            <el-checkbox-group
+                                    v-model="checkedCities1"
+                                    :min="1"
+                                    :max="3">
+                                <el-checkbox v-for="city in cities1" :label="city" :key="city">{{city}}</el-checkbox>
+                            </el-checkbox-group>
+                        </template>
+
 
                         <el-divider content-position="left"><span
                                 class="el-divider-span">按钮样式</span></el-divider>
                         <template>
                             <div>
-                                <el-radio-group v-model="radio1">
-                                    <el-radio-button label="上海"></el-radio-button>
-                                    <el-radio-button label="北京"></el-radio-button>
-                                    <el-radio-button label="广州"></el-radio-button>
-                                    <el-radio-button label="深圳"></el-radio-button>
-                                </el-radio-group>
+                                <el-checkbox-group v-model="checkboxGroup1">
+                                    <el-checkbox-button v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox-button>
+                                </el-checkbox-group>
                             </div>
                             <div style="margin-top: 20px">
-                                <el-radio-group v-model="radio2" size="medium">
-                                    <el-radio-button label="上海" ></el-radio-button>
-                                    <el-radio-button label="北京"></el-radio-button>
-                                    <el-radio-button label="广州"></el-radio-button>
-                                    <el-radio-button label="深圳"></el-radio-button>
-                                </el-radio-group>
+                                <el-checkbox-group v-model="checkboxGroup2" size="medium">
+                                    <el-checkbox-button v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox-button>
+                                </el-checkbox-group>
                             </div>
                             <div style="margin-top: 20px">
-                                <el-radio-group v-model="radio3" size="small">
-                                    <el-radio-button label="上海"></el-radio-button>
-                                    <el-radio-button label="北京" disabled ></el-radio-button>
-                                    <el-radio-button label="广州"></el-radio-button>
-                                    <el-radio-button label="深圳"></el-radio-button>
-                                </el-radio-group>
+                                <el-checkbox-group v-model="checkboxGroup3" size="small">
+                                    <el-checkbox-button v-for="city in cities" :label="city" :disabled="city === '北京'" :key="city">{{city}}</el-checkbox-button>
+                                </el-checkbox-group>
                             </div>
                             <div style="margin-top: 20px">
-                                <el-radio-group v-model="radio4" disabled size="mini">
-                                    <el-radio-button label="上海"></el-radio-button>
-                                    <el-radio-button label="北京"></el-radio-button>
-                                    <el-radio-button label="广州"></el-radio-button>
-                                    <el-radio-button label="深圳"></el-radio-button>
-                                </el-radio-group>
+                                <el-checkbox-group v-model="checkboxGroup4" size="mini" disabled>
+                                    <el-checkbox-button v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox-button>
+                                </el-checkbox-group>
                             </div>
                         </template>
 
                     </el-card>
                     <el-card class="box-card">
+
+
+
                         <el-divider content-position="left"><span
                                 class="el-divider-span">带有边框</span></el-divider>
                         <template>
                             <div>
-                                <el-radio v-model="radio5" label="1" border>备选项1</el-radio>
-                                <el-radio v-model="radio5" label="2" border>备选项2</el-radio>
+                                <el-checkbox v-model="checked5" label="备选项1" border></el-checkbox>
+                                <el-checkbox v-model="checked6" label="备选项2" border></el-checkbox>
                             </div>
                             <div style="margin-top: 20px">
-                                <el-radio v-model="radio6" label="1" border size="medium">备选项1</el-radio>
-                                <el-radio v-model="radio6" label="2" border size="medium" disabled>备选项2</el-radio>
+                                <el-checkbox v-model="checked7" label="备选项1" border size="medium"></el-checkbox>
+                                <el-checkbox v-model="checked8" label="备选项2" border size="medium"></el-checkbox>
                             </div>
                             <div style="margin-top: 20px">
-                                <el-radio-group @change="changeRadio" v-model="radio7" size="small">
-                                    <el-radio label="1" border>备选项7-1</el-radio>
-                                    <el-radio label="2" border>备选项7-2</el-radio>
-                                </el-radio-group>
+                                <el-checkbox-group v-model="checkboxGroup1" size="small">
+                                    <el-checkbox label="备选项1" border></el-checkbox>
+                                    <el-checkbox label="备选项2" border disabled></el-checkbox>
+                                </el-checkbox-group>
                             </div>
                             <div style="margin-top: 20px">
-                                <el-radio-group v-model="radio8" size="mini" disabled>
-                                    <el-radio label="1" border>备选项1</el-radio>
-                                    <el-radio label="2" border>备选项2</el-radio>
-                                </el-radio-group>
+                                <el-checkbox-group v-model="checkboxGroup2" size="mini" disabled>
+                                    <el-checkbox label="备选项1" border></el-checkbox>
+                                    <el-checkbox label="备选项2" border></el-checkbox>
+                                </el-checkbox-group>
                             </div>
                         </template>
+
 
                     </el-card>
 
@@ -341,7 +368,8 @@
       },
     ]
   }
-
+  const cityOptions = ['上海', '北京', '广州', '深圳']
+  const cityOptions1 = ['上海', '北京', '广州', '深圳']
   var app = new Vue({
     el: '#app',
     data: {
@@ -363,15 +391,25 @@
         avatar: iseeAvatar
       },
       /*your data*/
-      radio:'1',
-      radio1: '上海',
-      radio2: '北京',
-      radio3: '广州',
-      radio4: '深圳',
-      radio5: '1',
-      radio6: '1',
-      radio7: '1',
-      radio8: '1'
+      checked1: true,
+      checked2: false,
+      checked3: false,
+      checked4: false,
+      checked5: false,
+      checked6: false,
+      checked7: false,
+      checked8: false,
+      checkList: ['选中且禁用', '复选框 A'],
+      isIndeterminate: true,
+      checkAll: false,
+      checkedCities: ['上海', '北京'],
+      checkedCities1: ['上海', '北京'],
+      cities: cityOptions,
+      cities1: cityOptions1,
+      checkboxGroup1: ['上海'],
+      checkboxGroup2: ['上海'],
+      checkboxGroup3: ['上海'],
+      checkboxGroup4: ['上海'],
     },
     methods: {
       iseeTagSwitch(url, index, breadcrumb) {
@@ -401,8 +439,14 @@
         iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
       },
       /*your methods*/
-      changeRadio(val){
-        console.log(val)
+      handleCheckAllChange(val) {
+        this.checkedCities = val ? cityOptions : [];
+        this.isIndeterminate = false;
+      },
+      handleCheckedCitiesChange(value) {
+        let checkedCount = value.length;
+        this.checkAll = checkedCount === this.cities.length;
+        this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
       }
     },
     beforeMount() {
