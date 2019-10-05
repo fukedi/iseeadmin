@@ -193,6 +193,14 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },
+          {
+            index: '5-1-1',
+            title: '复杂表格1',
+            url: '/pages/component/table/complextable1.html',
+            target: '_self',
+            icon: '',
+            children: []
           }
           // {
           //   index: '5-0-2',

@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ISeeAdmin 【复杂表格1】 </title>
+    <!--    <link rel="stylesheet" href="/static/element/index.css">-->
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/iconfont/iconfont.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <!--    开发环境-->
+    <!--        <script src="/static/js/iseeadmin.js"></script>-->
+    <!--    正式环境-->
+    <script src="/static/js/iseeadmin.min.js"></script>
+    <script src="/static/js/menu.js"></script>
+    <!--    开发环境-->
+    <!--    <script src="/static/js/vue.js"></script>-->
+    <!--    正式环境-->
+    <!--        <script src="/static/js/vue.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="/static/element/index.js"></script>-->
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="/static/js/axios.min.js"></script>-->
+    <style>
+        .demo-table-expand {
+            font-size: 0;
+        }
+        .demo-table-expand label {
+            width: 90px;
+            color: #99a9bf;
+        }
+        .demo-table-expand .el-form-item {
+            margin-right: 0;
+            margin-bottom: 0;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container style="height: 100%;min-height:100vh;">
+        <el-aside v-show="iseeData.asideShow" width="210px">
+            <!--            左侧logo 开始-->
+            <div class="aside-logo">
+                <img class="aside-logo-img" src="/static/images/logo.png"
+                     alt=""> ISeeAdmin
+            </div>
+            <!--            左侧logo 结束-->
+            <!--            左侧菜单 开始-->
+            <el-menu @select="iseeMenuOpen" style="width: 210px;"
+                     unique-opened
+                     :default-active="iseeData.defaultActive"
+                     background-color="#304156"
+                     text-color="#bfcbd9"
+                     active-text-color="#409eff">
+
+                <template v-for="(item,index) in iseeData.menu">
+                    <template v-if="!item.children.length">
+                        <el-menu-item :index="item.index"><i :class="item.icon"></i>{{item.title}}</el-menu-item>
+                    </template>
+                    <template v-else>
+                        <el-submenu :index="item.index">
+                            <template slot="title"><i :class="item.icon"></i>{{item.title}}</template>
+                            <template v-for="(itemSub,indexSub) in item.children" :index="itemSub.index">
+                                <template v-if="itemSub.children.length">
+                                    <el-submenu :index="itemSub.index">
+                                        <span slot="title"><i :class="itemSub.icon"></i>{{ itemSub.title }}</span>
+                                        <template v-for="(itemSub_,indexSub_) in itemSub.children">
+                                            <el-menu-item :index="itemSub_.index"><i :class="itemSub_.icon"></i>{{
+                                                itemSub_.title }}
+                                            </el-menu-item>
+                                        </template>
+                                    </el-submenu>
+                                </template>
+                                <template v-else>
+                                    <el-menu-item :index="itemSub.index"><i :class="itemSub.icon"></i>{{ itemSub.title
+                                        }}
+                                    </el-menu-item>
+                                </template>
+                            </template>
+                        </el-submenu>
+                    </template>
+                </template>
+
+            </el-menu>
+            <!--            左侧菜单 结束-->
+        </el-aside>
+
+        <el-container>
+            <el-header height="83px">
+                <div class="isee-header-div">
+                    <!--                    面包屑 开始-->
+                    <div style="width: 100%;display: inherit;">
+                        <span class="aside-show" @click="iseeAsideShow">
+                            <i :class="iseeData.asideShowIcon"></i>
+                        </span>
+
+                        <el-breadcrumb style="line-height: 50px" separator="/">
+                            <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <!--                    面包屑 结束-->
+                    <!--                    icon功能列表，可根据需要修改 开始-->
+                    <div>
+                        <ul class="isee-ul">
+                            <li class="isee-li">
+                                <i style="font-size: 20px" class="el-icon-bell"></i>
+                            </li>
+                            <li @click="iseeFullScreen" class="isee-li">
+                                <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
+                            </li>
+                            <li class="isee-li" @click="iseeData.drawer = true">
+                                <span class="iconfont" style="font-size: 20px">&#xe602;</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--                    icon功能列表，可根据需要修改 结束-->
+                    <!--                    avatar显示 开始-->
+                    <div>
+                        <el-dropdown @command="iseeOpenUrl">
+                              <span class="el-dropdown-link">
+                                  <el-avatar style="margin-top: 9px" :size="iseeData.avatar.size"
+                                             :src="iseeData.avatar.url"></el-avatar>
+                              </span>
+
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(item,index) in iseeData.avatar.list" :icon="item.icon"
+                                                  :key="index" :command="index">{{item.title}}
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    avatar显示 结束-->
+                </div>
+                <div style="display: flex">
+                    <!--                    标签页列表 开始-->
+                    <div style="width: 100%">
+                        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
+                                :key="index"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
+                                :effect="item.effect"
+                                :type="item.type"
+                                @close="iseeTagClose(item.url,index)"
+                                size="medium"
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                        </el-tag>
+                    </div>
+                    <!--                    标签页列表 结束-->
+                    <!--                    标签页集中操作 开始-->
+                    <div style="float: right;">
+                        <el-dropdown @command="iseeTagCommandClose">
+                          <span class="el-dropdown-link">
+                              <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
+                          </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    标签页集中操作 结束-->
+                </div>
+
+                <!--抽屉式展示-->
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">https://gitee.com/youge/iseeadmin
+                                </el-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+                </el-drawer>
+                <!--抽屉式展示 结束-->
+            </el-header>
+
+            <el-main>
+                <!--                主内容展示-->
+                <div style="margin-right: 10px">
+                    <el-card class="box-card">
+                        Table 表格
+                        <el-link type="primary" target="_blank"
+                                 href="https://element.eleme.cn/#/zh-CN/component/table">
+                            官方文档 https://element.eleme.cn/#/zh-CN/component/table
+                        </el-link>
+                    </el-card>
+                </div>
+                <div style="display: flex">
+                    <el-card class="box-card">
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">多级表头 <el-tooltip
+                                content="只需要在 el-table-column 里面嵌套 el-table-column，就可以实现多级表头。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    :data="tableData3"
+                                    style="width: 100%">
+                                <el-table-column
+                                        prop="date"
+                                        label="日期"
+                                        width="150">
+                                </el-table-column>
+                                <el-table-column label="配送信息">
+                                    <el-table-column
+                                            prop="name"
+                                            label="姓名"
+                                            width="120">
+                                    </el-table-column>
+                                    <el-table-column label="地址">
+                                        <el-table-column
+                                                prop="province"
+                                                label="省份"
+                                                width="120">
+                                        </el-table-column>
+                                        <el-table-column
+                                                prop="city"
+                                                label="市区"
+                                                width="120">
+                                        </el-table-column>
+                                        <el-table-column
+                                                prop="address"
+                                                label="地址"
+                                                width="300">
+                                        </el-table-column>
+                                        <el-table-column
+                                                prop="zip"
+                                                label="邮编"
+                                                width="120">
+                                        </el-table-column>
+                                    </el-table-column>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">单选 <el-tooltip
+                                content="只需要配置highlight-current-row属性即可实现单选。之后由current-change事件来管理选中时触发的事件，它会传入currentRow，oldCurrentRow。如果需要显示索引，可以增加一列el-table-column，设置type属性为index即可显示从 1 开始的索引号。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    ref="singleTable"
+                                    :data="tableData"
+                                    highlight-current-row
+                                    @current-change="handleCurrentChange"
+                                    style="width: 100%">
+                                <el-table-column
+                                        type="index"
+                                        width="50">
+                                </el-table-column>
+                                <el-table-column
+                                        property="date"
+                                        label="日期"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        property="name"
+                                        label="姓名"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        property="address"
+                                        label="地址">
+                                </el-table-column>
+                            </el-table>
+                            <div style="margin-top: 20px">
+                                <el-button @click="setCurrent(tableData[1])">选中第二行</el-button>
+                                <el-button @click="setCurrent()">取消选择</el-button>
+                            </div>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">多选 <el-tooltip
+                                content="选择多行数据时使用 Checkbox。手动添加一个el-table-column，设type属性为selection即可；默认情况下若内容过多会折行显示，若需要单行显示可以使用show-overflow-tooltip属性，它接受一个Boolean，为true时多余的内容会在 hover 时以 tooltip 的形式显示出来。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    ref="multipleTable"
+                                    :data="tableData"
+                                    tooltip-effect="dark"
+                                    style="width: 100%"
+                                    @selection-change="handleSelectionChange">
+                                <el-table-column
+                                        type="selection"
+                                        width="55">
+                                </el-table-column>
+                                <el-table-column
+                                        label="日期"
+                                        width="120">
+                                    <template slot-scope="scope">{{ scope.row.date }}</template>
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址"
+                                        show-overflow-tooltip>
+                                </el-table-column>
+                            </el-table>
+                            <div style="margin-top: 20px">
+                                <el-button @click="toggleSelection([tableData[1], tableData[2]])">切换第二、第三行的选中状态</el-button>
+                                <el-button @click="toggleSelection()">取消选择</el-button>
+                            </div>
+                        </template>
+
+                    </el-card>
+                    <el-card class="box-card">
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">排序 <el-tooltip
+                                content="对表格进行排序，可快速查找或对比数据" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    :data="tableData"
+                                    style="width: 100%"
+                                    :default-sort = "{prop: 'date', order: 'descending'}"
+                            >
+                                <el-table-column
+                                        prop="date"
+                                        label="日期"
+                                        sortable
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        sortable
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址"
+                                        :formatter="formatter">
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">筛选 <el-tooltip
+                                content="在列中设置filtersfilter-method属性即可开启该列的筛选，filters 是一个数组，filter-method是一个方法，它用于决定某些数据是否显示，会传入三个参数：value, row 和 column。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-button @click="resetDateFilter">清除日期过滤器</el-button>
+                            <el-button @click="clearFilter">清除所有过滤器</el-button>
+                            <el-table
+                                    ref="filterTable"
+                                    :data="tableData4"
+                                    style="width: 100%">
+                                <el-table-column
+                                        prop="date"
+                                        label="日期"
+                                        sortable
+                                        width="180"
+                                        column-key="date"
+                                        :filters="[{text: '2016-05-01', value: '2016-05-01'}, {text: '2016-05-02', value: '2016-05-02'}, {text: '2016-05-03', value: '2016-05-03'}, {text: '2016-05-04', value: '2016-05-04'}]"
+                                        :filter-method="filterHandler"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址"
+                                        :formatter="formatter">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="tag"
+                                        label="标签"
+                                        width="100"
+                                        :filters="[{ text: '家', value: '家' }, { text: '公司', value: '公司' }]"
+                                        :filter-method="filterTag"
+                                        filter-placement="bottom-end">
+                                    <template slot-scope="scope">
+                                        <el-tag
+                                                :type="scope.row.tag === '家' ? 'primary' : 'success'"
+                                                disable-transitions>{{scope.row.tag}}</el-tag>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">自定义列模板 <el-tooltip
+                                content="通过 Scoped slot 可以获取到 row, column, $index 和 store（table 内部的状态管理）的数据" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    :data="tableData"
+                                    style="width: 100%">
+                                <el-table-column
+                                        label="日期"
+                                        width="180">
+                                    <template slot-scope="scope">
+                                        <i class="el-icon-time"></i>
+                                        <span style="margin-left: 10px">{{ scope.row.date }}</span>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        label="姓名"
+                                        width="180">
+                                    <template slot-scope="scope">
+                                        <el-popover trigger="hover" placement="top">
+                                            <p>姓名: {{ scope.row.name }}</p>
+                                            <p>住址: {{ scope.row.address }}</p>
+                                            <div slot="reference" class="name-wrapper">
+                                                <el-tag size="medium">{{ scope.row.name }}</el-tag>
+                                            </div>
+                                        </el-popover>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column label="操作">
+                                    <template slot-scope="scope">
+                                        <el-button
+                                                size="mini"
+                                                @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                                        <el-button
+                                                size="mini"
+                                                type="danger"
+                                                @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">展开行 <el-tooltip
+                                content='当行内容过多并且不想显示横向滚动条时，可以使用 Table 展开行功能。通过设置 type="expand" 和 Scoped slot 可以开启展开行功能，el-table-column 的模板会被渲染成为展开行的内容，展开行可访问的属性与使用自定义列模板时的 Scoped slot 相同。' placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    :data="tableData5"
+                                    style="width: 100%">
+                                <el-table-column type="expand">
+                                    <template slot-scope="props">
+                                        <el-form label-position="left" inline class="demo-table-expand">
+                                            <el-form-item label="商品名称">
+                                                <span>{{ props.row.name }}</span>
+                                            </el-form-item>
+                                            <el-form-item label="所属店铺">
+                                                <span>{{ props.row.shop }}</span>
+                                            </el-form-item>
+                                            <el-form-item label="商品 ID">
+                                                <span>{{ props.row.id }}</span>
+                                            </el-form-item>
+                                            <el-form-item label="店铺 ID">
+                                                <span>{{ props.row.shopId }}</span>
+                                            </el-form-item>
+                                            <el-form-item label="商品分类">
+                                                <span>{{ props.row.category }}</span>
+                                            </el-form-item>
+                                            <el-form-item label="店铺地址">
+                                                <span>{{ props.row.address }}</span>
+                                            </el-form-item>
+                                            <el-form-item label="商品描述">
+                                                <span>{{ props.row.desc }}</span>
+                                            </el-form-item>
+                                        </el-form>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        label="商品 ID"
+                                        prop="id">
+                                </el-table-column>
+                                <el-table-column
+                                        label="商品名称"
+                                        prop="name">
+                                </el-table-column>
+                                <el-table-column
+                                        label="描述"
+                                        prop="desc">
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                    </el-card>
+
+                </div>
+                <!--                主内容展示 结束-->
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+
+<script>
+  const iseeAvatar = {
+    url: '/static/images/avatar01.gif',
+    size: 32,
+    list: [
+      {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-user-solid',
+        url: '',
+        target: '_self',
+        title: 'admin',
+      }, {
+        index: '3-0',
+        indexPath: ['3', '3-0'],
+        icon: 'el-icon-tickets',
+        url: '/manage/profile.html',
+        target: '_self',
+        title: '基本资料',
+      }, {
+        index: '3-1',
+        indexPath: ['3', '3-1'],
+        icon: 'el-icon-edit-outline',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '修改密码',
+      }, {
+        index: '3-2',
+        indexPath: ['3', '3-2'],
+        icon: 'el-icon-switch-button',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '安全退出',
+      },
+    ]
+  }
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      iseeData: {
+        version: iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
+        status: false,
+        show: true,
+        asideShow: iseeAdmin.asideShow,
+        asideShowIcon: iseeAdmin.asideShowIcon,
+        fullscreen: false,
+        fullscreenIcon: '&#xe610;',
+        defaultActive: iseeAdmin.defaultActive,
+        tagList: iseeAdmin.tagList,
+        breadcrumb: iseeAdmin.breadcrumb,
+        menu: [],
+        avatar: iseeAvatar
+      },
+      /*your data*/
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+      }],
+      tableData3: [{
+        date: '2016-05-03',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-02',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-08',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-06',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-07',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }],
+      tableData4: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄',
+        tag: '家'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄',
+        tag: '公司'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄',
+        tag: '家'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄',
+        tag: '公司'
+      }],
+      tableData5: [{
+        id: '12987122',
+        name: '好滋好味鸡蛋仔',
+        category: '江浙小吃、小吃零食',
+        desc: '荷兰优质淡奶，奶香浓而不腻',
+        address: '上海市普陀区真北路',
+        shop: '王小虎夫妻店',
+        shopId: '10333'
+      }, {
+        id: '12987123',
+        name: '好滋好味鸡蛋仔',
+        category: '江浙小吃、小吃零食',
+        desc: '荷兰优质淡奶，奶香浓而不腻',
+        address: '上海市普陀区真北路',
+        shop: '王小虎夫妻店',
+        shopId: '10333'
+      }, {
+        id: '12987125',
+        name: '好滋好味鸡蛋仔',
+        category: '江浙小吃、小吃零食',
+        desc: '荷兰优质淡奶，奶香浓而不腻',
+        address: '上海市普陀区真北路',
+        shop: '王小虎夫妻店',
+        shopId: '10333'
+      }, {
+        id: '12987126',
+        name: '好滋好味鸡蛋仔',
+        category: '江浙小吃、小吃零食',
+        desc: '荷兰优质淡奶，奶香浓而不腻',
+        address: '上海市普陀区真北路',
+        shop: '王小虎夫妻店',
+        shopId: '10333'
+      }],
+      currentRow:null,
+      multipleSelection: [],
+    },
+    methods: {
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.$data.iseeData)
+      },
+
+      iseeTagClose(url, index) {
+        iseeAdmin.iseeTagClose(url, index, this.$data.iseeData)
+      },
+
+      iseeTagCommandClose(command) {
+        iseeAdmin.iseeTagCommandClose(command, this.$data.iseeData)
+      },
+
+      iseeMenuOpen(key, keyPath) {
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.$data.iseeData)
+      },
+
+      iseeFullScreen() {
+        iseeAdmin.iseeFullScreen(this.$data.iseeData)
+      },
+
+      iseeAsideShow() {
+        iseeAdmin.iseeAsideShow(this.$data.iseeData)
+      },
+      iseeOpenUrl(command) {
+        iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
+      },
+      /*your methods*/
+      setCurrent(row) {
+        this.$refs.singleTable.setCurrentRow(row);
+      },
+
+      handleCurrentChange(val) {
+        this.$data.currentRow = val;
+      },
+      handleSelectionChange(val) {
+        this.$data.multipleSelection = val;
+      },
+
+      toggleSelection(rows) {
+        if (rows) {
+          rows.forEach(row => {
+            this.$refs.multipleTable.toggleRowSelection(row);
+          });
+        } else {
+          this.$refs.multipleTable.clearSelection();
+        }
+      },
+
+      formatter(row, column) {
+        return row.address;
+      },
+
+      resetDateFilter() {
+        this.$refs.filterTable.clearFilter('date');
+      },
+      clearFilter() {
+        this.$refs.filterTable.clearFilter();
+      },
+      formatter(row, column) {
+        return row.address;
+      },
+      filterTag(value, row) {
+        return row.tag === value;
+      },
+      filterHandler(value, row, column) {
+        const property = column['property'];
+        return row[property] === value;
+      },
+      handleEdit(index, row) {
+        console.log(index, row);
+      },
+      handleDelete(index, row) {
+        console.log(index, row);
+      }
+
+    },
+    beforeMount() {
+      iseeAdmin.init(this.$data.iseeData)
+      this.$data.iseeData.menu = iseeMenu
+      /*your beforeMount*/
+    },
+    mounted() {
+
+    }
+  });
+</script>
+</body>
+
+</html>
+
