@@ -269,6 +269,8 @@ var iseeAdmin = {
     this.cacheSet('iseeTagList', o.tagList, 2)
     // 关闭当前tag,跳转到前一个tag
     if (t[0].index == o.defaultActive) {
+      o.breadcrumb = o.tagList[i - 1].breadcrumb
+      this.cacheSet('iseeBreadcrumb', o.breadcrumb, 2)
       this.cacheSet('iseeDefaultActive', o.tagList[i - 1].index)
       window.open(o.tagList[i - 1].url, '_self')
     }

@@ -161,14 +161,14 @@ var iseeMenu = [
             icon: '',
             children: []
           },
-          {
-            index: '5-0-4',
-            title: '表单元素',
-            url: '/pages/component/form/element.html',
-            target: '_self',
-            icon: '',
-            children: []
-          },
+          // {
+          //   index: '5-0-4',
+          //   title: '表单元素',
+          //   url: '/pages/component/form/element.html',
+          //   target: '_self',
+          //   icon: '',
+          //   children: []
+          // },
           // {
           //   index: '5-0-2',
           //   title: '表单组合',
@@ -198,6 +198,14 @@ var iseeMenu = [
             index: '5-1-1',
             title: '复杂表格1',
             url: '/pages/component/table/complextable1.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
+          {
+            index: '5-1-2',
+            title: '复杂表格2',
+            url: '/pages/component/table/complextable2.html',
             target: '_self',
             icon: '',
             children: []
