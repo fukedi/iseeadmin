@@ -178,6 +178,31 @@ var iseeMenu = [
           //   children: []
           // }
         ]
+      },
+      {
+        index: '5-1',
+        title: '表格',
+        url: '/pages/component/table',
+        target: '_self',
+        icon: 'el-icon-tickets',
+        children: [
+          {
+            index: '5-1-0',
+            title: '简单表格',
+            url: '/pages/component/table/simpletable.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }
+          // {
+          //   index: '5-0-2',
+          //   title: '表单组合',
+          //   url: '/pages/component/form/group.html',
+          //   target: '_self',
+          //   icon: 'el-icon-tickets',
+          //   children: []
+          // }
+        ]
       }
     ]
   }

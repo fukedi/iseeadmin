@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ISeeAdmin 【简单表格】 </title>
+    <!--    <link rel="stylesheet" href="/static/element/index.css">-->
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/iconfont/iconfont.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <!--    开发环境-->
+    <!--        <script src="/static/js/iseeadmin.js"></script>-->
+    <!--    正式环境-->
+    <script src="/static/js/iseeadmin.min.js"></script>
+    <script src="/static/js/menu.js"></script>
+    <!--    开发环境-->
+    <!--    <script src="/static/js/vue.js"></script>-->
+    <!--    正式环境-->
+    <!--        <script src="/static/js/vue.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="/static/element/index.js"></script>-->
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="/static/js/axios.min.js"></script>-->
+    <style>
+        .el-table .warning-row {
+            background: #DCDFE6;
+        }
+
+        .el-table .success-row {
+            background: #f0f9eb;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container style="height: 100%;min-height:100vh;">
+        <el-aside v-show="iseeData.asideShow" width="210px">
+            <!--            左侧logo 开始-->
+            <div class="aside-logo">
+                <img class="aside-logo-img" src="/static/images/logo.png"
+                     alt=""> ISeeAdmin
+            </div>
+            <!--            左侧logo 结束-->
+            <!--            左侧菜单 开始-->
+            <el-menu @select="iseeMenuOpen" style="width: 210px;"
+                     unique-opened
+                     :default-active="iseeData.defaultActive"
+                     background-color="#304156"
+                     text-color="#bfcbd9"
+                     active-text-color="#409eff">
+
+                <template v-for="(item,index) in iseeData.menu">
+                    <template v-if="!item.children.length">
+                        <el-menu-item :index="item.index"><i :class="item.icon"></i>{{item.title}}</el-menu-item>
+                    </template>
+                    <template v-else>
+                        <el-submenu :index="item.index">
+                            <template slot="title"><i :class="item.icon"></i>{{item.title}}</template>
+                            <template v-for="(itemSub,indexSub) in item.children" :index="itemSub.index">
+                                <template v-if="itemSub.children.length">
+                                    <el-submenu :index="itemSub.index">
+                                        <span slot="title"><i :class="itemSub.icon"></i>{{ itemSub.title }}</span>
+                                        <template v-for="(itemSub_,indexSub_) in itemSub.children">
+                                            <el-menu-item :index="itemSub_.index"><i :class="itemSub_.icon"></i>{{
+                                                itemSub_.title }}
+                                            </el-menu-item>
+                                        </template>
+                                    </el-submenu>
+                                </template>
+                                <template v-else>
+                                    <el-menu-item :index="itemSub.index"><i :class="itemSub.icon"></i>{{ itemSub.title
+                                        }}
+                                    </el-menu-item>
+                                </template>
+                            </template>
+                        </el-submenu>
+                    </template>
+                </template>
+
+            </el-menu>
+            <!--            左侧菜单 结束-->
+        </el-aside>
+
+        <el-container>
+            <el-header height="83px">
+                <div class="isee-header-div">
+                    <!--                    面包屑 开始-->
+                    <div style="width: 100%;display: inherit;">
+                        <span class="aside-show" @click="iseeAsideShow">
+                            <i :class="iseeData.asideShowIcon"></i>
+                        </span>
+
+                        <el-breadcrumb style="line-height: 50px" separator="/">
+                            <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <!--                    面包屑 结束-->
+                    <!--                    icon功能列表，可根据需要修改 开始-->
+                    <div>
+                        <ul class="isee-ul">
+                            <li class="isee-li">
+                                <i style="font-size: 20px" class="el-icon-bell"></i>
+                            </li>
+                            <li @click="iseeFullScreen" class="isee-li">
+                                <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
+                            </li>
+                            <li class="isee-li" @click="iseeData.drawer = true">
+                                <span class="iconfont" style="font-size: 20px">&#xe602;</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--                    icon功能列表，可根据需要修改 结束-->
+                    <!--                    avatar显示 开始-->
+                    <div>
+                        <el-dropdown @command="iseeOpenUrl">
+                              <span class="el-dropdown-link">
+                                  <el-avatar style="margin-top: 9px" :size="iseeData.avatar.size"
+                                             :src="iseeData.avatar.url"></el-avatar>
+                              </span>
+
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(item,index) in iseeData.avatar.list" :icon="item.icon"
+                                                  :key="index" :command="index">{{item.title}}
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    avatar显示 结束-->
+                </div>
+                <div style="display: flex">
+                    <!--                    标签页列表 开始-->
+                    <div style="width: 100%">
+                        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
+                                :key="index"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
+                                :effect="item.effect"
+                                :type="item.type"
+                                @close="iseeTagClose(item.url,index)"
+                                size="medium"
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                        </el-tag>
+                    </div>
+                    <!--                    标签页列表 结束-->
+                    <!--                    标签页集中操作 开始-->
+                    <div style="float: right;">
+                        <el-dropdown @command="iseeTagCommandClose">
+                          <span class="el-dropdown-link">
+                              <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
+                          </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    标签页集中操作 结束-->
+                </div>
+
+                <!--抽屉式展示-->
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">https://gitee.com/youge/iseeadmin
+                                </el-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+                </el-drawer>
+                <!--抽屉式展示 结束-->
+            </el-header>
+
+            <el-main>
+                <!--                主内容展示-->
+                <div style="margin-right: 10px">
+                    <el-card class="box-card">
+                        Table 表格
+                        <el-link type="primary" target="_blank"
+                                 href="https://element.eleme.cn/#/zh-CN/component/table">
+                            官方文档 https://element.eleme.cn/#/zh-CN/component/table
+                        </el-link>
+                    </el-card>
+                </div>
+                <div style="display: flex">
+                    <el-card class="box-card">
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">基础表格</span></el-divider>
+                        <template>
+                            <el-table
+                                    :data="tableData"
+                                    style="width: 100%">
+                                <el-table-column
+                                        prop="date"
+                                        label="日期"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址">
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">尺寸大小 <el-tooltip
+                                content="可设置table属性size为medium、small或mini控制表格尺寸大小" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    :data="tableData"
+                                    size="mini"
+                                    style="width: 100%">
+                                <el-table-column
+                                        prop="date"
+                                        label="日期"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址">
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">带斑马纹表格</span></el-divider>
+                        <el-table
+                                :data="tableData"
+                                stripe
+                                style="width: 100%">
+                            <el-table-column
+                                    prop="date"
+                                    label="日期"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="name"
+                                    label="姓名"
+                                    width="180">
+                            </el-table-column>
+                            <el-table-column
+                                    prop="address"
+                                    label="地址">
+                            </el-table-column>
+                        </el-table>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">带边框表格 <el-tooltip
+                                content="默认情况下，Table 组件是不具有竖直方向的边框的，如果需要，可以使用border属性，它接受一个Boolean，设置为true即可启用。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+
+                        <template>
+                            <el-table
+                                    :data="tableData"
+                                    border
+                                    style="width: 100%">
+                                <el-table-column
+                                        prop="date"
+                                        label="日期"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址">
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">带状态表格 <el-tooltip
+                                content="可将表格内容 highlight 显示，方便区分「成功、信息、警告、危险」等内容。可以通过指定 Table 组件的 row-class-name 属性来为 Table 中的某一行添加 class，表明该行处于某种状态。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    :data="tableData"
+                                    style="width: 100%"
+                                    :row-class-name="tableRowClassName">
+                                <el-table-column
+                                        prop="date"
+                                        label="日期"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址">
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                    </el-card>
+                    <el-card class="box-card">
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">固定表头 <el-tooltip
+                                content="只要在el-table元素中定义了height属性，即可实现固定表头的表格，而不需要额外的代码。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    :data="tableData1"
+                                    height="250"
+                                    border
+                                    style="width: 100%">
+                                <el-table-column
+                                        prop="date"
+                                        label="日期"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址">
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">固定列 <el-tooltip
+                                content="固定列需要使用fixed属性，它接受 Boolean 值或者leftright，表示左边固定还是右边固定。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    :data="tableData2"
+                                    border
+                                    style="width: 100%">
+                                <el-table-column
+                                        fixed
+                                        prop="date"
+                                        label="日期"
+                                        width="150">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="province"
+                                        label="省份"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="city"
+                                        label="市区"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址"
+                                        width="300">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="zip"
+                                        label="邮编"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        fixed="right"
+                                        label="操作"
+                                        width="100">
+                                    <template slot-scope="scope">
+                                        <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+                                        <el-button type="text" size="small">编辑</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">固定列和表头 <el-tooltip
+                                content="横纵内容过多时，可选择固定列和表头。固定列和表头可以同时使用，只需要将上述两个属性分别设置好即可。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    :data="tableData3"
+                                    style="width: 100%"
+                                    height="250">
+                                <el-table-column
+                                        fixed
+                                        prop="date"
+                                        label="日期"
+                                        width="150">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="province"
+                                        label="省份"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="city"
+                                        label="市区"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址"
+                                        width="300">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="zip"
+                                        label="邮编"
+                                        width="120">
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">流体高度 <el-tooltip
+                                content="通过设置max-height属性为 Table 指定最大高度。此时若表格所需的高度大于最大高度，则会显示一个滚动条。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-table
+                                    :data="tableData3"
+                                    style="width: 100%"
+                                    max-height="250">
+                                <el-table-column
+                                        fixed
+                                        prop="date"
+                                        label="日期"
+                                        width="150">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="province"
+                                        label="省份"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="city"
+                                        label="市区"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址"
+                                        width="300">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="zip"
+                                        label="邮编"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        fixed="right"
+                                        label="操作"
+                                        width="120">
+                                    <template slot-scope="scope">
+                                        <el-button
+                                                @click.native.prevent="deleteRow(scope.$index, tableData3)"
+                                                type="text"
+                                                size="small">
+                                            移除
+                                        </el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+
+
+                    </el-card>
+
+                </div>
+                <!--                主内容展示 结束-->
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+
+<script>
+  const iseeAvatar = {
+    url: '/static/images/avatar01.gif',
+    size: 32,
+    list: [
+      {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-user-solid',
+        url: '',
+        target: '_self',
+        title: 'admin',
+      }, {
+        index: '3-0',
+        indexPath: ['3', '3-0'],
+        icon: 'el-icon-tickets',
+        url: '/manage/profile.html',
+        target: '_self',
+        title: '基本资料',
+      }, {
+        index: '3-1',
+        indexPath: ['3', '3-1'],
+        icon: 'el-icon-edit-outline',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '修改密码',
+      }, {
+        index: '3-2',
+        indexPath: ['3', '3-2'],
+        icon: 'el-icon-switch-button',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '安全退出',
+      },
+    ]
+  }
+
+  var app = new Vue({
+    el: '#app',
+    data: {
+      iseeData: {
+        version: iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
+        status: false,
+        show: true,
+        asideShow: iseeAdmin.asideShow,
+        asideShowIcon: iseeAdmin.asideShowIcon,
+        fullscreen: false,
+        fullscreenIcon: '&#xe610;',
+        defaultActive: iseeAdmin.defaultActive,
+        tagList: iseeAdmin.tagList,
+        breadcrumb: iseeAdmin.breadcrumb,
+        menu: [],
+        avatar: iseeAvatar
+      },
+      /*your data*/
+      tableData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1517 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1519 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1516 弄'
+      }],
+      tableData1: [{
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-08',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-06',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-07',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }],
+      tableData2: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1517 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1519 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1516 弄',
+        zip: 200333
+      }],
+      tableData3: [{
+        date: '2016-05-03',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-02',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-08',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-06',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }, {
+        date: '2016-05-07',
+        name: '王小虎',
+        province: '上海',
+        city: '普陀区',
+        address: '上海市普陀区金沙江路 1518 弄',
+        zip: 200333
+      }]
+    },
+    methods: {
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.$data.iseeData)
+      },
+
+      iseeTagClose(url, index) {
+        iseeAdmin.iseeTagClose(url, index, this.$data.iseeData)
+      },
+
+      iseeTagCommandClose(command) {
+        iseeAdmin.iseeTagCommandClose(command, this.$data.iseeData)
+      },
+
+      iseeMenuOpen(key, keyPath) {
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.$data.iseeData)
+      },
+
+      iseeFullScreen() {
+        iseeAdmin.iseeFullScreen(this.$data.iseeData)
+      },
+
+      iseeAsideShow() {
+        iseeAdmin.iseeAsideShow(this.$data.iseeData)
+      },
+      iseeOpenUrl(command) {
+        iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
+      },
+      /*your methods*/
+      tableRowClassName({row, rowIndex}) {
+        if (rowIndex === 1) {
+          return 'warning-row';
+        } else if (rowIndex === 3) {
+          return 'success-row';
+        }
+        return '';
+      },
+
+      handleClick(row) {
+        console.log(row);
+      },
+
+      deleteRow(index, rows) {
+        rows.splice(index, 1);
+      }
+
+    },
+    beforeMount() {
+      iseeAdmin.init(this.$data.iseeData)
+      this.$data.iseeData.menu = iseeMenu
+      /*your beforeMount*/
+    },
+    mounted() {
+
+    }
+  });
+</script>
+</body>
+
+</html>
+
