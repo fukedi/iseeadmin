@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ISeeAdmin 【InputNumber计数器】 </title>
+    <title>ISeeAdmin 【Select 选择器】 </title>
     <!--    <link rel="stylesheet" href="/static/element/index.css">-->
     <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/iconfont/iconfont.css">
@@ -112,7 +112,7 @@
                     </span>
                     <!--                    标签页列表 结束-->
                     <!--                    标签页集中操作 开始-->
-                    <div style="float: right;">
+                    <div style="float: right;margin-left: 10px">
                         <el-dropdown @command="iseeTagCommandClose">
                           <span class="el-dropdown-link">
                               <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
@@ -148,7 +148,11 @@
                             <li>
                                 下载地址：
                                 <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
-                                         target="_blank">https://gitee.com/youge/iseeadmin
+                                         target="_blank">码云
+                                </el-link>
+                                |
+                                <el-link type="primary" :underline="false" href="https://github.com/fukedi/iseeadmin"
+                                         target="_blank">github
                                 </el-link>
                             </li>
                         </ul>
@@ -173,91 +177,193 @@
                 <!--                主内容展示-->
                 <div style="margin-right: 10px">
                     <el-card class="box-card">
-                        InputNumber 计数器
+                        Select 选择器
                         <el-link type="primary" target="_blank"
-                                 href="https://element.eleme.cn/#/zh-CN/component/input-number">
-                            官方文档 https://element.eleme.cn/#/zh-CN/component/input-number
+                                 href="https://element.eleme.cn/#/zh-CN/component/select">
+                            官方文档 https://element.eleme.cn/#/zh-CN/component/select
                         </el-link>
                     </el-card>
                 </div>
                 <div style="display: flex">
                     <el-card class="box-card">
-
                         <el-divider content-position="left"><span
-                                class="el-divider-span">基础用法</span></el-divider>
-                        <template>
-                            <el-input-number v-model="num" @change="handleChange" :min="1" :max="10"
-                                             label="描述文字"></el-input-number>
-                        </template>
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">禁用状态</span></el-divider>
-                        <template>
-                            <el-input-number v-model="num9" :disabled="true"></el-input-number>
-                        </template>
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">按钮位置 <el-tooltip
-                                content="设置 controls-position 属性可以控制按钮位置。" placement="top" effect="light"><i
+                                class="el-divider-span">基础用法 <el-tooltip
+                                content="v-model的值为当前被选中的el-option的 value 属性值" placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <template>
-                            <el-input-number v-model="num8" controls-position="right" @change="handleChange" :min="1"
-                                             :max="10"></el-input-number>
+                            <el-select v-model="value" placeholder="请选择">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
+
+
+                        <el-divider content-position="left"><span class="el-divider-span">有禁用选项</span></el-divider>
+                        <template>
+                            <el-select v-model="value1" placeholder="请选择">
+                                <el-option
+                                        v-for="item in options1"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value"
+                                        :disabled="item.disabled">
+                                </el-option>
+                            </el-select>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">禁用状态 <el-tooltip
+                                content="选择器不可用状态。为el-select设置disabled属性，则整个选择器不可用" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-select v-model="value" disabled placeholder="请选择">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
                         </template>
 
                     </el-card>
-                    <el-card class="box-card">
 
+                    <el-card class="box-card">
                         <el-divider content-position="left"><span
-                                class="el-divider-span">步数 <el-tooltip
-                                content="允许定义递增递减的步数控制" placement="top" effect="light"><i
+                                class="el-divider-span">可清空单选 <el-tooltip
+                                content="包含清空按钮，可将选择器清空为初始状态。为el-select设置clearable属性，则可将选择器清空。需要注意的是，clearable属性仅适用于单选"
+                                placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <template>
-                            <el-input-number v-model="num1" :step="2"></el-input-number>
+                            <el-select v-model="value" clearable placeholder="请选择">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
                         </template>
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">严格步数 <el-tooltip
-                                content="step-strictly属性接受一个Boolean。如果这个属性被设置为true，则只能输入步数的倍数。" placement="top"
+                                class="el-divider-span">基础多选 <el-tooltip
+                                content="为el-select设置multiple属性即可启用多选，此时v-model的值为当前选中值所组成的数组。默认情况下选中值会以 Tag 的形式展现，你也可以设置collapse-tags属性将它们合并为一段文字。为el-select设置multiple属性即可启用多选，此时v-model的值为当前选中值所组成的数组。默认情况下选中值会以 Tag 的形式展现，你也可以设置collapse-tags属性将它们合并为一段文字。"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-select v-model="value2" multiple placeholder="请选择">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                            <el-select
+                                    v-model="value3"
+                                    multiple
+                                    collapse-tags
+                                    style="margin-left: 20px;"
+                                    placeholder="请选择">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">分组 <el-tooltip
+                                content="备选项进行分组展示。使用el-option-group对备选项进行分组，它的label属性为分组名" placement="top"
                                 effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <template>
-                            <el-input-number v-model="num2" :step="2" step-strictly></el-input-number>
+                            <el-select v-model="value4" placeholder="请选择">
+                                <el-option-group
+                                        v-for="group in options2"
+                                        :key="group.label"
+                                        :label="group.label">
+                                    <el-option
+                                            v-for="item in group.options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value">
+                                    </el-option>
+                                </el-option-group>
+                            </el-select>
                         </template>
 
                     </el-card>
+
                     <el-card class="box-card">
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">精度 <el-tooltip
-                                content="设置 precision 属性可以控制数值精度，接收一个 Number。" placement="top" effect="light"><i
+                                class="el-divider-span">可搜索 <el-tooltip
+                                content="为el-select添加filterable属性即可启用搜索功能。默认情况下，Select 会找出所有label属性包含输入值的选项。如果希望使用其他的搜索逻辑，可以通过传入一个filter-method来实现。filter-method为一个Function，它会在输入值发生变化时调用，参数为当前输入值。"
+                                placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <template>
-                            <el-input-number v-model="num3" :precision="2" :step="0.1" :max="10"></el-input-number>
+                            <el-select v-model="value" filterable placeholder="请选择">
+                                <el-option
+                                        v-for="item in options"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
                         </template>
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">尺寸 <el-tooltip
-                                content="额外提供了 medium、small、mini 三种尺寸的数字输入框" placement="top" effect="light"><i
+                                class="el-divider-span">远程搜索 <el-tooltip
+                                content="为了启用远程搜索，需要将filterable和remote设置为true，同时传入一个remote-method。remote-method为一个Function，它会在输入值发生变化时调用，参数为当前输入值。需要注意的是，如果el-option是通过v-for指令渲染出来的，此时需要为el-option添加key属性，且其值需具有唯一性，比如此例中的item.value。"
+                                placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-                        <el-row style="margin-top: 10px">
-                            <el-col :span="10" :gutter="1">
-                                <el-input-number v-model="num4"></el-input-number>
-                            </el-col>
-                            <el-col :span="10" :offset="1">
-                                <el-input-number size="medium" v-model="num5"></el-input-number>
-                            </el-col>
-                        </el-row>
-                        <el-row style="margin-top: 10px">
-                            <el-col :span="10" :gutter="1">
-                                <el-input-number size="small" v-model="num6"></el-input-number>
-                            </el-col>
-                            <el-col :span="10" :offset="1">
-                                <el-input-number size="mini" v-model="num7"></el-input-number>
-                            </el-col>
-                        </el-row>
-                    </el-card>
+                        <template>
+                            <el-select
+                                    v-model="value"
+                                    multiple
+                                    filterable
+                                    remote
+                                    reserve-keyword
+                                    placeholder="请输入关键词"
+                                    :remote-method="remoteMethod"
+                                    :loading="loading">
+                                <el-option
+                                        v-for="item in options3"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
 
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">创建条目 <el-tooltip
+                                content="可以创建并选中选项中不存在的条目。使用allow-create属性即可通过在输入框中输入文字来创建新的条目。注意此时filterable必须为真。本例还使用了default-first-option属性，在该属性打开的情况下，按下回车就可以选中当前选项列表中的第一个选项，无需使用鼠标或键盘方向键进行定位。" placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-select
+                                    v-model="value5"
+                                    multiple
+                                    filterable
+                                    allow-create
+                                    default-first-option
+                                    placeholder="请选择文章标签">
+                                <el-option
+                                        v-for="item in options4"
+                                        :key="item.value"
+                                        :label="item.label"
+                                        :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </template>
+
+                    </el-card>
                 </div>
                 <!--                主内容展示 结束-->
             </el-main>
@@ -346,16 +452,101 @@
         avatar: iseeAvatar
       },
       /*your data*/
-      num: 1,
-      num1: 5,
-      num2: 3,
-      num3: 1,
-      num4: 1,
-      num5: 1,
-      num6: 1,
-      num7: 1,
-      num8: 1,
-      num9: 1,
+      options: [{
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶'
+      }, {
+        value: '选项3',
+        label: '蚵仔煎'
+      }, {
+        value: '选项4',
+        label: '龙须面'
+      }, {
+        value: '选项5',
+        label: '北京烤鸭'
+      }],
+      options1: [{
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶',
+        disabled: true
+      }, {
+        value: '选项3',
+        label: '蚵仔煎'
+      }, {
+        value: '选项4',
+        label: '龙须面'
+      }, {
+        value: '选项5',
+        label: '北京烤鸭'
+      }],
+      options2: [{
+        label: '热门城市',
+        options: [{
+          value: 'Shanghai',
+          label: '上海'
+        }, {
+          value: 'Beijing',
+          label: '北京'
+        }]
+      }, {
+        label: '城市名',
+        options: [{
+          value: 'Chengdu',
+          label: '成都'
+        }, {
+          value: 'Shenzhen',
+          label: '深圳'
+        }, {
+          value: 'Guangzhou',
+          label: '广州'
+        }, {
+          value: 'Dalian',
+          label: '大连'
+        }]
+      }],
+      options3: [],
+      states: ["Alabama", "Alaska", "Arizona",
+        "Arkansas", "California", "Colorado",
+        "Connecticut", "Delaware", "Florida",
+        "Georgia", "Hawaii", "Idaho", "Illinois",
+        "Indiana", "Iowa", "Kansas", "Kentucky",
+        "Louisiana", "Maine", "Maryland",
+        "Massachusetts", "Michigan", "Minnesota",
+        "Mississippi", "Missouri", "Montana",
+        "Nebraska", "Nevada", "New Hampshire",
+        "New Jersey", "New Mexico", "New York",
+        "North Carolina", "North Dakota", "Ohio",
+        "Oklahoma", "Oregon", "Pennsylvania",
+        "Rhode Island", "South Carolina",
+        "South Dakota", "Tennessee", "Texas",
+        "Utah", "Vermont", "Virginia",
+        "Washington", "West Virginia", "Wisconsin",
+        "Wyoming"],
+      options4: [{
+        value: 'HTML',
+        label: 'HTML'
+      }, {
+        value: 'CSS',
+        label: 'CSS'
+      }, {
+        value: 'JavaScript',
+        label: 'JavaScript'
+      }],
+      list: [],
+      loading: false,
+      value: '',
+      value1: '',
+      value2: '',
+      value3: '',
+      value4: '',
+      value5: '',
+
     },
     methods: {
       iseeTagSwitch(url, index, breadcrumb) {
@@ -388,16 +579,30 @@
         flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
       },
       /*your methods*/
-      handleChange(value) {
-        console.log(value);
+      remoteMethod(query) {
+        if (query !== '') {
+          this.loading = true;
+          setTimeout(() => {
+            this.loading = false;
+            this.options3 = this.list.filter(item => {
+              return item.label.toLowerCase()
+                .indexOf(query.toLowerCase()) > -1;
+            });
+          }, 200);
+        } else {
+          this.options3 = [];
+        }
       }
+
     },
     beforeMount() {
       iseeAdmin.init(this.iseeData)
       /*your beforeMount*/
     },
     mounted() {
-
+      this.list = this.states.map(item => {
+        return {value: item, label: item};
+      });
     }
   });
 </script>

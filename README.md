@@ -7,8 +7,8 @@ iseeAdmin是一个基于vue和element UI实现的后台前端解决方案，特�
 #### 基本情况
 1. iseeAdmin基于vue和element UI开发
 2. 使用对象：主要是后端人员，要求掌握vue基本技能和了解element ui
-3. iseeAdmin参考了[vue-element-admin](https://panjiachen.github.io/vue-element-admin-site/zh/)和[layuiAdmin](https://www.layui.com/admin/std/dist/views/)页面布局
-4. 下载地址：[https://gitee.com/youge/iseeadmin](https://gitee.com/youge/iseeadmin)
+3. iseeAdmin参考了[vue-element-admin](https://panjiachen.github.io/vue-element-admin)和[layuiAdmin](https://www.layui.com/admin/std/dist/views/)页面布局
+4. 下载地址：[码云](https://gitee.com/youge/iseeadmin) 或 [github](https://github.com/fukedi/iseeadmin)
 5. [demo](http://56c.net.cn)
 6. 使用文档：[56c.net.cn](https://www.kancloud.cn/ghzz789/iseeadmin)
 7. 交流QQ群：927049524

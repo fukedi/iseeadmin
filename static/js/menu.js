@@ -167,6 +167,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-0-4',
+            title: 'Select 选择器',
+            url: '/pages/component/form/select.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
           // {
           //   index: '5-0-4',

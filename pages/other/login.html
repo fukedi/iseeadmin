@@ -113,8 +113,8 @@
         this.$refs[obj].validate((valid) => {
           if (valid) {
             axios.get('/data/login.json', {
-              account: this.$data.loginData.account,
-              pass: this.$data.loginData.pass,
+              account: this.loginData.account,
+              pass: this.loginData.pass,
             }).then(res => {
               console.log(res.data)
               window.location.href = "/";

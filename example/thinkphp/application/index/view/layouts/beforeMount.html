@@ -1,1 +1,1 @@
-iseeAdmin.init(this.$data.iseeData)
+iseeAdmin.init(this.iseeData)
