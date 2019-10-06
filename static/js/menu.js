@@ -289,7 +289,15 @@ var iseeMenu = [
           children: []
         },
         ]
-      }
+      },
+      {
+        index: '5-4',
+        title: '上传组件',
+        url: '/pages/component/upload.html',
+        target: '_self',
+        icon: 'el-icon-upload',
+        children: []
+      },
     ]
   }
 ]
