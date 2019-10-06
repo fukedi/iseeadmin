@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ISeeAdmin 【Cascader 级联选择器】 </title>
+    <!--    <link rel="stylesheet" href="/static/element/index.css">-->
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/iconfont/iconfont.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <!--    开发环境-->
+    <!--        <script src="/static/js/iseeadmin.js"></script>-->
+    <!--    正式环境-->
+    <script src="/static/js/iseeadmin.min.js"></script>
+    <script src="/static/js/menu.js"></script>
+    <!--    开发环境-->
+    <!--    <script src="/static/js/vue.js"></script>-->
+    <!--    正式环境-->
+    <!--        <script src="/static/js/vue.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="/static/element/index.js"></script>-->
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="/static/js/axios.min.js"></script>-->
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container style="height: 100%;min-height:100vh;">
+        <el-aside v-show="iseeData.asideShow" width="210px">
+            <!--            左侧logo 开始-->
+            <div class="aside-logo">
+                <img class="aside-logo-img" src="/static/images/logo.png"
+                     alt=""> ISeeAdmin
+            </div>
+            <!--            左侧logo 结束-->
+            <!--            左侧菜单 开始-->
+            <el-menu @select="iseeMenuOpen" style="width: 210px;"
+                     unique-opened
+                     :default-active="iseeData.defaultActive"
+                     background-color="#304156"
+                     text-color="#bfcbd9"
+                     active-text-color="#409eff">
+                <iseemenu :menu="iseeData.menu"></iseemenu>
+            </el-menu>
+            <!--            左侧菜单 结束-->
+        </el-aside>
+
+        <el-container>
+            <el-header height="83px">
+                <div class="isee-header-div">
+                    <!--                    面包屑 开始-->
+                    <div style="width: 100%;display: inherit;">
+                        <span class="aside-show" @click="iseeAsideShow">
+                            <i :class="iseeData.asideShowIcon"></i>
+                        </span>
+
+                        <el-breadcrumb style="line-height: 50px" separator="/">
+                            <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <!--                    面包屑 结束-->
+                    <!--                    icon功能列表，可根据需要修改 开始-->
+                    <div>
+                        <ul class="isee-ul">
+                            <li class="isee-li">
+                                <i style="font-size: 20px" class="el-icon-bell"></i>
+                            </li>
+                            <li @click="iseeFullScreen" class="isee-li">
+                                <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
+                            </li>
+                            <li class="isee-li" @click="iseeData.drawer = true">
+                                <span class="iconfont" style="font-size: 20px">&#xe602;</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--                    icon功能列表，可根据需要修改 结束-->
+                    <!--                    avatar显示 开始-->
+                    <div>
+                        <el-dropdown @command="iseeOpenUrl">
+                              <span class="el-dropdown-link">
+                                  <el-avatar style="margin-top: 9px" :size="iseeData.avatar.size"
+                                             :src="iseeData.avatar.url"></el-avatar>
+                              </span>
+
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(item,index) in iseeData.avatar.list" :icon="item.icon"
+                                                  :key="index" :command="index">{{item.title}}
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    avatar显示 结束-->
+                </div>
+                <div style="display: flex">
+                    <!--                    标签页列表 开始-->
+                    <span @click="iseeTagDivMove(1)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-left"></i>
+                    </span>
+                    <div ref="iseeTagDiv" class="isee-tag-div">
+                        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
+                                :key="index"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
+                                :effect="item.effect"
+                                :type="item.type"
+                                @close="iseeTagClose(item.url,index)"
+                                size="medium"
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                        </el-tag>
+                    </div>
+                    <span @click="iseeTagDivMove(2)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-right"></i>
+                    </span>
+                    <!--                    标签页列表 结束-->
+                    <!--                    标签页集中操作 开始-->
+                    <div style="float: right;margin-left: 10px">
+                        <el-dropdown @command="iseeTagCommandClose">
+                          <span class="el-dropdown-link">
+                              <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
+                          </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    标签页集中操作 结束-->
+                </div>
+
+                <!--抽屉式展示-->
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">码云
+                                </el-link>
+                                |
+                                <el-link type="primary" :underline="false" href="https://github.com/fukedi/iseeadmin"
+                                         target="_blank">github
+                                </el-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+                </el-drawer>
+                <!--抽屉式展示 结束-->
+            </el-header>
+
+            <el-main>
+                <!--                主内容展示-->
+                <div style="margin-right: 10px">
+                    <el-card class="box-card">
+                        Cascader 级联选择器
+                        <el-link type="primary" target="_blank"
+                                 href="https://element.eleme.cn/#/zh-CN/component/cascader">
+                            官方文档 https://element.eleme.cn/#/zh-CN/component/cascader
+                        </el-link>
+                    </el-card>
+                </div>
+                <div style="display: flex">
+                    <el-card class="box-card">
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">基础用法 <el-tooltip
+                                content="只需为 Cascader 的options属性指定选项数组即可渲染出一个级联选择器。通过props.expandTrigger可以定义展开子级菜单的触发方式。"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-row>
+                            <el-col :span="8">
+                                        <span style="line-height: 40px;font-size: 14px">
+                                            默认 click 触发子菜单
+                                        </span>
+                            </el-col>
+                            <el-col :span="15" :gutter="1">
+                                <el-cascader
+                                        v-model="value"
+                                        :options="options"
+                                        @change="handleChange"></el-cascader>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top: 10px">
+                            <el-col :span="8">
+                                        <span style="line-height: 40px;font-size: 14px">
+                                            hover 触发子菜单
+                                        </span>
+                            </el-col>
+                            <el-col :span="15" :gutter="1">
+                                <el-cascader
+                                        v-model="value"
+                                        :options="options"
+                                        :props="{ expandTrigger: 'hover' }"
+                                        @change="handleChange"></el-cascader>
+                            </el-col>
+                        </el-row>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">禁用选项 <el-tooltip
+                                content="options指定的数组中的第一个元素含有disabled: true键值对，因此是禁用的。在默认情况下，Cascader 会检查数据中每一项的disabled字段是否为true，如果你的数据中表示禁用含义的字段名不为disabled，可以通过props.disabled属性来指定（详见下方 API 表格）。当然，value、label和children这三个字段名也可以通过同样的方式指定。"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-cascader :options="options1"></el-cascader>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">可清空 <el-tooltip
+                                content="包含清空按钮，可将选择器清空为初始状态。为el-select设置clearable属性，则可将选择器清空。需要注意的是，clearable属性仅适用于单选"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-cascader :options="options" clearable></el-cascader>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">仅显示最后一级 <el-tooltip
+                                content="可以仅在输入框中显示选中项最后一级的标签，而不是选中项所在的完整路径。属性show-all-levels定义了是否显示完整的路径，将其赋值为false则仅显示最后一级"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-cascader :options="options" :show-all-levels="false"></el-cascader>
+
+
+                    </el-card>
+
+                    <el-card class="box-card">
+
+
+
+
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">多选 <el-tooltip
+                                content="可通过 props.multiple = true 来开启多选模式。在开启多选模式后，默认情况下会展示所有已选中的选项的Tag，你可以使用collapse-tags来折叠Tag"
+                                placement="top"
+                                effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-row>
+                            <el-col :span="8">
+                                        <span style="line-height: 40px;font-size: 14px">
+                                            默认显示所有Tag
+                                        </span>
+                            </el-col>
+                            <el-col :span="15" :gutter="1">
+                                <el-cascader
+                                        :options="options"
+                                        :props="props"
+                                        clearable></el-cascader>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top: 10px">
+                            <el-col :span="8">
+                                        <span style="line-height: 40px;font-size: 14px">
+                                            折叠展示Tag
+                                        </span>
+                            </el-col>
+                            <el-col :span="15" :gutter="1">
+                                <el-cascader
+                                        :options="options"
+                                        :props="props"
+                                        collapse-tags
+                                        clearable></el-cascader>
+                            </el-col>
+                        </el-row>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">选择任意一级选项 <el-tooltip
+                                content="在单选模式下，你只能选择叶子节点；而在多选模式下，勾选父节点真正选中的都是叶子节点。启用该功能后，可让父子节点取消关联，选择任意一级选项。可通过 props.checkStrictly = true 来设置父子节点取消选中关联，从而达到选择任意一级选项的目的。"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-row>
+                            <el-col :span="8">
+                                        <span style="line-height: 40px;font-size: 14px">
+                                            单选选择任意一级选项
+                                        </span>
+                            </el-col>
+                            <el-col :span="15" :gutter="1">
+                                <el-cascader
+                                        :options="options"
+                                        :props="{ checkStrictly: true }"
+                                        clearable></el-cascader>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top: 10px">
+                            <el-col :span="8">
+                                        <span style="line-height: 40px;font-size: 14px">
+                                            多选选择任意一级选项
+                                        </span>
+                            </el-col>
+                            <el-col :span="15" :gutter="1">
+                                <el-cascader
+                                        :options="options"
+                                        :props="{ multiple: true, checkStrictly: true }"
+                                        clearable></el-cascader>
+                            </el-col>
+                        </el-row>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">动态加载 <el-tooltip
+                                content="通过lazy开启动态加载，并通过lazyload来设置加载数据源的方法。lazyload方法有两个参数，第一个参数node为当前点击的节点，第二个resolve为数据加载完成的回调(必须调用)。为了更准确的显示节点的状态，还可以对节点数据添加是否为叶子节点的标志位 (默认字段为leaf，可通过props.leaf修改)，否则会简单的以有无子节点来判断是否为叶子节点。"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-cascader :props="props1"></el-cascader>
+
+                    </el-card>
+
+                    <el-card class="box-card">
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">可搜索 <el-tooltip
+                                content="将filterable赋值为true即可打开搜索功能，默认会匹配节点的label或所有父节点的label(由show-all-levels决定)中包含输入值的选项。你也可以用filter-method自定义搜索逻辑，接受一个函数，第一个参数是节点node，第二个参数是搜索关键词keyword，通过返回布尔值表示是否命中。"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-row>
+                            <el-col :span="8">
+                                        <span style="line-height: 40px;font-size: 14px">
+                                            单选可搜索
+                                        </span>
+                            </el-col>
+                            <el-col :span="15" :gutter="1">
+                                <el-cascader
+                                        placeholder="试试搜索：指南"
+                                        :options="options"
+                                        filterable></el-cascader>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top: 10px">
+                            <el-col :span="8">
+                                        <span style="line-height: 40px;font-size: 14px">
+                                            多选可搜索
+                                        </span>
+                            </el-col>
+                            <el-col :span="15" :gutter="1">
+                                <el-cascader
+                                        placeholder="试试搜索：指南"
+                                        :options="options"
+                                        :props="{ multiple: true }"
+                                        filterable></el-cascader>
+                            </el-col>
+                        </el-row>
+
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">自定义节点内容 <el-tooltip
+                                content="可以通过scoped slot对级联选择器的备选项的节点内容进行自定义，scoped slot会传入两个字段 node 和 data，分别表示当前节点的 Node 对象和数据。"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-cascader :options="options">
+                            <template slot-scope="{ node, data }">
+                                <span>{{ data.label }}</span>
+                                <span v-if="!node.isLeaf"> ({{ data.children.length }}) </span>
+                            </template>
+                        </el-cascader>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">级联面板 <el-tooltip
+                                content="和级联选择器一样，通过options来指定选项，也可通过props来设置多选、动态加载等功能。"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-cascader-panel :options="options"></el-cascader-panel>
+
+                    </el-card>
+                </div>
+                <!--                主内容展示 结束-->
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+
+<script>
+  const iseeAvatar = {
+    url: '/static/images/avatar01.gif',
+    size: 32,
+    list: [
+      {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-user-solid',
+        url: '',
+        target: '_self',
+        title: 'admin',
+      }, {
+        index: '3-0',
+        indexPath: ['3', '3-0'],
+        icon: 'el-icon-tickets',
+        url: '/manage/profile.html',
+        target: '_self',
+        title: '基本资料',
+      }, {
+        index: '3-1',
+        indexPath: ['3', '3-1'],
+        icon: 'el-icon-edit-outline',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '修改密码',
+      }, {
+        index: '3-2',
+        indexPath: ['3', '3-2'],
+        icon: 'el-icon-switch-button',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '安全退出',
+      },
+    ]
+  }
+  var iseemenu = {
+    props: ['menu'],
+    name: 'iseemenu',
+    template: `
+    <div>
+        <template v-for="item in menu">
+            <el-submenu :index="item.index" v-if="item.children.length">
+                <template slot="title">
+                    <i :class="item.icon"></i>
+                    <span slot="title">{{item.title}}</span>
+                </template>
+                <iseemenu :menu="item.children"></iseemenu>
+            </el-submenu>
+            <el-menu-item :index="item.index" v-else>
+                <i :class="item.icon"></i>
+                <span slot="title">{{item.title}}</span>
+            </el-menu-item>
+        </template>
+    </div>`,
+  }
+  let id = 0
+  var app = new Vue({
+    el: '#app',
+    components: {
+      iseemenu
+    },
+    data: {
+      iseeData: {
+        version: iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
+        status: false,
+        show: true,
+        asideShow: iseeAdmin.asideShow,
+        asideShowIcon: iseeAdmin.asideShowIcon,
+        fullscreen: false,
+        fullscreenIcon: '&#xe610;',
+        defaultActive: iseeAdmin.defaultActive,
+        tagList: iseeAdmin.tagList,
+        breadcrumb: iseeAdmin.breadcrumb,
+        menu: iseeMenu,
+        avatar: iseeAvatar
+      },
+      /*your data*/
+      value: [],
+      options: [{
+        value: 'zhinan',
+        label: '指南',
+        children: [{
+          value: 'shejiyuanze',
+          label: '设计原则',
+          children: [{
+            value: 'yizhi',
+            label: '一致'
+          }, {
+            value: 'fankui',
+            label: '反馈'
+          }, {
+            value: 'xiaolv',
+            label: '效率'
+          }, {
+            value: 'kekong',
+            label: '可控'
+          }]
+        }, {
+          value: 'daohang',
+          label: '导航',
+          children: [{
+            value: 'cexiangdaohang',
+            label: '侧向导航'
+          }, {
+            value: 'dingbudaohang',
+            label: '顶部导航'
+          }]
+        }]
+      }, {
+        value: 'zujian',
+        label: '组件',
+        children: [{
+          value: 'basic',
+          label: 'Basic',
+          children: [{
+            value: 'layout',
+            label: 'Layout 布局'
+          }, {
+            value: 'color',
+            label: 'Color 色彩'
+          }, {
+            value: 'typography',
+            label: 'Typography 字体'
+          }, {
+            value: 'icon',
+            label: 'Icon 图标'
+          }, {
+            value: 'button',
+            label: 'Button 按钮'
+          }]
+        }, {
+          value: 'form',
+          label: 'Form',
+          children: [{
+            value: 'radio',
+            label: 'Radio 单选框'
+          }, {
+            value: 'checkbox',
+            label: 'Checkbox 多选框'
+          }, {
+            value: 'input',
+            label: 'Input 输入框'
+          }, {
+            value: 'input-number',
+            label: 'InputNumber 计数器'
+          }, {
+            value: 'select',
+            label: 'Select 选择器'
+          }, {
+            value: 'cascader',
+            label: 'Cascader 级联选择器'
+          }, {
+            value: 'switch',
+            label: 'Switch 开关'
+          }, {
+            value: 'slider',
+            label: 'Slider 滑块'
+          }, {
+            value: 'time-picker',
+            label: 'TimePicker 时间选择器'
+          }, {
+            value: 'date-picker',
+            label: 'DatePicker 日期选择器'
+          }, {
+            value: 'datetime-picker',
+            label: 'DateTimePicker 日期时间选择器'
+          }, {
+            value: 'upload',
+            label: 'Upload 上传'
+          }, {
+            value: 'rate',
+            label: 'Rate 评分'
+          }, {
+            value: 'form',
+            label: 'Form 表单'
+          }]
+        }, {
+          value: 'data',
+          label: 'Data',
+          children: [{
+            value: 'table',
+            label: 'Table 表格'
+          }, {
+            value: 'tag',
+            label: 'Tag 标签'
+          }, {
+            value: 'progress',
+            label: 'Progress 进度条'
+          }, {
+            value: 'tree',
+            label: 'Tree 树形控件'
+          }, {
+            value: 'pagination',
+            label: 'Pagination 分页'
+          }, {
+            value: 'badge',
+            label: 'Badge 标记'
+          }]
+        }, {
+          value: 'notice',
+          label: 'Notice',
+          children: [{
+            value: 'alert',
+            label: 'Alert 警告'
+          }, {
+            value: 'loading',
+            label: 'Loading 加载'
+          }, {
+            value: 'message',
+            label: 'Message 消息提示'
+          }, {
+            value: 'message-box',
+            label: 'MessageBox 弹框'
+          }, {
+            value: 'notification',
+            label: 'Notification 通知'
+          }]
+        }, {
+          value: 'navigation',
+          label: 'Navigation',
+          children: [{
+            value: 'menu',
+            label: 'NavMenu 导航菜单'
+          }, {
+            value: 'tabs',
+            label: 'Tabs 标签页'
+          }, {
+            value: 'breadcrumb',
+            label: 'Breadcrumb 面包屑'
+          }, {
+            value: 'dropdown',
+            label: 'Dropdown 下拉菜单'
+          }, {
+            value: 'steps',
+            label: 'Steps 步骤条'
+          }]
+        }, {
+          value: 'others',
+          label: 'Others',
+          children: [{
+            value: 'dialog',
+            label: 'Dialog 对话框'
+          }, {
+            value: 'tooltip',
+            label: 'Tooltip 文字提示'
+          }, {
+            value: 'popover',
+            label: 'Popover 弹出框'
+          }, {
+            value: 'card',
+            label: 'Card 卡片'
+          }, {
+            value: 'carousel',
+            label: 'Carousel 走马灯'
+          }, {
+            value: 'collapse',
+            label: 'Collapse 折叠面板'
+          }]
+        }]
+      }, {
+        value: 'ziyuan',
+        label: '资源',
+        children: [{
+          value: 'axure',
+          label: 'Axure Components'
+        }, {
+          value: 'sketch',
+          label: 'Sketch Templates'
+        }, {
+          value: 'jiaohu',
+          label: '组件交互文档'
+        }]
+      }],
+      options1: [{
+        value: 'zhinan',
+        label: '指南',
+        disabled: true,
+        children: [{
+          value: 'shejiyuanze',
+          label: '设计原则',
+          children: [{
+            value: 'yizhi',
+            label: '一致'
+          }, {
+            value: 'fankui',
+            label: '反馈'
+          }, {
+            value: 'xiaolv',
+            label: '效率'
+          }, {
+            value: 'kekong',
+            label: '可控'
+          }]
+        }, {
+          value: 'daohang',
+          label: '导航',
+          children: [{
+            value: 'cexiangdaohang',
+            label: '侧向导航'
+          }, {
+            value: 'dingbudaohang',
+            label: '顶部导航'
+          }]
+        }]
+      }, {
+        value: 'zujian',
+        label: '组件',
+        children: [{
+          value: 'basic',
+          label: 'Basic',
+          children: [{
+            value: 'layout',
+            label: 'Layout 布局'
+          }, {
+            value: 'color',
+            label: 'Color 色彩'
+          }, {
+            value: 'typography',
+            label: 'Typography 字体'
+          }, {
+            value: 'icon',
+            label: 'Icon 图标'
+          }, {
+            value: 'button',
+            label: 'Button 按钮'
+          }]
+        }, {
+          value: 'form',
+          label: 'Form',
+          children: [{
+            value: 'radio',
+            label: 'Radio 单选框'
+          }, {
+            value: 'checkbox',
+            label: 'Checkbox 多选框'
+          }, {
+            value: 'input',
+            label: 'Input 输入框'
+          }, {
+            value: 'input-number',
+            label: 'InputNumber 计数器'
+          }, {
+            value: 'select',
+            label: 'Select 选择器'
+          }, {
+            value: 'cascader',
+            label: 'Cascader 级联选择器'
+          }, {
+            value: 'switch',
+            label: 'Switch 开关'
+          }, {
+            value: 'slider',
+            label: 'Slider 滑块'
+          }, {
+            value: 'time-picker',
+            label: 'TimePicker 时间选择器'
+          }, {
+            value: 'date-picker',
+            label: 'DatePicker 日期选择器'
+          }, {
+            value: 'datetime-picker',
+            label: 'DateTimePicker 日期时间选择器'
+          }, {
+            value: 'upload',
+            label: 'Upload 上传'
+          }, {
+            value: 'rate',
+            label: 'Rate 评分'
+          }, {
+            value: 'form',
+            label: 'Form 表单'
+          }]
+        }, {
+          value: 'data',
+          label: 'Data',
+          children: [{
+            value: 'table',
+            label: 'Table 表格'
+          }, {
+            value: 'tag',
+            label: 'Tag 标签'
+          }, {
+            value: 'progress',
+            label: 'Progress 进度条'
+          }, {
+            value: 'tree',
+            label: 'Tree 树形控件'
+          }, {
+            value: 'pagination',
+            label: 'Pagination 分页'
+          }, {
+            value: 'badge',
+            label: 'Badge 标记'
+          }]
+        }, {
+          value: 'notice',
+          label: 'Notice',
+          children: [{
+            value: 'alert',
+            label: 'Alert 警告'
+          }, {
+            value: 'loading',
+            label: 'Loading 加载'
+          }, {
+            value: 'message',
+            label: 'Message 消息提示'
+          }, {
+            value: 'message-box',
+            label: 'MessageBox 弹框'
+          }, {
+            value: 'notification',
+            label: 'Notification 通知'
+          }]
+        }, {
+          value: 'navigation',
+          label: 'Navigation',
+          children: [{
+            value: 'menu',
+            label: 'NavMenu 导航菜单'
+          }, {
+            value: 'tabs',
+            label: 'Tabs 标签页'
+          }, {
+            value: 'breadcrumb',
+            label: 'Breadcrumb 面包屑'
+          }, {
+            value: 'dropdown',
+            label: 'Dropdown 下拉菜单'
+          }, {
+            value: 'steps',
+            label: 'Steps 步骤条'
+          }]
+        }, {
+          value: 'others',
+          label: 'Others',
+          children: [{
+            value: 'dialog',
+            label: 'Dialog 对话框'
+          }, {
+            value: 'tooltip',
+            label: 'Tooltip 文字提示'
+          }, {
+            value: 'popover',
+            label: 'Popover 弹出框'
+          }, {
+            value: 'card',
+            label: 'Card 卡片'
+          }, {
+            value: 'carousel',
+            label: 'Carousel 走马灯'
+          }, {
+            value: 'collapse',
+            label: 'Collapse 折叠面板'
+          }]
+        }]
+      }, {
+        value: 'ziyuan',
+        label: '资源',
+        children: [{
+          value: 'axure',
+          label: 'Axure Components'
+        }, {
+          value: 'sketch',
+          label: 'Sketch Templates'
+        }, {
+          value: 'jiaohu',
+          label: '组件交互文档'
+        }]
+      }],
+      props: {multiple: true},
+      props1: {
+        lazy: true,
+        lazyLoad(node, resolve) {
+          const {level} = node;
+          setTimeout(() => {
+            const nodes = Array.from({length: level + 1})
+              .map(item => ({
+                value: ++id,
+                label: `选项${id}`,
+                leaf: level >= 2
+              }));
+            // 通过调用resolve将子节点数据返回，通知组件数据加载完成
+            resolve(nodes);
+          }, 1000);
+        }
+      }
+
+    },
+    methods: {
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.iseeData)
+      },
+
+      iseeTagClose(url, index) {
+        iseeAdmin.iseeTagClose(url, index, this.iseeData)
+      },
+
+      iseeTagCommandClose(command) {
+        iseeAdmin.iseeTagCommandClose(command, this.iseeData)
+      },
+
+      iseeMenuOpen(key, keyPath) {
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.iseeData)
+      },
+
+      iseeFullScreen() {
+        iseeAdmin.iseeFullScreen(this.iseeData)
+      },
+
+      iseeAsideShow() {
+        iseeAdmin.iseeAsideShow(this.iseeData)
+      },
+      iseeOpenUrl(command) {
+        iseeAdmin.iseeMenuOpen(this.iseeData.avatar.list[command].index, this.iseeData.avatar.list[command].indexPath, this.iseeData)
+      },
+      iseeTagDivMove(flag) {
+        flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
+      },
+      /*your methods*/
+      handleChange(value) {
+        console.log(value);
+      }
+
+    },
+    beforeMount() {
+      iseeAdmin.init(this.iseeData)
+      /*your beforeMount*/
+    },
+    mounted() {
+
+    }
+  });
+</script>
+</body>
+
+</html>
+

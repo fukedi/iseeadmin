@@ -146,31 +146,38 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-0-1',
             title: 'radio单选框',
             url: '/pages/component/form/radio.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-0-2',
             title: 'checkbox多选框',
             url: '/pages/component/form/checkbox.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-0-3',
             title: 'inputnumber计数器',
             url: '/pages/component/form/inputnumber.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-0-4',
             title: 'Select 选择器',
             url: '/pages/component/form/select.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-0-5',
+            title: 'Cascader 级联选择器',
+            url: '/pages/component/form/cascader.html',
             target: '_self',
             icon: '',
             children: []
