@@ -180,7 +180,7 @@ var iseeAdmin = {
       }
     })
 
-    if (o.status == false) {
+    if (o.status == false && b_.target == '_self') {
       let issTag = {
         index: k,
         title: b_.title,
@@ -194,10 +194,13 @@ var iseeAdmin = {
       o.tagList.push(issTag)
       this.cacheSet('iseeTagList', o.tagList, 2)
     }
-    o.breadcrumb = b
-    this.cacheSet('iseeBreadcrumb', o.breadcrumb, 2)
-    this.cacheSet('iseeDefaultActive', k)
-    window.open(b_.url, '_self')
+    if (b_.target == '_self') {
+      o.breadcrumb = b
+      this.cacheSet('iseeBreadcrumb', o.breadcrumb, 2)
+      this.cacheSet('iseeDefaultActive', k)
+    }
+
+    window.open(b_.url, b_.target)
   },
 
   /**
@@ -266,6 +269,8 @@ var iseeAdmin = {
     this.cacheSet('iseeTagList', o.tagList, 2)
     // 关闭当前tag,跳转到前一个tag
     if (t[0].index == o.defaultActive) {
+      o.breadcrumb = o.tagList[i - 1].breadcrumb
+      this.cacheSet('iseeBreadcrumb', o.breadcrumb, 2)
       this.cacheSet('iseeDefaultActive', o.tagList[i - 1].index)
       window.open(o.tagList[i - 1].url, '_self')
     }
@@ -305,7 +310,8 @@ var iseeAdmin = {
           b.push({
             index: o.index,
             title: o.title,
-            url: o.url
+            url: o.url,
+            target: o.target
           })
           m_ = m[i].children
         }

@@ -82,7 +82,7 @@
       var vm = new Vue({
         el: '#app',
         components: {
-          iseemenu
+          @include('admin.layouts.components')
         },
         data: {
             @include('admin.layouts.data')

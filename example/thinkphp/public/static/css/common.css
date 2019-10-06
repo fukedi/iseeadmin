@@ -76,12 +76,38 @@ body {
     padding-left: 15px;
     color: #409EFF;
 }
-.isee-drawer-ul{
+
+.isee-drawer-ul {
     margin: 0;
     list-style: none;
 }
-.isee-drawer-ul li{
+
+.isee-drawer-ul li {
     line-height: 30px;
+}
+
+.box-card {
+    width: 100%;
+    margin: 0 10px 10px 0;
+}
+
+.el-divider-span {
+    color: #F56C6C;
+    font-size: 15px;
+    font-weight: bold
+}
+
+.isee-tag-div {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0 10px
+}
+
+.isee-tag-span {
+    cursor: pointer;
+    line-height: 30px;
+    font-size: 22px;
 }
 
 [v-cloak] {

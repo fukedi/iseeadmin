@@ -99,7 +99,7 @@
                                 :type="item.type"
                                 @close="iseeTagClose(item.url,index)"
                                 size="medium"
-                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> @{{item.title}}
                         </el-tag>
                     </div>
                     <span @click="iseeTagDivMove(2)" class="isee-tag-span">
@@ -198,6 +198,26 @@
         title: '安全退出',
       },
     ]
+  }
+  var iseemenu = {
+    props: ['menu'],
+    name: 'iseemenu',
+    template: `
+    <div>
+        <template v-for="item in menu">
+            <el-submenu :index="item.index" v-if="item.children.length">
+                <template slot="title">
+                    <i :class="item.icon"></i>
+                    <span slot="title">@{{item.title}}</span>
+                </template>
+                <iseemenu :menu="item.children"></iseemenu>
+            </el-submenu>
+            <el-menu-item :index="item.index" v-else>
+                <i :class="item.icon"></i>
+                <span slot="title">@{{item.title}}</span>
+            </el-menu-item>
+        </template>
+    </div>`,
   }
 </script>
 
