@@ -169,19 +169,27 @@ var iseeMenu = [
             children: []
           }, {
             index: '5-0-4',
-            title: 'Select 选择器',
+            title: 'select选择器',
             url: '/pages/component/form/select.html',
             target: '_self',
             icon: '',
             children: []
           }, {
             index: '5-0-5',
-            title: 'Cascader 级联选择器',
+            title: 'cascader级联选择器',
             url: '/pages/component/form/cascader.html',
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-0-6',
+            title: 'switch开关',
+            url: '/pages/component/form/switch.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
+
           // {
           //   index: '5-0-4',
           //   title: '表单元素',
@@ -240,6 +248,14 @@ var iseeMenu = [
           //   children: []
           // }
         ]
+      },
+      {
+        index: '5-2',
+        title: '滑块组件',
+        url: '/pages/component/slider.html',
+        target: '_self',
+        icon: 'el-icon-tickets',
+        children: []
       }
     ]
   }
