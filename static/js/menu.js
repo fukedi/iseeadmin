@@ -298,6 +298,14 @@ var iseeMenu = [
         icon: 'el-icon-upload',
         children: []
       },
+      {
+        index: '5-5',
+        title: '评分组件',
+        url: '/pages/component/rate.html',
+        target: '_self',
+        icon: 'el-icon-star-on',
+        children: []
+      },
     ]
   }
 ]
