@@ -256,6 +256,39 @@ var iseeMenu = [
         target: '_self',
         icon: 'el-icon-tickets',
         children: []
+      },
+      {
+        index: '5-3',
+        title: '日期时间',
+        url: '/pages/component/datetime',
+        target: '_self',
+        icon: 'el-icon-time',
+        children: [
+          {
+          index: '5-3-0',
+          title: '时间选择器',
+          url: '/pages/component/datetime/timepicker.html',
+          target: '_self',
+          icon: '',
+          children: []
+        },
+          {
+          index: '5-3-1',
+          title: '日期选择器',
+          url: '/pages/component/datetime/datepicker.html',
+          target: '_self',
+          icon: '',
+          children: []
+        },
+          {
+          index: '5-3-2',
+          title: '日期时间选择器',
+          url: '/pages/component/datetime/datetimepicker.html',
+          target: '_self',
+          icon: '',
+          children: []
+        },
+        ]
       }
     ]
   }

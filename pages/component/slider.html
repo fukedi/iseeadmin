@@ -21,6 +21,26 @@
     <!--    <script src="/static/element/index.js"></script>-->
     <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
     <!--    <script src="/static/js/axios.min.js"></script>-->
+    <style>
+        .isee-slider-class1 .el-slider__bar{
+            background-color: #F56C6C;
+        }
+        .isee-slider-class1 .el-slider__button{
+            border: 2px solid #F56C6C;
+        }
+        .isee-slider-class2 .el-slider__bar{
+            background-color: #67C23A;
+        }
+        .isee-slider-class2 .el-slider__button{
+            border: 2px solid #67C23A;
+        }
+        .isee-slider-class3 .el-slider__bar{
+            background-color: #E6A23C;
+        }
+        .isee-slider-class3 .el-slider__button{
+            border: 2px solid #E6A23C;
+        }
+    </style>
 </head>
 <body>
 <div id="app" v-cloak>
@@ -317,13 +337,32 @@
                                 placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <template>
-                            <el-slider
-                                    v-model="value7"
-                                    vertical
-                                    height="200px">
-                            </el-slider>
-                        </template>
+                            <el-row>
+                                <el-col :span="8">
+                                    <el-slider
+                                            v-model="value7"
+                                            vertical
+                                            height="200px">
+                                    </el-slider>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-slider
+                                            v-model="value7"
+                                            vertical
+                                            height="200px">
+                                    </el-slider>
+                                </el-col>
+                                <el-col :span="8">
+                                    <el-slider
+                                            v-model="value7"
+                                            vertical
+                                            height="200px">
+                                    </el-slider>
+                                </el-col>
+                            </el-row>
 
+                        </template>
+                        <div style="padding: 10px"></div>
                         <el-divider content-position="left"><span
                                 class="el-divider-span">展示标记 <el-tooltip
                                 content="设置 marks 属性可以展示标记 " placement="top"
@@ -351,7 +390,11 @@
 
                             <el-row>
                                 <el-col :span="19" :gutter="1">
-                                    <el-slider class="isee-slider-class2" v-model="value2"></el-slider>
+                                    <el-slider class="isee-slider-class2"
+                                            v-model="value2"
+                                            :step="10"
+                                            show-stops>
+                                    </el-slider>
                                 </el-col>
                             </el-row>
 

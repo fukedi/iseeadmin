@@ -109,25 +109,6 @@ body {
     line-height: 30px;
     font-size: 22px;
 }
-.isee-slider-class1 .el-slider__bar{
-    background-color: #F56C6C;
-}
-.isee-slider-class1 .el-slider__button{
-    border: 2px solid #F56C6C;
-}
-.isee-slider-class2 .el-slider__bar{
-    background-color: #67C23A;
-}
-.isee-slider-class2 .el-slider__button{
-    border: 2px solid #67C23A;
-}
-.isee-slider-class3 .el-slider__bar{
-    background-color: #E6A23C;
-}
-.isee-slider-class3 .el-slider__button{
-    border: 2px solid #E6A23C;
-}
-
 
 [v-cloak] {
     display: none;

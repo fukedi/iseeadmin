@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ISeeAdmin 【首页】 </title>
+    <title>ISeeAdmin 【DateTimePicker 日期时间选择器】 </title>
     <!--    <link rel="stylesheet" href="/static/element/index.css">-->
     <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/iconfont/iconfont.css">
@@ -175,83 +175,157 @@
 
             <el-main>
                 <!--                主内容展示-->
-                <el-card class="box-card" style="margin-bottom: 10px">
-                    <div slot="header" class="clearfix">
-                        <span>简介</span>
-                    </div>
-                    <div style="padding-left: 40px">
-                        iseeAdmin是一个基于vue和element UI实现的后台前端解决方案，特别针对后端人员设计的一款后台前端产品，让后端人员更注重业务逻辑开发，项目开发更快。本项目免费开源，欢迎使用！
-                    </div>
-                </el-card>
-                <el-card class="box-card" style="margin-bottom: 10px">
-                    <div slot="header" class="clearfix">
-                        <span>基本情况</span>
-                    </div>
+                <div style="margin-right: 10px">
+                    <el-card class="box-card">
+                        DateTimePicker 日期时间选择器
+                        <el-link type="primary" target="_blank"
+                                 href="https://element.eleme.cn/#/zh-CN/component/datetime-picker">
+                            官方文档 https://element.eleme.cn/#/zh-CN/component/datetime-picker
+                        </el-link>
+                    </el-card>
+                </div>
+                <div style="display: flex">
+                    <el-card class="box-card">
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">日期和时间点 <el-tooltip
+                                content="通过设置type属性为datetime，即可在同一个选择器里同时进行日期和时间的选择。快捷选项的使用方法与 Date Picker 相同。 " placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-row>
+                                <el-col :span="8" style="text-align: center">
+                                        <span style="line-height: 40px;font-size: 14px;">
+                                            默认
+                                        </span>
+                                </el-col>
+                                <el-col :span="8" style="text-align: center">
+                                    <span style="line-height: 40px;font-size: 14px;">
+                                            带快捷选项
+                                        </span>
+                                </el-col>
+                                <el-col :span="8" style="text-align: center">
+                                    <span style="line-height: 40px;font-size: 14px;">
+                                            设置默认时间
+                                        </span>
+                                </el-col>
+                            </el-row>
 
-                    <ul class="isee-drawer-ul">
-                        <li>
-                            1. iseeAdmin基于vue和element UI开发
-                        </li>
-                        <li>
-                            2. 使用对象：主要是后端人员，要求掌握vue基本技能和了解element ui
-                        </li>
-                        <li>
-                            3. iseeAdmin参考了
-                            <el-link type="primary" :underline="false"
-                                     href="https://panjiachen.github.io/vue-element-admin" target="_blank">
-                                vue-element-admin
-                            </el-link>
-                            和
-                            <el-link type="primary" :underline="false" href="https://www.layui.com/admin/std/dist/views"
-                                     target="_blank">layuiAdmin
-                            </el-link>
-                            页面布局
-                        </li>
-                        <li>
-                            4. 下载地址：
-                            <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
-                                     target="_blank">码云
-                            </el-link>
-                            |
-                            <el-link type="primary" :underline="false" href="https://github.com/fukedi/iseeadmin"
-                                     target="_blank">github
-                            </el-link>
-                        </li>
-                        <li>
-                            5. demo：
-                            <el-link type="primary" :underline="false" href="http://56c.net.cn"
-                                     target="_blank">56c.net.cn
-                            </el-link>
-                        </li>
-                        <li>
-                            6.
-                            <el-link type="primary" :underline="false" href="https://www.kancloud.cn/ghzz789/iseeadmin"
-                                     target="_blank">使用文档
-                            </el-link>
-                        </li>
-                        <li>
-                            7. 交流QQ群：927049524
-                        </li>
-                    </ul>
-                </el-card>
+                            <el-row>
+                                <el-col :span="8" style="text-align: center">
+                                    <el-date-picker
+                                            v-model="value1"
+                                            type="datetime"
+                                            placeholder="选择日期时间">
+                                    </el-date-picker>
+                                </el-col>
+                                <el-col :span="8" style="text-align: center">
+                                    <el-date-picker
+                                            v-model="value2"
+                                            type="datetime"
+                                            placeholder="选择日期时间"
+                                            align="right"
+                                            :picker-options="pickerOptions">
+                                    </el-date-picker>
+                                </el-col>
+                                <el-col :span="8" style="text-align: center">
+                                    <el-date-picker
+                                            v-model="value3"
+                                            type="datetime"
+                                            placeholder="选择日期时间"
+                                            default-time="12:00:00">
+                                    </el-date-picker>
+                                </el-col>
+                            </el-row>
 
-                <el-card class="box-card" style="margin-bottom: 10px">
-                    <div slot="header" class="clearfix">
-                        <span>特点对比</span>
-                    </div>
-                    <div style="padding-left: 40px">
-                        <p>上手难度 vue-element-admin > iseeAdmin > layuiAdmin</p>
-                        <p>vue-element-admin和iseeAdmin都是基于vue和element
-                            UI开发，但vue-element-admin是用vue-cli脚手架（采用脚手架开发是主流）开发的，这要求使用者需要比较专业的前端技能知识，但很多后端人员并不具备。iseeAdmin是直接引入式开发，使用者只需要掌握vue或MVVM模式的基本知识，就能快速开发，相对来说，难度低很多。
-                        </p>
-                        <p>
-                            layuiAdmin和iseeAdmin都是采用直接引入式开发的，layuiAdmin只需要使用者掌握传统的javascript知识就能开发，但iseeAdmin除此之外，还要求掌握vue或MVVM模式的知识，所以难度增加。</p>
-                        <p>那么问题来了！既然layuiAdmin上手难度是最低的，为什么还要使用vue-element-admin和iseeAdmin？</p>
-                        <p>1. 使用MVVM模式进行前端开发的快乐是传统前端开发无法比拟的<br>
-                            2. layuiAdmin是收费的，vue-element-admin和iseeAdmin都开源，可免费使用</p>
-                    </div>
+                        </template>
 
-                </el-card>
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">日期和时间范围 <el-tooltip
+                                content="设置type为datetimerange即可选择日期和时间范围 " placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-row>
+                                <el-col :span="12" style="text-align: center">
+                                        <span style="line-height: 40px;font-size: 14px;">
+                                            默认
+                                        </span>
+                                </el-col>
+                                <el-col :span="12" style="text-align: center">
+                                    <span style="line-height: 40px;font-size: 14px;">
+                                            带快捷选项
+                                        </span>
+                                </el-col>
+                            </el-row>
+
+                            <el-row>
+                                <el-col :span="12" style="text-align: center">
+                                    <el-date-picker
+                                            v-model="value4"
+                                            type="datetimerange"
+                                            range-separator="至"
+                                            start-placeholder="开始日期"
+                                            end-placeholder="结束日期">
+                                    </el-date-picker>
+                                </el-col>
+                                <el-col :span="12" style="text-align: center">
+                                    <el-date-picker
+                                            v-model="value5"
+                                            type="datetimerange"
+                                            :picker-options="pickerOptions1"
+                                            range-separator="至"
+                                            start-placeholder="开始日期"
+                                            end-placeholder="结束日期"
+                                            align="right">
+                                    </el-date-picker>
+                                </el-col>
+                            </el-row>
+
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">默认的起始与结束时刻 <el-tooltip
+                                content="使用datetimerange进行范围选择时，在日期选择面板中选定起始与结束的日期，默认会使用该日期的00:00:00作为起始与结束的时刻；通过选项default-time可以控制选中起始与结束日期时所使用的具体时刻。default-time接受一个数组，数组每项值为字符串，形如12:00:00，其中第一项控制起始日期的具体时刻，第二项控制结束日期的具体时刻。 " placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-row>
+                                <el-col :span="12" style="text-align: center">
+                                        <span style="line-height: 40px;font-size: 14px;">
+                                            起始日期时刻为 12:00:00
+                                        </span>
+                                </el-col>
+                                <el-col :span="12" style="text-align: center">
+                                    <span style="line-height: 40px;font-size: 14px;">
+                                            起始日期时刻为 12:00:00，结束日期时刻为 08:00:00
+                                        </span>
+                                </el-col>
+                            </el-row>
+
+                            <el-row>
+                                <el-col :span="12" style="text-align: center">
+                                    <el-date-picker
+                                            v-model="value6"
+                                            type="datetimerange"
+                                            start-placeholder="开始日期"
+                                            end-placeholder="结束日期"
+                                            :default-time="['12:00:00']">
+                                    </el-date-picker>
+                                </el-col>
+                                <el-col :span="12" style="text-align: center">
+                                    <el-date-picker
+                                            v-model="value7"
+                                            type="datetimerange"
+                                            align="right"
+                                            start-placeholder="开始日期"
+                                            end-placeholder="结束日期"
+                                            :default-time="['12:00:00', '08:00:00']">
+                                    </el-date-picker>
+                                </el-col>
+                            </el-row>
+
+                        </template>
+
+
+                    </el-card>
+                </div>
                 <!--                主内容展示 结束-->
             </el-main>
         </el-container>
@@ -339,6 +413,63 @@
         avatar: iseeAvatar
       },
       /*your data*/
+      pickerOptions: {
+        shortcuts: [{
+          text: '今天',
+          onClick(picker) {
+            picker.$emit('pick', new Date());
+          }
+        }, {
+          text: '昨天',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24);
+            picker.$emit('pick', date);
+          }
+        }, {
+          text: '一周前',
+          onClick(picker) {
+            const date = new Date();
+            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', date);
+          }
+        }]
+      },
+      value1: '',
+      value2: '',
+      value3: '',
+      pickerOptions1: {
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }]
+      },
+      value4: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+      value5: '',
+      value6: '',
+      value7: '',
+
     },
     methods: {
       iseeTagSwitch(url, index, breadcrumb) {
