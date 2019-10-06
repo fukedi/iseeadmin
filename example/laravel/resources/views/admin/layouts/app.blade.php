@@ -88,7 +88,10 @@
                     </div>
                 </div>
                 <div style="display: flex">
-                    <div style="width: 100%">
+                    <span @click="iseeTagDivMove(1)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-left"></i>
+                    </span>
+                    <div ref="iseeTagDiv" class="isee-tag-div">
                         <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
                                 :key="index"
                                 @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
@@ -96,9 +99,12 @@
                                 :type="item.type"
                                 @close="iseeTagClose(item.url,index)"
                                 size="medium"
-                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> @{{item.title}}
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
                         </el-tag>
                     </div>
+                    <span @click="iseeTagDivMove(2)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-right"></i>
+                    </span>
                     <div style="float: right;">
                         <el-dropdown @command="iseeTagCommandClose">
                           <span class="el-dropdown-link">

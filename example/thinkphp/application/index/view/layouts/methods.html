@@ -24,3 +24,6 @@ iseeAdmin.iseeAsideShow(this.$data.iseeData)
 iseeOpenUrl(command) {
 iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
 },
+iseeTagDivMove(flag) {
+flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
+},

@@ -107,7 +107,10 @@
                 </div>
                 <div style="display: flex">
                     <!--                    标签页列表 开始-->
-                    <div style="width: 100%">
+                    <span @click="iseeTagDivMove(1)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-left"></i>
+                    </span>
+                    <div ref="iseeTagDiv" class="isee-tag-div">
                         <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
                                 :key="index"
                                 @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
@@ -118,6 +121,9 @@
                                 :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
                         </el-tag>
                     </div>
+                    <span @click="iseeTagDivMove(2)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-right"></i>
+                    </span>
                     <!--                    标签页列表 结束-->
                     <!--                    标签页集中操作 开始-->
                     <div style="float: right;">
@@ -722,6 +728,9 @@
       },
       iseeOpenUrl(command) {
         iseeAdmin.iseeMenuOpen(this.$data.iseeData.avatar.list[command].index, this.$data.iseeData.avatar.list[command].indexPath, this.$data.iseeData)
+      },
+      iseeTagDivMove(flag) {
+        flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
       },
       /*your methods*/
       setCurrent(row) {
