@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ISeeAdmin 【Tree 树形控件】 </title>
+    <!--    <link rel="stylesheet" href="/static/element/index.css">-->
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/iconfont/iconfont.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <!--    开发环境-->
+    <!--        <script src="/static/js/iseeadmin.js"></script>-->
+    <!--    正式环境-->
+    <script src="/static/js/iseeadmin.min.js"></script>
+    <script src="/static/js/menu.js"></script>
+    <!--    开发环境-->
+    <!--    <script src="/static/js/vue.js"></script>-->
+    <!--    正式环境-->
+    <!--        <script src="/static/js/vue.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="/static/element/index.js"></script>-->
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="/static/js/axios.min.js"></script>-->
+    <style>
+        .custom-tree-node {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 14px;
+            padding-right: 8px;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container style="height: 100%;min-height:100vh;">
+        <el-aside v-show="iseeData.asideShow" width="210px">
+            <!--            左侧logo 开始-->
+            <div class="aside-logo">
+                <img class="aside-logo-img" src="/static/images/logo.png"
+                     alt=""> ISeeAdmin
+            </div>
+            <!--            左侧logo 结束-->
+            <!--            左侧菜单 开始-->
+            <el-menu @select="iseeMenuOpen" style="width: 210px;"
+                     unique-opened
+                     :default-active="iseeData.defaultActive"
+                     background-color="#304156"
+                     text-color="#bfcbd9"
+                     active-text-color="#409eff">
+                <iseemenu :menu="iseeData.menu"></iseemenu>
+            </el-menu>
+            <!--            左侧菜单 结束-->
+        </el-aside>
+
+        <el-container>
+            <el-header height="83px">
+                <div class="isee-header-div">
+                    <!--                    面包屑 开始-->
+                    <div style="width: 100%;display: inherit;">
+                        <span class="aside-show" @click="iseeAsideShow">
+                            <i :class="iseeData.asideShowIcon"></i>
+                        </span>
+
+                        <el-breadcrumb style="line-height: 50px" separator="/">
+                            <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <!--                    面包屑 结束-->
+                    <!--                    icon功能列表，可根据需要修改 开始-->
+                    <div>
+                        <ul class="isee-ul">
+                            <li class="isee-li">
+                                <i style="font-size: 20px" class="el-icon-bell"></i>
+                            </li>
+                            <li @click="iseeFullScreen" class="isee-li">
+                                <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
+                            </li>
+                            <li class="isee-li" @click="iseeData.drawer = true">
+                                <span class="iconfont" style="font-size: 20px">&#xe602;</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--                    icon功能列表，可根据需要修改 结束-->
+                    <!--                    avatar显示 开始-->
+                    <div>
+                        <el-dropdown @command="iseeOpenUrl">
+                              <span class="el-dropdown-link">
+                                  <el-avatar style="margin-top: 9px" :size="iseeData.avatar.size"
+                                             :src="iseeData.avatar.url"></el-avatar>
+                              </span>
+
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(item,index) in iseeData.avatar.list" :icon="item.icon"
+                                                  :key="index" :command="index">{{item.title}}
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    avatar显示 结束-->
+                </div>
+                <div style="display: flex">
+                    <!--                    标签页列表 开始-->
+                    <span @click="iseeTagDivMove(1)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-left"></i>
+                    </span>
+                    <div ref="iseeTagDiv" class="isee-tag-div">
+                        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
+                                :key="index"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
+                                :effect="item.effect"
+                                :type="item.type"
+                                @close="iseeTagClose(item.url,index)"
+                                size="medium"
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                        </el-tag>
+                    </div>
+                    <span @click="iseeTagDivMove(2)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-right"></i>
+                    </span>
+                    <!--                    标签页列表 结束-->
+                    <!--                    标签页集中操作 开始-->
+                    <div style="float: right;margin-left: 10px">
+                        <el-dropdown @command="iseeTagCommandClose">
+                          <span class="el-dropdown-link">
+                              <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
+                          </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    标签页集中操作 结束-->
+                </div>
+
+                <!--抽屉式展示-->
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">码云
+                                </el-link>
+                                |
+                                <el-link type="primary" :underline="false" href="https://github.com/fukedi/iseeadmin"
+                                         target="_blank">github
+                                </el-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+                </el-drawer>
+                <!--抽屉式展示 结束-->
+            </el-header>
+
+            <el-main>
+                <!--                主内容展示-->
+                <div style="margin-right: 10px">
+                    <el-card class="box-card">
+                        Tree 树形控件
+                        <el-link type="primary" target="_blank"
+                                 href="https://element.eleme.cn/#/zh-CN/component/tree">
+                            官方文档 https://element.eleme.cn/#/zh-CN/component/tree
+                        </el-link>
+                    </el-card>
+                </div>
+                <div style="display: flex">
+                    <el-card class="box-card">
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">基础用法 <el-tooltip
+                                content="基础的树形结构展示。 " placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">懒加载自定义叶子节点 <el-tooltip
+                                content="由于在点击节点时才进行该层数据的获取，默认情况下 Tree 无法预知某个节点是否为叶子节点，所以会为每个节点添加一个下拉按钮，如果节点没有下层数据，则点击后下拉按钮会消失。同时，你也可以提前告知 Tree 某个节点是否为叶子节点，从而避免在叶子节点前渲染下拉按钮。 "
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-tree
+                                :props="props1"
+                                :load="loadNode1"
+                                lazy
+                                show-checkbox>
+                        </el-tree>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">默认展开和默认选中 <el-tooltip
+                                content="分别通过default-expanded-keys和default-checked-keys设置默认展开和默认选中的节点。需要注意的是，此时必须设置node-key，其值为节点数据中的一个字段名，该字段在整棵树中是唯一的。 "
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-tree
+                                :data="data1"
+                                show-checkbox
+                                node-key="id"
+                                :default-expanded-keys="[2, 3]"
+                                :default-checked-keys="[5]"
+                                :props="defaultProps1">
+                        </el-tree>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">节点过滤 <el-tooltip
+                                content="在需要对节点进行过滤时，调用 Tree 实例的filter方法，参数为关键字。需要注意的是，此时需要设置filter-node-method，值为过滤函数。"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-input
+                                placeholder="输入关键字进行过滤"
+                                v-model="filterText">
+                        </el-input>
+                        <el-tree
+                                class="filter-tree"
+                                :data="data"
+                                :props="defaultProps"
+                                default-expand-all
+                                :filter-node-method="filterNode"
+                                ref="tree">
+                        </el-tree>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">禁用状态 <el-tooltip
+                                content="通过disabled设置禁用状态。 "
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-tree
+                                :data="data2"
+                                show-checkbox
+                                node-key="id"
+                                :default-expanded-keys="[2, 3]"
+                                :default-checked-keys="[5]">
+                        </el-tree>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">手风琴模式 <el-tooltip
+                                content="对于同一级的节点，每次只能展开一个"
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-tree
+                                :data="data"
+                                :props="defaultProps"
+                                accordion
+                                @node-click="handleNodeClick">
+                        </el-tree>
+
+                    </el-card>
+
+                    <el-card class="box-card">
+                        
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">可选择 <el-tooltip
+                                content="适用于需要选择层级时使用。本例还展示了动态加载节点数据的方法。 " placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-tree
+                                :props="props"
+                                :load="loadNode"
+                                lazy
+                                show-checkbox
+                                @check-change="handleCheckChange">
+                        </el-tree>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">树节点的选择 <el-tooltip
+                                content="获取和设置各有两种方式：通过 node 或通过 key。如果需要通过 key 来获取或设置，则必须设置node-key。 " placement="top"
+                                effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-tree
+                                :data="data1"
+                                show-checkbox
+                                default-expand-all
+                                node-key="id"
+                                ref="tree"
+                                highlight-current
+                                :props="defaultProps">
+                        </el-tree>
+                        <div style="display: flex;margin-top: 10px">
+                            <el-button @click="getCheckedNodes" type="warning">通过node获取</el-button>
+                            <el-button @click="getCheckedKeys" type="warning">通过key获取</el-button>
+                            <el-button @click="setCheckedNodes" type="warning">通过node设置</el-button>
+                            <el-button @click="setCheckedKeys" type="warning">通过key设置</el-button>
+                            <el-button @click="resetChecked" type="warning">清空</el-button>
+                        </div>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">自定义节点内容 <el-tooltip
+                                content="可以通过两种方法进行树节点内容的自定义：render-content和 scoped slot。使用render-content指定渲染函数，该函数返回需要的节点区内容即可。渲染函数的用法请参考 Vue 文档。使用 scoped slot 会传入两个参数node和data，分别表示当前节点的 Node 对象和当前节点的数据。注意：由于 jsfiddle 不支持 JSX 语法，所以render-content示例在 jsfiddle 中无法运行。但是在实际的项目中，只要正确地配置了相关依赖，就可以正常运行。 "
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-row>
+                            <el-col :span="12" style="text-align: center">
+                                        <span style="line-height: 40px;font-size: 14px;">
+                                           使用 render-content
+                                        </span>
+                            </el-col>
+                            <el-col :span="12" style="text-align: center">
+                                    <span style="line-height: 40px;font-size: 14px;">
+                                            使用 scoped slot
+                                        </span>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-tree
+                                        :data="data"
+                                        show-checkbox
+                                        node-key="id"
+                                        default-expand-all
+                                        :expand-on-click-node="false"
+                                        :render-content="renderContent">
+                                </el-tree>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-tree
+                                        :data="data"
+                                        show-checkbox
+                                        node-key="id"
+                                        default-expand-all
+                                        :expand-on-click-node="false">
+                                      <span class="custom-tree-node" slot-scope="{ node, data }">
+                                        <span>{{ node.label }}</span>
+                                        <span>
+                                          <el-button
+                                                  type="text"
+                                                  size="mini"
+                                                  @click="() => append(data)">
+                                            Append
+                                          </el-button>
+                                          <el-button
+                                                  type="text"
+                                                  size="mini"
+                                                  @click="() => remove(node, data)">
+                                            Delete
+                                          </el-button>
+                                        </span>
+                                      </span>
+                                </el-tree>
+                            </el-col>
+                        </el-row>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">可拖拽节点 <el-tooltip
+                                content="通过 draggable 属性可让节点变为可拖拽 "
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-tree
+                                :data="data"
+                                node-key="id"
+                                default-expand-all
+                                @node-drag-start="handleDragStart"
+                                @node-drag-enter="handleDragEnter"
+                                @node-drag-leave="handleDragLeave"
+                                @node-drag-over="handleDragOver"
+                                @node-drag-end="handleDragEnd"
+                                @node-drop="handleDrop"
+                                draggable
+                                :allow-drop="allowDrop"
+                                :allow-drag="allowDrag">
+                        </el-tree>
+
+                    </el-card>
+
+                </div>
+                <!--                主内容展示 结束-->
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+
+<script>
+  let id = 1000;
+  const iseeAvatar = {
+    url: '/static/images/avatar01.gif',
+    size: 32,
+    list: [
+      {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-user-solid',
+        url: '',
+        target: '_self',
+        title: 'admin',
+      }, {
+        index: '3-0',
+        indexPath: ['3', '3-0'],
+        icon: 'el-icon-tickets',
+        url: '/manage/profile.html',
+        target: '_self',
+        title: '基本资料',
+      }, {
+        index: '3-1',
+        indexPath: ['3', '3-1'],
+        icon: 'el-icon-edit-outline',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '修改密码',
+      }, {
+        index: '3-2',
+        indexPath: ['3', '3-2'],
+        icon: 'el-icon-switch-button',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '安全退出',
+      },
+    ]
+  }
+  var iseemenu = {
+    props: ['menu'],
+    name: 'iseemenu',
+    template: `
+    <div>
+        <template v-for="item in menu">
+            <el-submenu :index="item.index" v-if="item.children.length">
+                <template slot="title">
+                    <i :class="item.icon"></i>
+                    <span slot="title">{{item.title}}</span>
+                </template>
+                <iseemenu :menu="item.children"></iseemenu>
+            </el-submenu>
+            <el-menu-item :index="item.index" v-else>
+                <i :class="item.icon"></i>
+                <span slot="title">{{item.title}}</span>
+            </el-menu-item>
+        </template>
+    </div>`,
+  }
+  var app = new Vue({
+    el: '#app',
+    components: {
+      iseemenu
+    },
+    data: {
+      iseeData: {
+        version: iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
+        status: false,
+        show: true,
+        asideShow: iseeAdmin.asideShow,
+        asideShowIcon: iseeAdmin.asideShowIcon,
+        fullscreen: false,
+        fullscreenIcon: '&#xe610;',
+        defaultActive: iseeAdmin.defaultActive,
+        tagList: iseeAdmin.tagList,
+        breadcrumb: iseeAdmin.breadcrumb,
+        menu: iseeMenu,
+        avatar: iseeAvatar
+      },
+      /*your data*/
+      data: [{
+        label: '一级 1',
+        children: [{
+          label: '二级 1-1',
+          children: [{
+            label: '三级 1-1-1'
+          }]
+        }]
+      }, {
+        label: '一级 2',
+        children: [{
+          label: '二级 2-1',
+          children: [{
+            label: '三级 2-1-1'
+          }]
+        }, {
+          label: '二级 2-2',
+          children: [{
+            label: '三级 2-2-1'
+          }]
+        }]
+      }, {
+        label: '一级 3',
+        children: [{
+          label: '二级 3-1',
+          children: [{
+            label: '三级 3-1-1'
+          }]
+        }, {
+          label: '二级 3-2',
+          children: [{
+            label: '三级 3-2-1'
+          }]
+        }]
+      }],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      props: {
+        label: 'name',
+        children: 'zones'
+      },
+      count: 1,
+      props1: {
+        label: 'name',
+        children: 'zones',
+        isLeaf: 'leaf'
+      },
+      data1: [{
+        id: 1,
+        label: '一级 1',
+        children: [{
+          id: 4,
+          label: '二级 1-1',
+          children: [{
+            id: 9,
+            label: '三级 1-1-1'
+          }, {
+            id: 10,
+            label: '三级 1-1-2'
+          }]
+        }]
+      }, {
+        id: 2,
+        label: '一级 2',
+        children: [{
+          id: 5,
+          label: '二级 2-1'
+        }, {
+          id: 6,
+          label: '二级 2-2'
+        }]
+      }, {
+        id: 3,
+        label: '一级 3',
+        children: [{
+          id: 7,
+          label: '二级 3-1'
+        }, {
+          id: 8,
+          label: '二级 3-2'
+        }]
+      }],
+      defaultProps1: {
+        children: 'children',
+        label: 'label'
+      },
+      data2: [{
+        id: 1,
+        label: '一级 2',
+        children: [{
+          id: 3,
+          label: '二级 2-1',
+          children: [{
+            id: 4,
+            label: '三级 3-1-1'
+          }, {
+            id: 5,
+            label: '三级 3-1-2',
+            disabled: true
+          }]
+        }, {
+          id: 2,
+          label: '二级 2-2',
+          disabled: true,
+          children: [{
+            id: 6,
+            label: '三级 3-2-1'
+          }, {
+            id: 7,
+            label: '三级 3-2-2',
+            disabled: true
+          }]
+        }]
+      }],
+      filterText: '',
+    },
+    watch: {
+      filterText(val) {
+        this.$refs.tree.filter(val);
+      }
+    },
+    methods: {
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.iseeData)
+      },
+
+      iseeTagClose(url, index) {
+        iseeAdmin.iseeTagClose(url, index, this.iseeData)
+      },
+
+      iseeTagCommandClose(command) {
+        iseeAdmin.iseeTagCommandClose(command, this.iseeData)
+      },
+
+      iseeMenuOpen(key, keyPath) {
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.iseeData)
+      },
+
+      iseeFullScreen() {
+        iseeAdmin.iseeFullScreen(this.iseeData)
+      },
+
+      iseeAsideShow() {
+        iseeAdmin.iseeAsideShow(this.iseeData)
+      },
+      iseeOpenUrl(command) {
+        iseeAdmin.iseeMenuOpen(this.iseeData.avatar.list[command].index, this.iseeData.avatar.list[command].indexPath, this.iseeData)
+      },
+      iseeTagDivMove(flag) {
+        flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
+      },
+      /*your methods*/
+      handleNodeClick(data) {
+        console.log(data);
+      },
+      handleCheckChange(data, checked, indeterminate) {
+        console.log(data, checked, indeterminate);
+      },
+      loadNode(node, resolve) {
+        if (node.level === 0) {
+          return resolve([{name: 'region1'}, {name: 'region2'}]);
+        }
+        if (node.level > 3) return resolve([]);
+
+        var hasChild;
+        if (node.data.name === 'region1') {
+          hasChild = true;
+        } else if (node.data.name === 'region2') {
+          hasChild = false;
+        } else {
+          hasChild = Math.random() > 0.5;
+        }
+        setTimeout(() => {
+          var data;
+          if (hasChild) {
+            data = [{
+              name: 'zone' + this.count++
+            }, {
+              name: 'zone' + this.count++
+            }];
+          } else {
+            data = [];
+          }
+          resolve(data);
+        }, 500);
+      },
+      loadNode1(node, resolve) {
+        if (node.level === 0) {
+          return resolve([{name: 'region'}]);
+        }
+        if (node.level > 1) return resolve([]);
+
+        setTimeout(() => {
+          const data = [{
+            name: 'leaf',
+            leaf: true
+          }, {
+            name: 'zone'
+          }];
+
+          resolve(data);
+        }, 500);
+      },
+      getCheckedNodes() {
+        console.log(this.$refs.tree.getCheckedNodes());
+      },
+      getCheckedKeys() {
+        console.log(this.$refs.tree.getCheckedKeys());
+      },
+      setCheckedNodes() {
+        this.$refs.tree.setCheckedNodes([{
+          id: 5,
+          label: '二级 2-1'
+        }, {
+          id: 9,
+          label: '三级 1-1-1'
+        }]);
+      },
+      setCheckedKeys() {
+        this.$refs.tree.setCheckedKeys([3]);
+      },
+      resetChecked() {
+        this.$refs.tree.setCheckedKeys([]);
+      },
+      append(data) {
+        const newChild = {id: id++, label: 'testtest', children: []};
+        if (!data.children) {
+          this.$set(data, 'children', []);
+        }
+        data.children.push(newChild);
+      },
+
+      remove(node, data) {
+        const parent = node.parent;
+        const children = parent.data.children || parent.data;
+        const index = children.findIndex(d => d.id === data.id);
+        children.splice(index, 1);
+      },
+      renderContent(h, {node, data, store}) {
+        return h({
+          template: `<span class="custom-tree-node"><span>${node.label}</span><span><el-button size="mini" type="text" @click="append">Append</el-button><el-button size="mini" type="text" @click="remove">Delete</el-button></span></span>`,
+          methods: {
+            append() {
+              const newChild = {id: id++, label: 'testtest', children: []};
+              if (!data.children) {
+                this.$set(data, 'children', []);
+              }
+              data.children.push(newChild);
+            },
+            remove() {
+              const parent = node.parent;
+              const children = parent.data.children || parent.data;
+              const index = children.findIndex(d => d.id === data.id);
+              children.splice(index, 1);
+            },
+          }
+        })
+      },
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
+      },
+      handleDragStart(node, ev) {
+        console.log('drag start', node);
+      },
+      handleDragEnter(draggingNode, dropNode, ev) {
+        console.log('tree drag enter: ', dropNode.label);
+      },
+      handleDragLeave(draggingNode, dropNode, ev) {
+        console.log('tree drag leave: ', dropNode.label);
+      },
+      handleDragOver(draggingNode, dropNode, ev) {
+        console.log('tree drag over: ', dropNode.label);
+      },
+      handleDragEnd(draggingNode, dropNode, dropType, ev) {
+        console.log('tree drag end: ', dropNode && dropNode.label, dropType);
+      },
+      handleDrop(draggingNode, dropNode, dropType, ev) {
+        console.log('tree drop: ', dropNode.label, dropType);
+      },
+      allowDrop(draggingNode, dropNode, type) {
+        if (dropNode.data.label === '二级 3-1') {
+          return type !== 'inner';
+        } else {
+          return true;
+        }
+      },
+      allowDrag(draggingNode) {
+        return draggingNode.data.label.indexOf('三级 3-2-2') === -1;
+      }
+
+    },
+    beforeMount() {
+      iseeAdmin.init(this.iseeData)
+      /*your beforeMount*/
+    },
+    mounted() {
+
+    }
+  });
+</script>
+</body>
+
+</html>
+
