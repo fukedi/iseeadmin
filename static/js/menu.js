@@ -318,10 +318,17 @@ var iseeMenu = [
         children: []
       },{
         index: '5-10',
-        title: '树形控件',
+        title: '树形组件',
         url: '/pages/component/tree.html',
         target: '_self',
         icon: 'el-icon-collection-tag',
+        children: []
+      },{
+        index: '5-11',
+        title: '按钮组件',
+        url: '/pages/component/button.html',
+        target: '_self',
+        icon: 'el-icon-switch-button',
         children: []
       },
     ]
