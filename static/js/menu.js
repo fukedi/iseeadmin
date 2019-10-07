@@ -309,6 +309,13 @@ var iseeMenu = [
         target: '_self',
         icon: 'el-icon-collection-tag',
         children: []
+      },{
+        index: '5-9',
+        title: '进度条',
+        url: '/pages/component/progress.html',
+        target: '_self',
+        icon: 'el-icon-collection-tag',
+        children: []
       },
     ]
   }
