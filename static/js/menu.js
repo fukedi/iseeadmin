@@ -302,6 +302,13 @@ var iseeMenu = [
         target: '_self',
         icon: 'el-icon-more',
         children: []
+      },{
+        index: '5-8',
+        title: '标签组件',
+        url: '/pages/component/tag.html',
+        target: '_self',
+        icon: 'el-icon-collection-tag',
+        children: []
       },
     ]
   }
