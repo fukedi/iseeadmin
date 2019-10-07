@@ -189,23 +189,14 @@ var iseeMenu = [
             icon: '',
             children: []
           },
-
-          // {
-          //   index: '5-0-4',
-          //   title: '表单元素',
-          //   url: '/pages/component/form/element.html',
-          //   target: '_self',
-          //   icon: '',
-          //   children: []
-          // },
-          // {
-          //   index: '5-0-2',
-          //   title: '表单组合',
-          //   url: '/pages/component/form/group.html',
-          //   target: '_self',
-          //   icon: 'el-icon-tickets',
-          //   children: []
-          // }
+          {
+            index: '5-0-7',
+            title: 'form表单',
+            url: '/pages/component/form/form.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
         ]
       },
       {
@@ -239,14 +230,6 @@ var iseeMenu = [
             icon: '',
             children: []
           }
-          // {
-          //   index: '5-0-2',
-          //   title: '表单组合',
-          //   url: '/pages/component/form/group.html',
-          //   target: '_self',
-          //   icon: 'el-icon-tickets',
-          //   children: []
-          // }
         ]
       },
       {
