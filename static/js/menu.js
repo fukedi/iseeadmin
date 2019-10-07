@@ -312,6 +312,13 @@ var iseeMenu = [
         target: '_self',
         icon: 'el-icon-orange',
         children: []
+      },{
+        index: '5-7',
+        title: '穿梭框',
+        url: '/pages/component/transfer.html',
+        target: '_self',
+        icon: 'el-icon-more',
+        children: []
       },
     ]
   }
