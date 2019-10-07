@@ -305,6 +305,13 @@ var iseeMenu = [
         target: '_self',
         icon: 'el-icon-star-on',
         children: []
+      },{
+        index: '5-6',
+        title: '颜色选择器',
+        url: '/pages/component/colorpicker.html',
+        target: '_self',
+        icon: 'el-icon-orange',
+        children: []
       },
     ]
   }
