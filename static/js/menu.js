@@ -233,12 +233,28 @@ var iseeMenu = [
         ]
       },
       {
-        index: '5-2',
-        title: '滑块组件',
-        url: '/pages/component/slider.html',
+        index: '5-11',
+        title: '基础组件',
+        url: '/pages/component/basic',
         target: '_self',
-        icon: 'el-icon-tickets',
-        children: []
+        icon: 'el-icon-switch-button',
+        children: [
+          {
+            index: '5-11-0',
+            title: '按钮组件',
+            url: '/pages/component/basic/button.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },{
+            index: '5-11-1',
+            title: 'Color色彩',
+            url: '/pages/component/basic/color.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
+        ]
       },
       {
         index: '5-3',
@@ -248,30 +264,38 @@ var iseeMenu = [
         icon: 'el-icon-time',
         children: [
           {
-          index: '5-3-0',
-          title: '时间选择器',
-          url: '/pages/component/datetime/timepicker.html',
-          target: '_self',
-          icon: '',
-          children: []
-        },
+            index: '5-3-0',
+            title: '时间选择器',
+            url: '/pages/component/datetime/timepicker.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
           {
-          index: '5-3-1',
-          title: '日期选择器',
-          url: '/pages/component/datetime/datepicker.html',
-          target: '_self',
-          icon: '',
-          children: []
-        },
+            index: '5-3-1',
+            title: '日期选择器',
+            url: '/pages/component/datetime/datepicker.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
           {
-          index: '5-3-2',
-          title: '日期时间选择器',
-          url: '/pages/component/datetime/datetimepicker.html',
-          target: '_self',
-          icon: '',
-          children: []
-        },
+            index: '5-3-2',
+            title: '日期时间选择器',
+            url: '/pages/component/datetime/datetimepicker.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
         ]
+      },
+      {
+        index: '5-2',
+        title: '滑块组件',
+        url: '/pages/component/slider.html',
+        target: '_self',
+        icon: 'el-icon-tickets',
+        children: []
       },
       {
         index: '5-4',
@@ -323,14 +347,8 @@ var iseeMenu = [
         target: '_self',
         icon: 'el-icon-collection-tag',
         children: []
-      },{
-        index: '5-11',
-        title: '按钮组件',
-        url: '/pages/component/button.html',
-        target: '_self',
-        icon: 'el-icon-switch-button',
-        children: []
       },
+
     ]
   }
 ]
