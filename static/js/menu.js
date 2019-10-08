@@ -133,6 +133,51 @@ var iseeMenu = [
     icon: 'el-icon-menu',
     children: [
       {
+        index: '5-11',
+        title: '基础组件',
+        url: '/pages/component/basic',
+        target: '_self',
+        icon: 'el-icon-switch-button',
+        children: [
+          {
+            index: '5-11-3',
+            title: 'Layout布局',
+            url: '/pages/component/basic/layout.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-11-4',
+            title: 'Container布局',
+            url: '/pages/component/basic/container.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-11-0',
+            title: '按钮组件',
+            url: '/pages/component/basic/button.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-11-1',
+            title: 'Color色彩',
+            url: '/pages/component/basic/color.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-11-2',
+            title: 'Link文字链接',
+            url: '/pages/component/basic/link.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
+        ]
+      },
+      {
         index: '5-0',
         title: '表单',
         url: '/pages/component/form',
@@ -181,10 +226,70 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-0-6',
             title: 'switch开关',
             url: '/pages/component/form/switch.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-0-8',
+            title: '滑块组件',
+            url: '/pages/component/form/slider.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-0-9',
+            title: '上传组件',
+            url: '/pages/component/form/upload.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-0-10',
+            title: '评分组件',
+            url: '/pages/component/form/rate.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-0-11',
+            title: '颜色选择器',
+            url: '/pages/component/form/colorpicker.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
+          {
+            index: '5-0-12',
+            title: '穿梭框',
+            url: '/pages/component/form/transfer.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
+          {
+            index: '5-0-13',
+            title: '时间选择器',
+            url: '/pages/component/form/timepicker.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
+          {
+            index: '5-0-14',
+            title: '日期选择器',
+            url: '/pages/component/form/datepicker.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
+          {
+            index: '5-0-15',
+            title: '日期时间选择器',
+            url: '/pages/component/form/datetimepicker.html',
             target: '_self',
             icon: '',
             children: []
@@ -199,6 +304,7 @@ var iseeMenu = [
           },
         ]
       },
+
       {
         index: '5-1',
         title: '表格',
@@ -232,136 +338,24 @@ var iseeMenu = [
           }
         ]
       },
+
+
+
       {
-        index: '5-11',
-        title: '基础组件',
-        url: '/pages/component/basic',
-        target: '_self',
-        icon: 'el-icon-switch-button',
-        children: [
-          {
-            index: '5-11-3',
-            title: 'Layout布局',
-            url: '/pages/component/basic/layout.html',
-            target: '_self',
-            icon: '',
-            children: []
-          },{
-            index: '5-11-4',
-            title: 'Container布局',
-            url: '/pages/component/basic/container.html',
-            target: '_self',
-            icon: '',
-            children: []
-          },{
-            index: '5-11-0',
-            title: '按钮组件',
-            url: '/pages/component/basic/button.html',
-            target: '_self',
-            icon: '',
-            children: []
-          },{
-            index: '5-11-1',
-            title: 'Color色彩',
-            url: '/pages/component/basic/color.html',
-            target: '_self',
-            icon: '',
-            children: []
-          },{
-            index: '5-11-2',
-            title: 'Link文字链接',
-            url: '/pages/component/basic/link.html',
-            target: '_self',
-            icon: '',
-            children: []
-          },
-        ]
-      },
-      {
-        index: '5-3',
-        title: '日期时间',
-        url: '/pages/component/datetime',
-        target: '_self',
-        icon: 'el-icon-time',
-        children: [
-          {
-            index: '5-3-0',
-            title: '时间选择器',
-            url: '/pages/component/datetime/timepicker.html',
-            target: '_self',
-            icon: '',
-            children: []
-          },
-          {
-            index: '5-3-1',
-            title: '日期选择器',
-            url: '/pages/component/datetime/datepicker.html',
-            target: '_self',
-            icon: '',
-            children: []
-          },
-          {
-            index: '5-3-2',
-            title: '日期时间选择器',
-            url: '/pages/component/datetime/datetimepicker.html',
-            target: '_self',
-            icon: '',
-            children: []
-          },
-        ]
-      },
-      {
-        index: '5-2',
-        title: '滑块组件',
-        url: '/pages/component/slider.html',
-        target: '_self',
-        icon: 'el-icon-tickets',
-        children: []
-      },
-      {
-        index: '5-4',
-        title: '上传组件',
-        url: '/pages/component/upload.html',
-        target: '_self',
-        icon: 'el-icon-upload',
-        children: []
-      },
-      {
-        index: '5-5',
-        title: '评分组件',
-        url: '/pages/component/rate.html',
-        target: '_self',
-        icon: 'el-icon-star-on',
-        children: []
-      },{
-        index: '5-6',
-        title: '颜色选择器',
-        url: '/pages/component/colorpicker.html',
-        target: '_self',
-        icon: 'el-icon-orange',
-        children: []
-      },{
-        index: '5-7',
-        title: '穿梭框',
-        url: '/pages/component/transfer.html',
-        target: '_self',
-        icon: 'el-icon-more',
-        children: []
-      },{
         index: '5-8',
         title: '标签组件',
         url: '/pages/component/tag.html',
         target: '_self',
         icon: 'el-icon-collection-tag',
         children: []
-      },{
+      }, {
         index: '5-9',
         title: '进度条',
         url: '/pages/component/progress.html',
         target: '_self',
         icon: 'el-icon-collection-tag',
         children: []
-      },{
+      }, {
         index: '5-10',
         title: '树形组件',
         url: '/pages/component/tree.html',
