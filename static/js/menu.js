@@ -253,6 +253,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-11-2',
+            title: 'Link文字链接',
+            url: '/pages/component/basic/link.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
