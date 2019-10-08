@@ -247,6 +247,13 @@ var iseeMenu = [
             icon: '',
             children: []
           },{
+            index: '5-11-4',
+            title: 'Container布局',
+            url: '/pages/component/basic/container.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },{
             index: '5-11-0',
             title: '按钮组件',
             url: '/pages/component/basic/button.html',
