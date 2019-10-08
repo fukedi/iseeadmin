@@ -240,6 +240,13 @@ var iseeMenu = [
         icon: 'el-icon-switch-button',
         children: [
           {
+            index: '5-11-3',
+            title: 'Layout布局',
+            url: '/pages/component/basic/layout.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },{
             index: '5-11-0',
             title: '按钮组件',
             url: '/pages/component/basic/button.html',
