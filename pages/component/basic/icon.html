@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ISeeAdmin 【Icon 图标】 </title>
+    <!--    <link rel="stylesheet" href="/static/element/index.css">-->
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/iconfont/iconfont.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <!--    开发环境-->
+    <!--        <script src="/static/js/iseeadmin.js"></script>-->
+    <!--    正式环境-->
+    <script src="/static/js/iseeadmin.min.js"></script>
+    <script src="/static/js/menu.js"></script>
+    <!--    开发环境-->
+    <!--    <script src="/static/js/vue.js"></script>-->
+    <!--    正式环境-->
+    <!--        <script src="/static/js/vue.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="/static/element/index.js"></script>-->
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="/static/js/axios.min.js"></script>-->
+    <style>
+        .isee-icon-p {
+            font-size: 12px;
+            opacity: 0.6;
+            padding: 0;
+            margin: 0
+        }
+
+        .isee-icon-i {
+            font-size: 32px;
+        }
+
+        .isee-icon-row {
+            margin: 40px 0;
+        }
+
+        .isee-icon-col {
+            text-align: center;
+        }
+
+        .isee-icon-col:hover {
+            text-align: center;
+            color: #409EFF
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container style="height: 100%;min-height:100vh;">
+        <el-aside v-show="iseeData.asideShow" width="210px">
+            <!--            左侧logo 开始-->
+            <div class="aside-logo">
+                <img class="aside-logo-img" src="/static/images/logo.png"
+                     alt=""> ISeeAdmin
+            </div>
+            <!--            左侧logo 结束-->
+            <!--            左侧菜单 开始-->
+            <el-menu @select="iseeMenuOpen" style="width: 210px;"
+                     unique-opened
+                     :default-active="iseeData.defaultActive"
+                     background-color="#304156"
+                     text-color="#bfcbd9"
+                     active-text-color="#409eff">
+                <iseemenu :menu="iseeData.menu"></iseemenu>
+            </el-menu>
+            <!--            左侧菜单 结束-->
+        </el-aside>
+
+        <el-container>
+            <el-header height="83px">
+                <div class="isee-header-div">
+                    <!--                    面包屑 开始-->
+                    <div style="width: 100%;display: inherit;">
+                        <span class="aside-show" @click="iseeAsideShow">
+                            <i :class="iseeData.asideShowIcon"></i>
+                        </span>
+
+                        <el-breadcrumb style="line-height: 50px" separator="/">
+                            <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <!--                    面包屑 结束-->
+                    <!--                    icon功能列表，可根据需要修改 开始-->
+                    <div>
+                        <ul class="isee-ul">
+                            <li class="isee-li">
+                                <i style="font-size: 20px" class="el-icon-bell"></i>
+                            </li>
+                            <li @click="iseeFullScreen" class="isee-li">
+                                <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
+                            </li>
+                            <li class="isee-li" @click="iseeData.drawer = true">
+                                <span class="iconfont" style="font-size: 20px">&#xe602;</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--                    icon功能列表，可根据需要修改 结束-->
+                    <!--                    avatar显示 开始-->
+                    <div>
+                        <el-dropdown @command="iseeOpenUrl">
+                              <span class="el-dropdown-link">
+                                  <el-avatar style="margin-top: 9px" :size="iseeData.avatar.size"
+                                             :src="iseeData.avatar.url"></el-avatar>
+                              </span>
+
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(item,index) in iseeData.avatar.list" :icon="item.icon"
+                                                  :key="index" :command="index">{{item.title}}
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    avatar显示 结束-->
+                </div>
+                <div style="display: flex">
+                    <!--                    标签页列表 开始-->
+                    <span @click="iseeTagDivMove(1)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-left"></i>
+                    </span>
+                    <div ref="iseeTagDiv" class="isee-tag-div">
+                        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
+                                :key="index"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
+                                :effect="item.effect"
+                                :type="item.type"
+                                @close="iseeTagClose(item.url,index)"
+                                size="medium"
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                        </el-tag>
+                    </div>
+                    <span @click="iseeTagDivMove(2)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-right"></i>
+                    </span>
+                    <!--                    标签页列表 结束-->
+                    <!--                    标签页集中操作 开始-->
+                    <div style="float: right;margin-left: 10px">
+                        <el-dropdown @command="iseeTagCommandClose">
+                          <span class="el-dropdown-link">
+                              <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
+                          </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    标签页集中操作 结束-->
+                </div>
+
+                <!--抽屉式展示-->
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">码云
+                                </el-link>
+                                |
+                                <el-link type="primary" :underline="false" href="https://github.com/fukedi/iseeadmin"
+                                         target="_blank">github
+                                </el-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+                </el-drawer>
+                <!--抽屉式展示 结束-->
+            </el-header>
+
+            <el-main>
+                <!--                主内容展示-->
+                <div style="margin-right: 10px">
+                    <el-card class="box-card">
+                        Icon 图标
+                        <el-link type="primary" target="_blank"
+                                 href="https://element.eleme.cn/#/zh-CN/component/icon">
+                            官方文档 https://element.eleme.cn/#/zh-CN/component/icon
+                        </el-link>
+                    </el-card>
+                </div>
+                <div style="display: flex">
+                    <el-card class="box-card">
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">使用方法 <el-tooltip
+                                content="直接通过设置类名为 el-icon-iconName 来使用即可 " placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <el-row style="line-height: 40px">
+                            <el-col :span="1">
+                                <i class="el-icon-edit"></i>
+                            </el-col>
+                            <el-col :span="1">
+                                <i class="el-icon-share"></i>
+                            </el-col>
+                            <el-col :span="1">
+                                <i class="el-icon-delete"></i>
+                            </el-col>
+                            <el-col :span="1">
+                                <el-button type="primary" icon="el-icon-search">搜索</el-button>
+                            </el-col>
+                        </el-row>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">图标集合 <el-tooltip
+                                content="图标集合 " placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template v-for="n in num">
+                            <el-row class="isee-icon-row">
+                                <el-col v-for="p_ in p" :span="2" class="isee-icon-col">
+                                    <i :class="iconData[(n-1)*12+p_-1] + ' isee-icon-i'"></i>
+                                    <p class="isee-icon-p">{{iconData[(n-1)*12+p_-1]}}</p>
+                                </el-col>
+                            </el-row>
+                        </template>
+                    </el-card>
+                </div>
+                <!--                主内容展示 结束-->
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+
+<script>
+  const iseeAvatar = {
+    url: '/static/images/avatar01.gif',
+    size: 32,
+    list: [
+      {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-user-solid',
+        url: '',
+        target: '_self',
+        title: 'admin',
+      }, {
+        index: '3-0',
+        indexPath: ['3', '3-0'],
+        icon: 'el-icon-tickets',
+        url: '/manage/profile.html',
+        target: '_self',
+        title: '基本资料',
+      }, {
+        index: '3-1',
+        indexPath: ['3', '3-1'],
+        icon: 'el-icon-edit-outline',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '修改密码',
+      }, {
+        index: '3-2',
+        indexPath: ['3', '3-2'],
+        icon: 'el-icon-switch-button',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '安全退出',
+      },
+    ]
+  }
+  var iseemenu = {
+    props: ['menu'],
+    name: 'iseemenu',
+    template: `
+    <div>
+        <template v-for="item in menu">
+            <el-submenu :index="item.index" v-if="item.children.length">
+                <template slot="title">
+                    <i :class="item.icon"></i>
+                    <span slot="title">{{item.title}}</span>
+                </template>
+                <iseemenu :menu="item.children"></iseemenu>
+            </el-submenu>
+            <el-menu-item :index="item.index" v-else>
+                <i :class="item.icon"></i>
+                <span slot="title">{{item.title}}</span>
+            </el-menu-item>
+        </template>
+    </div>`,
+  }
+  var app = new Vue({
+    el: '#app',
+    components: {
+      iseemenu
+    },
+    data: {
+      iseeData: {
+        version: iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
+        status: false,
+        show: true,
+        asideShow: iseeAdmin.asideShow,
+        asideShowIcon: iseeAdmin.asideShowIcon,
+        fullscreen: false,
+        fullscreenIcon: '&#xe610;',
+        defaultActive: iseeAdmin.defaultActive,
+        tagList: iseeAdmin.tagList,
+        breadcrumb: iseeAdmin.breadcrumb,
+        menu: iseeMenu,
+        avatar: iseeAvatar
+      },
+      /*your data*/
+      iconData: [
+        'el-icon-platform-eleme',
+        'el-icon-eleme',
+        'el-icon-delete-solid',
+        'el-icon-delete',
+        'el-icon-s-tools',
+        'el-icon-setting',
+        'el-icon-user-solid',
+        'el-icon-user',
+        'el-icon-phone',
+        'el-icon-phone-outline',
+        'el-icon-more',
+        'el-icon-more-outline',
+        'el-icon-star-on',
+        'el-icon-star-off',
+        'el-icon-s-goods',
+        'el-icon-goods',
+        'el-icon-warning',
+        'el-icon-warning-outline',
+        'el-icon-question',
+        'el-icon-info',
+        'el-icon-remove',
+        'el-icon-circle-plus',
+        'el-icon-success',
+        'el-icon-error',
+        'el-icon-zoom-in',
+        'el-icon-zoom-out',
+        'el-icon-remove-outline',
+        'el-icon-circle-plus-outline',
+        'el-icon-circle-check',
+        'el-icon-circle-close',
+        'el-icon-s-help',
+        'el-icon-help',
+        'el-icon-minus',
+        'el-icon-plus',
+        'el-icon-check',
+        'el-icon-close',
+        'el-icon-picture',
+        'el-icon-picture-outline',
+        'el-icon-picture-outline-round',
+        'el-icon-upload',
+        'el-icon-upload2',
+        'el-icon-download',
+        'el-icon-camera-solid',
+        'el-icon-camera',
+        'el-icon-video-camera-solid',
+        'el-icon-video-camera',
+        'el-icon-message-solid',
+        'el-icon-bell',
+        'el-icon-s-cooperation',
+        'el-icon-s-order',
+        'el-icon-s-platform',
+        'el-icon-s-fold',
+        'el-icon-s-unfold',
+        'el-icon-s-operation',
+        'el-icon-s-promotion',
+        'el-icon-s-home',
+        'el-icon-s-release',
+        'el-icon-s-ticket',
+        'el-icon-s-management',
+        'el-icon-s-open',
+        'el-icon-s-shop',
+        'el-icon-s-marketing',
+        'el-icon-s-flag',
+        'el-icon-s-comment',
+        'el-icon-s-finance',
+        'el-icon-s-claim',
+        'el-icon-s-custom',
+        'el-icon-s-opportunity',
+        'el-icon-s-data',
+        'el-icon-s-check',
+        'el-icon-s-grid',
+        'el-icon-menu',
+        'el-icon-share',
+        'el-icon-d-caret',
+        'el-icon-caret-left',
+        'el-icon-caret-right',
+        'el-icon-caret-bottom',
+        'el-icon-caret-top',
+        'el-icon-bottom-left',
+        'el-icon-bottom-right',
+        'el-icon-back',
+        'el-icon-right',
+        'el-icon-bottom',
+        'el-icon-top',
+        'el-icon-top-left',
+        'el-icon-top-right',
+        'el-icon-arrow-left',
+        'el-icon-arrow-right',
+        'el-icon-arrow-down',
+        'el-icon-arrow-up',
+        'el-icon-d-arrow-left',
+        'el-icon-d-arrow-right',
+        'el-icon-video-pause',
+        'el-icon-video-play',
+        'el-icon-refresh',
+        'el-icon-refresh-right',
+        'el-icon-refresh-left',
+        'el-icon-finished',
+        'el-icon-sort',
+        'el-icon-sort-up',
+        'el-icon-sort-down',
+        'el-icon-rank',
+        'el-icon-loading',
+        'el-icon-view',
+        'el-icon-c-scale-to-original',
+        'el-icon-date',
+        'el-icon-edit',
+        'el-icon-edit-outline',
+        'el-icon-folder',
+        'el-icon-folder-opened',
+        'el-icon-folder-add',
+        'el-icon-folder-remove',
+        'el-icon-folder-delete',
+        'el-icon-folder-checked',
+        'el-icon-tickets',
+        'el-icon-document-remove',
+        'el-icon-document-delete',
+        'el-icon-document-copy',
+        'el-icon-document-checked',
+        'el-icon-document',
+        'el-icon-document-add',
+        'el-icon-printer',
+        'el-icon-paperclip',
+        'el-icon-takeaway-box',
+        'el-icon-search',
+        'el-icon-monitor',
+        'el-icon-attract',
+        'el-icon-mobile',
+        'el-icon-scissors',
+        'el-icon-umbrella',
+        'el-icon-headset',
+        'el-icon-brush',
+        'el-icon-mouse',
+        'el-icon-coordinate',
+        'el-icon-magic-stick',
+        'el-icon-reading',
+        'el-icon-data-line',
+        'el-icon-data-board',
+        'el-icon-pie-chart',
+        'el-icon-data-analysis',
+        'el-icon-collection-tag',
+        'el-icon-film',
+        'el-icon-suitcase',
+        'el-icon-suitcase-1',
+        'el-icon-receiving',
+        'el-icon-collection',
+        'el-icon-files',
+        'el-icon-notebook-1',
+        'el-icon-notebook-2',
+        'el-icon-toilet-paper',
+        'el-icon-office-building',
+        'el-icon-school',
+        'el-icon-table-lamp',
+        'el-icon-house',
+        'el-icon-no-smoking',
+        'el-icon-smoking',
+        'el-icon-shopping-cart-full',
+        'el-icon-shopping-cart-1',
+        'el-icon-shopping-cart-2',
+        'el-icon-shopping-bag-1',
+        'el-icon-shopping-bag-2',
+        'el-icon-sold-out',
+        'el-icon-sell',
+        'el-icon-present',
+        'el-icon-box',
+        'el-icon-bank-card',
+        'el-icon-money',
+        'el-icon-coin',
+        'el-icon-wallet',
+        'el-icon-discount',
+        'el-icon-price-tag',
+        'el-icon-news',
+        'el-icon-guide',
+        'el-icon-male',
+        'el-icon-female',
+        'el-icon-thumb',
+        'el-icon-cpu',
+        'el-icon-link',
+        'el-icon-connection',
+        'el-icon-open',
+        'el-icon-turn-off',
+        'el-icon-set-up',
+        'el-icon-chat-round',
+        'el-icon-chat-line-round',
+        'el-icon-chat-square',
+        'el-icon-chat-dot-round',
+        'el-icon-chat-dot-square',
+        'el-icon-chat-line-square',
+        'el-icon-message',
+        'el-icon-postcard',
+        'el-icon-position',
+        'el-icon-turn-off-microphone',
+        'el-icon-microphone',
+        'el-icon-close-notification',
+        'el-icon-bangzhu',
+        'el-icon-time',
+        'el-icon-odometer',
+        'el-icon-crop',
+        'el-icon-aim',
+        'el-icon-switch-button',
+        'el-icon-full-screen',
+        'el-icon-copy-document',
+        'el-icon-mic',
+        'el-icon-stopwatch',
+        'el-icon-medal-1',
+        'el-icon-medal',
+        'el-icon-trophy',
+        'el-icon-trophy-1',
+        'el-icon-first-aid-kit',
+        'el-icon-discover',
+        'el-icon-place',
+        'el-icon-location',
+        'el-icon-location-outline',
+        'el-icon-location-information',
+        'el-icon-add-location',
+        'el-icon-delete-location',
+        'el-icon-map-location',
+        'el-icon-alarm-clock',
+        'el-icon-timer',
+        'el-icon-watch-1',
+        'el-icon-watch',
+        'el-icon-lock',
+        'el-icon-unlock',
+        'el-icon-key',
+        'el-icon-service',
+        'el-icon-mobile-phone',
+        'el-icon-bicycle',
+        'el-icon-truck',
+        'el-icon-ship',
+        'el-icon-basketball',
+        'el-icon-football',
+        'el-icon-soccer',
+        'el-icon-baseball',
+        'el-icon-wind-power',
+        'el-icon-light-rain',
+        'el-icon-lightning',
+        'el-icon-heavy-rain',
+        'el-icon-sunrise',
+        'el-icon-sunrise-1',
+        'el-icon-sunset',
+        'el-icon-sunny',
+        'el-icon-cloudy',
+        'el-icon-partly-cloudy',
+        'el-icon-cloudy-and-sunny',
+        'el-icon-moon',
+        'el-icon-moon-night',
+        'el-icon-dish',
+        'el-icon-dish-1',
+        'el-icon-food',
+        'el-icon-chicken',
+        'el-icon-fork-spoon',
+        'el-icon-knife-fork',
+        'el-icon-burger',
+        'el-icon-tableware',
+        'el-icon-sugar',
+        'el-icon-dessert',
+        'el-icon-ice-cream',
+        'el-icon-hot-water',
+        'el-icon-water-cup',
+        'el-icon-coffee-cup',
+        'el-icon-cold-drink',
+        'el-icon-goblet',
+        'el-icon-goblet-full',
+        'el-icon-goblet-square',
+        'el-icon-goblet-square-full',
+        'el-icon-refrigerator',
+        'el-icon-grape',
+        'el-icon-watermelon',
+        'el-icon-cherry',
+        'el-icon-apple',
+        'el-icon-pear',
+        'el-icon-orange',
+        'el-icon-coffee',
+        'el-icon-ice-tea',
+        'el-icon-ice-drink',
+        'el-icon-milk-tea',
+        'el-icon-potato-strips',
+        'el-icon-lollipop',
+        'el-icon-ice-cream-square',
+        'el-icon-ice-cream-round',],
+      num: 0,
+      p: 12
+
+    },
+    methods: {
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.iseeData)
+      },
+
+      iseeTagClose(url, index) {
+        iseeAdmin.iseeTagClose(url, index, this.iseeData)
+      },
+
+      iseeTagCommandClose(command) {
+        iseeAdmin.iseeTagCommandClose(command, this.iseeData)
+      },
+
+      iseeMenuOpen(key, keyPath) {
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.iseeData)
+      },
+
+      iseeFullScreen() {
+        iseeAdmin.iseeFullScreen(this.iseeData)
+      },
+
+      iseeAsideShow() {
+        iseeAdmin.iseeAsideShow(this.iseeData)
+      },
+      iseeOpenUrl(command) {
+        iseeAdmin.iseeMenuOpen(this.iseeData.avatar.list[command].index, this.iseeData.avatar.list[command].indexPath, this.iseeData)
+      },
+      iseeTagDivMove(flag) {
+        flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
+      },
+      /*your methods*/
+
+    },
+    beforeMount() {
+      iseeAdmin.init(this.iseeData)
+      /*your beforeMount*/
+      this.num = Math.ceil(this.iconData.length / 12)
+    },
+    mounted() {
+
+    }
+  });
+</script>
+</body>
+
+</html>
+

@@ -168,6 +168,13 @@ var iseeMenu = [
             icon: '',
             children: []
           }, {
+            index: '5-11-5',
+            title: 'Icon 图标',
+            url: '/pages/component/basic/icon.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
             index: '5-11-2',
             title: 'Link文字链接',
             url: '/pages/component/basic/link.html',
