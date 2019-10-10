@@ -370,6 +370,20 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          }, {
+            index: '5-1-7',
+            title: 'Badge标记',
+            url: '/pages/component/data/badge.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },{
+            index: '5-1-8',
+            title: 'Avatar头像',
+            url: '/pages/component/data/avatar.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
