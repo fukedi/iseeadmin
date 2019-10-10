@@ -134,7 +134,7 @@ var iseeMenu = [
     children: [
       {
         index: '5-11',
-        title: '基础组件',
+        title: '基础',
         url: '/pages/component/basic',
         target: '_self',
         icon: 'el-icon-switch-button',
@@ -314,15 +314,15 @@ var iseeMenu = [
 
       {
         index: '5-1',
-        title: '表格',
-        url: '/pages/component/table',
+        title: '数据',
+        url: '/pages/component/data',
         target: '_self',
         icon: 'el-icon-tickets',
         children: [
           {
             index: '5-1-0',
             title: '简单表格',
-            url: '/pages/component/table/simpletable.html',
+            url: '/pages/component/data/simpletable.html',
             target: '_self',
             icon: '',
             children: []
@@ -330,7 +330,7 @@ var iseeMenu = [
           {
             index: '5-1-1',
             title: '复杂表格1',
-            url: '/pages/component/table/complextable1.html',
+            url: '/pages/component/data/complextable1.html',
             target: '_self',
             icon: '',
             children: []
@@ -338,38 +338,45 @@ var iseeMenu = [
           {
             index: '5-1-2',
             title: '复杂表格2',
-            url: '/pages/component/table/complextable2.html',
+            url: '/pages/component/data/complextable2.html',
             target: '_self',
             icon: '',
             children: []
-          }
+          },{
+            index: '5-1-3',
+            title: 'Tag标签',
+            url: '/pages/component/data/tag.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-1-4',
+            title: 'Progress进度条',
+            url: '/pages/component/data/progress.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-1-5',
+            title: 'Tree树形组件',
+            url: '/pages/component/data/tree.html',
+            target: '_self',
+            icon: '',
+            children: []
+          }, {
+            index: '5-1-6',
+            title: 'Pagination分页',
+            url: '/pages/component/data/pagination.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
         ]
       },
 
 
 
-      {
-        index: '5-8',
-        title: '标签组件',
-        url: '/pages/component/tag.html',
-        target: '_self',
-        icon: 'el-icon-collection-tag',
-        children: []
-      }, {
-        index: '5-9',
-        title: '进度条',
-        url: '/pages/component/progress.html',
-        target: '_self',
-        icon: 'el-icon-collection-tag',
-        children: []
-      }, {
-        index: '5-10',
-        title: '树形组件',
-        url: '/pages/component/tree.html',
-        target: '_self',
-        icon: 'el-icon-collection-tag',
-        children: []
-      },
+
 
     ]
   }
