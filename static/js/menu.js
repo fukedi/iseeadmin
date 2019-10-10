@@ -386,6 +386,22 @@ var iseeMenu = [
             children: []
           },
         ]
+      },{
+        index: '5-2',
+        title: '通知',
+        url: '/pages/component/notices',
+        target: '_self',
+        icon: 'el-icon-tickets',
+        children: [
+          {
+            index: '5-2-0',
+            title: 'Alert警告',
+            url: '/pages/component/notices/alert.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
+        ]
       },
 
 
