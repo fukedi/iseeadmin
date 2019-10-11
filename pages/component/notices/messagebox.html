@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ISeeAdmin 【MessageBox 弹框】 </title>
+    <!--    <link rel="stylesheet" href="/static/element/index.css">-->
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/iconfont/iconfont.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <!--    开发环境-->
+    <!--        <script src="/static/js/iseeadmin.js"></script>-->
+    <!--    正式环境-->
+    <script src="/static/js/iseeadmin.min.js"></script>
+    <script src="/static/js/menu.js"></script>
+    <!--    开发环境-->
+    <!--    <script src="/static/js/vue.js"></script>-->
+    <!--    正式环境-->
+    <!--        <script src="/static/js/vue.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="/static/element/index.js"></script>-->
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="/static/js/axios.min.js"></script>-->
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container style="height: 100%;min-height:100vh;">
+        <el-aside v-show="iseeData.asideShow" width="210px">
+            <!--            左侧logo 开始-->
+            <div class="aside-logo">
+                <img class="aside-logo-img" src="/static/images/logo.png"
+                     alt=""> ISeeAdmin
+            </div>
+            <!--            左侧logo 结束-->
+            <!--            左侧菜单 开始-->
+            <el-menu @select="iseeMenuOpen" style="width: 210px;"
+                     unique-opened
+                     :default-active="iseeData.defaultActive"
+                     background-color="#304156"
+                     text-color="#bfcbd9"
+                     active-text-color="#409eff">
+                <iseemenu :menu="iseeData.menu"></iseemenu>
+            </el-menu>
+            <!--            左侧菜单 结束-->
+        </el-aside>
+
+        <el-container>
+            <el-header height="83px">
+                <div class="isee-header-div">
+                    <!--                    面包屑 开始-->
+                    <div style="width: 100%;display: inherit;">
+                        <span class="aside-show" @click="iseeAsideShow">
+                            <i :class="iseeData.asideShowIcon"></i>
+                        </span>
+
+                        <el-breadcrumb style="line-height: 50px" separator="/">
+                            <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <!--                    面包屑 结束-->
+                    <!--                    icon功能列表，可根据需要修改 开始-->
+                    <div>
+                        <ul class="isee-ul">
+                            <li class="isee-li">
+                                <i style="font-size: 20px" class="el-icon-bell"></i>
+                            </li>
+                            <li @click="iseeFullScreen" class="isee-li">
+                                <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
+                            </li>
+                            <li class="isee-li" @click="iseeData.drawer = true">
+                                <span class="iconfont" style="font-size: 20px">&#xe602;</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--                    icon功能列表，可根据需要修改 结束-->
+                    <!--                    avatar显示 开始-->
+                    <div>
+                        <el-dropdown @command="iseeOpenUrl">
+                              <span class="el-dropdown-link">
+                                  <el-avatar style="margin-top: 9px" :size="iseeData.avatar.size"
+                                             :src="iseeData.avatar.url"></el-avatar>
+                              </span>
+
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(item,index) in iseeData.avatar.list" :icon="item.icon"
+                                                  :key="index" :command="index">{{item.title}}
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    avatar显示 结束-->
+                </div>
+                <div style="display: flex">
+                    <!--                    标签页列表 开始-->
+                    <span @click="iseeTagDivMove(1)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-left"></i>
+                    </span>
+                    <div ref="iseeTagDiv" class="isee-tag-div">
+                        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
+                                :key="index"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
+                                :effect="item.effect"
+                                :type="item.type"
+                                @close="iseeTagClose(item.url,index)"
+                                size="medium"
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                        </el-tag>
+                    </div>
+                    <span @click="iseeTagDivMove(2)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-right"></i>
+                    </span>
+                    <!--                    标签页列表 结束-->
+                    <!--                    标签页集中操作 开始-->
+                    <div style="float: right;margin-left: 10px">
+                        <el-dropdown @command="iseeTagCommandClose">
+                          <span class="el-dropdown-link">
+                              <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
+                          </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    标签页集中操作 结束-->
+                </div>
+
+                <!--抽屉式展示-->
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">码云
+                                </el-link>
+                                |
+                                <el-link type="primary" :underline="false" href="https://github.com/fukedi/iseeadmin"
+                                         target="_blank">github
+                                </el-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+                </el-drawer>
+                <!--抽屉式展示 结束-->
+            </el-header>
+
+            <el-main>
+                <!--                主内容展示-->
+                <div style="margin-right: 10px">
+                    <el-card class="box-card">
+                        MessageBox 弹框
+                        <el-link type="primary" target="_blank"
+                                 href="https://element.eleme.cn/#/zh-CN/component/message-box">
+                            官方文档 https://element.eleme.cn/#/zh-CN/component/message-box
+                        </el-link>
+                    </el-card>
+                </div>
+                <div style="display: flex">
+                    <el-card class="box-card">
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">说明 <el-tooltip
+                                content="说明 " placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <p style="font-size: 14px">
+                            模拟系统的消息提示框而实现的一套模态对话框组件，用于消息提示、确认消息和提交内容。
+                        </p>
+                        <p style="padding: 8px 16px;font-size: 14px;border-radius:4px;border-left: 5px solid #50bfff ">
+                            从场景上说，MessageBox 的作用是美化系统自带的 alert、confirm 和 prompt，因此适合展示较为简单的内容。如果需要弹出较为复杂的内容，请使用 Dialog。
+                        </p>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">消息提示 <el-tooltip
+                                content="当用户进行操作时会被触发，该对话框中断用户操作，直到用户确认知晓后才可关闭。调用$alert方法即可打开消息提示，它模拟了系统的 alert，无法通过按下 ESC 或点击框外关闭。此例中接收了两个参数，message和title。值得一提的是，窗口被关闭后，它默认会返回一个Promise对象便于进行后续操作的处理。若不确定浏览器是否支持Promise，可自行引入第三方 polyfill 或像本例一样使用回调进行后续处理。 "
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-button type="primary" @click="open">点击打开 Message Box</el-button>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">确认消息 <el-tooltip
+                                content="提示用户确认其已经触发的动作，并询问是否进行此操作时会用到此对话框。调用$confirm方法即可打开消息提示，它模拟了系统的 confirm。Message Box 组件也拥有极高的定制性，我们可以传入options作为第三个参数，它是一个字面量对象。type字段表明消息类型，可以为success，error，info和warning，无效的设置将会被忽略。注意，第二个参数title必须定义为String类型，如果是Object，会被理解为options。在这里我们用了 Promise 来处理后续响应。 "
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-button type="success" @click="open1">点击打开 Message Box</el-button>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">提交内容 <el-tooltip
+                                content="当用户进行操作时会被触发，中断用户操作，提示用户进行输入的对话框。调用$prompt方法即可打开消息提示，它模拟了系统的 prompt。可以用inputPattern字段自己规定匹配模式，或者用inputValidator规定校验函数，可以返回Boolean或String，返回false或字符串时均表示校验未通过，同时返回的字符串相当于定义了inputErrorMessage字段。此外，可以用inputPlaceholder字段来定义输入框的占位符。 "
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-button type="info" @click="open2">点击打开 Message Box</el-button>
+                        </template>
+                        
+                    </el-card>
+
+                    <el-card class="box-card">
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">区分取消与关闭 <el-tooltip
+                                content="有些场景下，点击取消按钮与点击关闭按钮有着不同的含义。默认情况下，当用户触发取消（点击取消按钮）和触发关闭（点击关闭按钮或遮罩层、按下 ESC 键）时，Promise 的 reject 回调和callback回调的参数均为 'cancel'。如果将distinguishCancelAndClose属性设置为 true，则上述两种行为的参数分别为 'cancel' 和 'close'。 "
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-button type="primary" @click="open5">点击打开 Message Box</el-button>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">自定义 <el-tooltip
+                                content="可自定义配置不同内容。以上三个方法都是对$msgbox方法的再包装。本例直接调用$msgbox方法，使用了showCancelButton字段，用于显示取消按钮。另外可使用cancelButtonClass为其添加自定义样式，使用cancelButtonText来自定义按钮文本（Confirm 按钮也具有相同的字段，在文末的字段说明中有完整的字段列表）。此例还使用了beforeClose属性，它的值是一个方法，会在 MessageBox 的实例关闭前被调用，同时暂停实例的关闭。它有三个参数：action、实例本身和done方法。使用它能够在关闭前对实例进行一些操作，比如为确定按钮添加loading状态等；此时若需要关闭实例，可以调用done方法（若在beforeClose中没有调用done，则实例不会关闭）。 "
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-button type="warning" @click="open3">点击打开 Message Box</el-button>
+                        </template>
+                        <p style="padding: 8px 16px;font-size: 14px;border-radius:4px;border-left: 5px solid #50bfff ">
+                            弹出层的内容可以是 VNode，所以我们能把一些自定义组件传入其中。每次弹出层打开后，Vue 会对新老 VNode
+                            节点进行比对，然后将根据比较结果进行最小单位地修改视图。这也许会造成弹出层内容区域的组件没有重新渲染，例如
+                            <el-link href="https://github.com/ElemeFE/element/issues/8931">#8931</el-link>
+                            。当这类问题出现时，解决方案是给 VNode 加上一个不相同的
+                            key，参考
+                            <el-link href="https://jsfiddle.net/zhiyang/ezmhq2ef/">这里</el-link>
+                            。
+                        </p>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">使用 HTML 片段 <el-tooltip
+                                content="message 属性支持传入 HTML 片段。将dangerouslyUseHTMLString属性设置为 true，message 就会被当作 HTML 片段处理。 "
+                                placement="top"
+                                effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-button type="danger" @click="open4">点击打开 Message Box</el-button>
+                        </template>
+                        <p style="padding: 8px 16px;font-size: 14px;border-radius:4px;border-left: 5px solid #fe6c6f ">
+                            message 属性虽然支持传入 HTML 片段，但是在网站上动态渲染任意 HTML 是非常危险的，因为容易导致 XSS 攻击。因此在 dangerouslyUseHTMLString
+                            打开的情况下，请确保 message 的内容是可信的，永远不要将用户提交的内容赋值给 message 属性。
+                        </p>
+
+                    </el-card>
+
+                    <el-card class="box-card">
+
+
+
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">居中布局 <el-tooltip
+                                content="内容支持居中布局。将 center 设置为 true 即可开启居中布局 "
+                                placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <template>
+                            <el-button type="text" @click="open6">点击打开 Message Box</el-button>
+                        </template>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">全局方法 <el-tooltip
+                                content="全局方法 " placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <p style="font-size: 14px;font-weight: bold;opacity: 0.68">
+                            如果你完整引入了 Element，它会为 Vue.prototype 添加如下全局方法：$msgbox, $alert, $confirm 和 $prompt。因此在 Vue
+                            instance 中可以采用本页面中的方式调用 MessageBox。调用参数为：
+                        </p>
+                        <ul style="font-size: 12px">
+                            <li style="padding: 5px">$msgbox(options)</li>
+                            <li style="padding: 5px">$alert(message, title, options) 或 $alert(message, options)</li>
+                            <li style="padding: 5px">$confirm(message, title, options) 或 $confirm(message, options)</li>
+                            <li style="padding:5px"> $prompt(message, title, options) 或 $prompt(message, options)</li>
+                        </ul>
+
+                        <el-divider content-position="left"><span
+                                class="el-divider-span">单独引用 <el-tooltip
+                                content="单独引用 " placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <p style="font-size:14px;font-weight: bold;opacity: 0.68">
+                            如果单独引入 MessageBox：
+                        </p>
+                        <span style="font-size: 12px;padding: 20px">
+                        import { MessageBox } from 'element-ui';
+                        </span>
+                        <p style="font-size:14px;font-weight: bold;opacity: 0.68">
+                            那么对应于上述四个全局方法的调用方法依次为：MessageBox, MessageBox.alert, MessageBox.confirm 和
+                            MessageBox.prompt，调用参数与全局方法相同。
+                        </p>
+
+
+                    </el-card>
+                </div>
+                <!--                主内容展示 结束-->
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+
+<script>
+  const iseeAvatar = {
+    url: '/static/images/avatar01.gif',
+    size: 32,
+    list: [
+      {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-user-solid',
+        url: '',
+        target: '_self',
+        title: 'admin',
+      }, {
+        index: '3-0',
+        indexPath: ['3', '3-0'],
+        icon: 'el-icon-tickets',
+        url: '/manage/profile.html',
+        target: '_self',
+        title: '基本资料',
+      }, {
+        index: '3-1',
+        indexPath: ['3', '3-1'],
+        icon: 'el-icon-edit-outline',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '修改密码',
+      }, {
+        index: '3-2',
+        indexPath: ['3', '3-2'],
+        icon: 'el-icon-switch-button',
+        url: '/manage/modify.html',
+        target: '_self',
+        title: '安全退出',
+      },
+    ]
+  }
+  var iseemenu = {
+    props: ['menu'],
+    name: 'iseemenu',
+    template: `
+    <div>
+        <template v-for="item in menu">
+            <el-submenu :index="item.index" v-if="item.children.length">
+                <template slot="title">
+                    <i :class="item.icon"></i>
+                    <span slot="title">{{item.title}}</span>
+                </template>
+                <iseemenu :menu="item.children"></iseemenu>
+            </el-submenu>
+            <el-menu-item :index="item.index" v-else>
+                <i :class="item.icon"></i>
+                <span slot="title">{{item.title}}</span>
+            </el-menu-item>
+        </template>
+    </div>`,
+  }
+  var app = new Vue({
+    el: '#app',
+    components: {
+      iseemenu
+    },
+    data: {
+      iseeData: {
+        version: iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
+        status: false,
+        show: true,
+        asideShow: iseeAdmin.asideShow,
+        asideShowIcon: iseeAdmin.asideShowIcon,
+        fullscreen: false,
+        fullscreenIcon: '&#xe610;',
+        defaultActive: iseeAdmin.defaultActive,
+        tagList: iseeAdmin.tagList,
+        breadcrumb: iseeAdmin.breadcrumb,
+        menu: iseeMenu,
+        avatar: iseeAvatar
+      },
+      /*your data*/
+
+    },
+    methods: {
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.iseeData)
+      },
+
+      iseeTagClose(url, index) {
+        iseeAdmin.iseeTagClose(url, index, this.iseeData)
+      },
+
+      iseeTagCommandClose(command) {
+        iseeAdmin.iseeTagCommandClose(command, this.iseeData)
+      },
+
+      iseeMenuOpen(key, keyPath) {
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.iseeData)
+      },
+
+      iseeFullScreen() {
+        iseeAdmin.iseeFullScreen(this.iseeData)
+      },
+
+      iseeAsideShow() {
+        iseeAdmin.iseeAsideShow(this.iseeData)
+      },
+      iseeOpenUrl(command) {
+        iseeAdmin.iseeMenuOpen(this.iseeData.avatar.list[command].index, this.iseeData.avatar.list[command].indexPath, this.iseeData)
+      },
+      iseeTagDivMove(flag) {
+        flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
+      },
+      /*your methods*/
+      open() {
+        this.$alert('这是一段内容', '标题名称', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'info',
+              message: `action: ${action}`
+            });
+          }
+        });
+      },
+      open1() {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      },
+      open2() {
+        this.$prompt('请输入邮箱', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+          inputErrorMessage: '邮箱格式不正确'
+        }).then(({value}) => {
+          this.$message({
+            type: 'success',
+            message: '你的邮箱是: ' + value
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          });
+        });
+      },
+      open3() {
+        const h = this.$createElement;
+        this.$msgbox({
+          title: '消息',
+          message: h('p', null, [
+            h('span', null, '内容可以是 '),
+            h('i', {style: 'color: teal'}, 'VNode')
+          ]),
+          showCancelButton: true,
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm') {
+              instance.confirmButtonLoading = true;
+              instance.confirmButtonText = '执行中...';
+              setTimeout(() => {
+                done();
+                setTimeout(() => {
+                  instance.confirmButtonLoading = false;
+                }, 300);
+              }, 3000);
+            } else {
+              done();
+            }
+          }
+        }).then(action => {
+          this.$message({
+            type: 'info',
+            message: 'action: ' + action
+          });
+        });
+      },
+      open4() {
+        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
+          dangerouslyUseHTMLString: true
+        });
+      },
+      open5() {
+        this.$confirm('检测到未保存的内容，是否在离开页面前保存修改？', '确认信息', {
+          distinguishCancelAndClose: true,
+          confirmButtonText: '保存',
+          cancelButtonText: '放弃修改'
+        })
+          .then(() => {
+            this.$message({
+              type: 'info',
+              message: '保存修改'
+            });
+          })
+          .catch(action => {
+            this.$message({
+              type: 'info',
+              message: action === 'cancel'
+                ? '放弃保存并离开页面'
+                : '停留在当前页面'
+            })
+          });
+      },
+      open6() {
+        this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+          center: true
+        }).then(() => {
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+      }
+
+    },
+    beforeMount() {
+      iseeAdmin.init(this.iseeData)
+      /*your beforeMount*/
+    },
+    mounted() {
+
+    }
+  });
+</script>
+</body>
+
+</html>
+

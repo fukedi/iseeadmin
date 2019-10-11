@@ -414,6 +414,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-2-3',
+            title: 'MessageBox弹框',
+            url: '/pages/component/notices/messagebox.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
