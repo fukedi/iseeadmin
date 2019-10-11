@@ -400,6 +400,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-2-1',
+            title: 'Loading加载',
+            url: '/pages/component/notices/loading.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },

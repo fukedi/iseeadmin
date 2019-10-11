@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ISeeAdmin 【Cascader 级联选择器】 </title>
+    <title>ISeeAdmin 【Loading 加载】 </title>
     <!--    <link rel="stylesheet" href="/static/element/index.css">-->
     <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/iconfont/iconfont.css">
@@ -177,79 +177,149 @@
                 <!--                主内容展示-->
                 <div style="margin-right: 10px">
                     <el-card class="box-card">
-                        Cascader 级联选择器
+                        Loading 加载
                         <el-link type="primary" target="_blank"
-                                 href="https://element.eleme.cn/#/zh-CN/component/cascader">
-                            官方文档 https://element.eleme.cn/#/zh-CN/component/cascader
+                                 href="https://element.eleme.cn/#/zh-CN/component/loading">
+                            官方文档 https://element.eleme.cn/#/zh-CN/component/loading
                         </el-link>
                     </el-card>
                 </div>
                 <div style="display: flex">
                     <el-card class="box-card">
                         <el-divider content-position="left"><span
-                                class="el-divider-span">基础用法 <el-tooltip
-                                content=" " placement="top" effect="light"><i
+                                class="el-divider-span">区域加载 <el-tooltip
+                                content="在表格等容器中加载数据时显示。Element 提供了两种调用 Loading 的方法：指令和服务。对于自定义指令v-loading，只需要绑定Boolean即可。默认状况下，Loading 遮罩会插入到绑定元素的子节点，通过添加body修饰符，可以使遮罩插入至 DOM 中的 body 上。 "
+                                placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
+                        <template>
+                            <el-table
+                                    v-loading="loading"
+                                    :data="tableData"
+                                    style="width: 100%">
+                                <el-table-column
+                                        prop="date"
+                                        label="日期"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址">
+                                </el-table-column>
+                            </el-table>
+                        </template>
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">禁用状态 <el-tooltip
-                                content=" " placement="top" effect="light"><i
+                                class="el-divider-span">自定义 <el-tooltip
+                                content="可自定义加载文案、图标和背景色。在绑定了v-loading指令的元素上添加element-loading-text属性，其值会被渲染为加载文案，并显示在加载图标的下方。类似地，element-loading-spinner和element-loading-background属性分别用来设定图标类名和背景色值。 "
+                                placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
+                        <template>
+                            <el-table
+                                    v-loading="loading"
+                                    element-loading-text="拼命加载中"
+                                    element-loading-spinner="el-icon-loading"
+                                    element-loading-background="rgba(0, 0, 0, 0.8)"
+                                    :data="tableData"
+                                    style="width: 100%">
+                                <el-table-column
+                                        prop="date"
+                                        label="日期"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="姓名"
+                                        width="180">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="address"
+                                        label="地址">
+                                </el-table-column>
+                            </el-table>
+                        </template>
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">禁用状态 <el-tooltip
-                                content=" " placement="top" effect="light"><i
+                                class="el-divider-span">整页加载 <el-tooltip
+                                content="页面数据加载时显示。当使用指令方式时，全屏遮罩需要添加fullscreen修饰符（遮罩会插入至 body 上），此时若需要锁定屏幕的滚动，可以使用lock修饰符；当使用服务方式时，遮罩默认即为全屏，无需额外设置。 "
+                                placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
+                        <template>
+                            <el-button
+                                    type="primary"
+                                    @click="openFullScreen"
+                                    v-loading.fullscreen.lock="fullscreenLoading">
+                                指令方式
+                            </el-button>
+                            <el-button
+                                    type="primary"
+                                    @click="openFullScreen">
+                                服务方式
+                            </el-button>
+                        </template>
 
                     </el-card>
 
                     <el-card class="box-card">
+
                         <el-divider content-position="left"><span
-                                class="el-divider-span">可清空单选 <el-tooltip
-                                content=" "
+                                class="el-divider-span">服务 <el-tooltip
+                                content="服务 "
                                 placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">基础多选 <el-tooltip
-                                content=" "
-                                placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">分组 <el-tooltip
-                                content=" " placement="top"
-                                effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
-
-                    </el-card>
-
-                    <el-card class="box-card">
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">可搜索 <el-tooltip
-                                content=" "
-                                placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">远程搜索 <el-tooltip
-                                content=" "
-                                placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">创建条目 <el-tooltip
-                                content=" " placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
+                        <div style="font-size: 14px">
+                            <p style="font-weight: bold;opacity: 0.68">
+                                Loading 还可以以服务的方式调用。引入 Loading 服务：
+                            </p>
+                            <span style="font-size: 12px;padding: 20px">
+                                import { Loading } from 'element-ui';
+                            </span>
+                            <p style="font-weight: bold;opacity: 0.68">
+                                在需要调用时：
+                            </p>
+                            <span style="font-size: 12px;padding: 20px">
+                             Loading.service(options);
+                            </span>
+                            <p style="font-weight: bold;opacity: 0.68">
+                                其中 options 参数为 Loading 的配置项，具体见下表。LoadingService 会返回一个 Loading 实例，可通过调用该实例的 close
+                                方法来关闭它：
+                            </p>
+                            <span style="font-size: 12px;padding: 10px 0 0 20px;display: block">
+                                let loadingInstance = Loading.service(options);
+                            </span>
+                            <span style="font-size: 12px;padding-left:  20px;display: block">
+                                this.$nextTick(() => { // 以服务的方式调用的 Loading 需要异步关闭
+                            </span>
+                            <span style="font-size: 12px;padding:  0 0 20px 20px;display: block">
+                                loadingInstance.close();
+                                });
+                            </span>
+                            <p style="font-weight: bold;opacity: 0.68">
+                                需要注意的是，以服务的方式调用的全屏 Loading 是单例的：若在前一个全屏 Loading 关闭前再次调用全屏 Loading，并不会创建一个新的 Loading
+                                实例，而是返回现有全屏 Loading 的实例：
+                            </p>
+                            <span style="font-size: 12px;padding: 10px 0 0 20px;display: block">
+                            let loadingInstance1 = Loading.service({ fullscreen: true });
+                            </span>
+                            <span style="font-size: 12px;padding-left:  20px;display: block">
+                            let loadingInstance2 = Loading.service({ fullscreen: true });
+                            </span>
+                            <span style="font-size: 12px;padding:  0 0 20px 20px;display: block">
+                            console.log(loadingInstance1 === loadingInstance2); // true
+                            </span>
+                            <p style="font-weight: bold;opacity: 0.68">
+                                此时调用它们中任意一个的 close 方法都能关闭这个全屏 Loading。
+                            </p>
+                            <p style="font-weight: bold;opacity: 0.68">
+                                如果完整引入了 Element，那么 Vue.prototype 上会有一个全局方法
+                                $loading，它的调用方式为：this.$loading(options)，同样会返回一个
+                                Loading 实例。
+                            </p>
+                        </div>
 
                     </el-card>
                 </div>
@@ -340,6 +410,21 @@
         avatar: iseeAvatar
       },
       /*your data*/
+      tableData: [{
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }],
+      loading: true,
+      fullscreenLoading: false,
 
     },
     methods: {
@@ -373,6 +458,23 @@
         flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
       },
       /*your methods*/
+      openFullScreen() {
+        this.fullscreenLoading = true;
+        setTimeout(() => {
+          this.fullscreenLoading = false;
+        }, 2000);
+      },
+      openFullScreen() {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+        setTimeout(() => {
+          loading.close();
+        }, 2000);
+      }
 
     },
     beforeMount() {
