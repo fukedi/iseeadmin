@@ -407,6 +407,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-2-2',
+            title: 'Message消息提示',
+            url: '/pages/component/notices/message.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
