@@ -453,6 +453,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-3-2',
+            title: 'Breadcrumb面包屑',
+            url: '/pages/component/navigation/breadcrumb.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
