@@ -446,6 +446,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-3-1',
+            title: 'Tabs标签页',
+            url: '/pages/component/navigation/tabs.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
