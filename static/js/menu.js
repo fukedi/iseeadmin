@@ -386,7 +386,8 @@ var iseeMenu = [
             children: []
           },
         ]
-      },{
+      },
+      {
         index: '5-2',
         title: '通知',
         url: '/pages/component/notices',
@@ -425,6 +426,23 @@ var iseeMenu = [
             index: '5-2-4',
             title: 'Notification通知',
             url: '/pages/component/notices/notification.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
+        ]
+      },
+      {
+        index: '5-3',
+        title: '导航',
+        url: '/pages/component/navigation',
+        target: '_self',
+        icon: 'el-icon-tickets',
+        children: [
+          {
+            index: '5-3-0',
+            title: 'NavMenu导航菜单',
+            url: '/pages/component/navigation/navmenu.html',
             target: '_self',
             icon: '',
             children: []
