@@ -421,6 +421,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-2-4',
+            title: 'Notification通知',
+            url: '/pages/component/notices/notification.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
