@@ -547,6 +547,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-4-8',
+            title: 'Calendar日历',
+            url: '/pages/component/others/calendar.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
