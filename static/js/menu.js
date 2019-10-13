@@ -526,6 +526,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-4-5',
+            title: 'Collapse折叠面板',
+            url: '/pages/component/others/collapse.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
