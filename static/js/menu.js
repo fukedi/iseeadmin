@@ -533,6 +533,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-4-6',
+            title: 'Timeline时间线',
+            url: '/pages/component/others/timeline.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
