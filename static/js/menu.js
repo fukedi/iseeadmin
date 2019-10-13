@@ -540,6 +540,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-4-7',
+            title: 'Divider分割线',
+            url: '/pages/component/others/divider.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
