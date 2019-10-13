@@ -484,6 +484,30 @@ var iseeMenu = [
           },
         ]
       },
+      {
+        index: '5-4',
+        title: '其它',
+        url: '/pages/component/others',
+        target: '_self',
+        icon: 'el-icon-tickets',
+        children: [
+          {
+            index: '5-4-0',
+            title: 'Dialog对话框',
+            url: '/pages/component/others/dialog.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },{
+            index: '5-4-1',
+            title: 'Tooltip文字提示',
+            url: '/pages/component/others/tooltip.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },
+        ]
+      },
 
 
 
