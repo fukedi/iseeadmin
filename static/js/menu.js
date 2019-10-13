@@ -474,6 +474,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-3-5',
+            title: 'Steps步骤条',
+            url: '/pages/component/navigation/steps.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
