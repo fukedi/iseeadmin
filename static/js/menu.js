@@ -460,6 +460,20 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-3-3',
+            title: 'PageHeader页头',
+            url: '/pages/component/navigation/pageheader.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },{
+            index: '5-3-4',
+            title: 'Dropdown下拉菜单',
+            url: '/pages/component/navigation/dropdown.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
