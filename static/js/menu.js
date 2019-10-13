@@ -505,6 +505,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-4-2',
+            title: 'Popover弹出框',
+            url: '/pages/component/others/popover.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
