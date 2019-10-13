@@ -519,6 +519,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-4-4',
+            title: 'Carousel走马灯',
+            url: '/pages/component/others/carousel.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
