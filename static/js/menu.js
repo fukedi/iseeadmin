@@ -512,6 +512,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-4-3',
+            title: 'Card卡片',
+            url: '/pages/component/others/card.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
