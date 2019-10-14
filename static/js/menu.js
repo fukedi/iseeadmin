@@ -554,6 +554,27 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-4-9',
+            title: 'Image图片',
+            url: '/pages/component/others/image.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },{
+            index: '5-4-10',
+            title: 'InfiniteScroll无限滚动',
+            url: '/pages/component/others/infinitescroll.html',
+            target: '_self',
+            icon: '',
+            children: []
+          },{
+            index: '5-4-11',
+            title: 'Drawer抽屉',
+            url: '/pages/component/others/drawer.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
