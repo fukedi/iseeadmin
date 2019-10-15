@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ISeeAdmin 【网站设置】 </title>
+    <title>ISeeAdmin 【基本资料】 </title>
     <!--    <link rel="stylesheet" href="/static/element/index.css">-->
     <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/iconfont/iconfont.css">
@@ -183,44 +183,42 @@
                 <div style="margin-right: 10px">
                     <el-card class="box-card">
                         <p style="padding: 8px 16px;font-size: 14px;border-radius:4px;border-left: 5px solid #50bfff ">
-                            网站设置
+                            基本资料
                         </p>
                         <el-divider></el-divider>
                         <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="150px">
 
-                            <el-form-item label="网站名称" prop="name">
-                                <el-input v-model="ruleForm.name" placeholder="iseeAdmin"
-                                          class="form-item-width"></el-input>
+                            <el-form-item label="所属角色" prop="role">
+                                <el-select v-model="ruleForm.role" placeholder="请选择角色">
+                                    <el-option v-for="item in roleList" :label="item.name" :value="item.id"></el-option>
+                                </el-select>
                             </el-form-item>
-                            <el-form-item label="网站域名" prop="domain">
-                                <el-input v-model="ruleForm.domain" placeholder="56c.net.cn" class="form-item-width">
-                                    <template slot="prepend">Http://</template>
+                            <el-form-item label="用户名" prop="name">
+                                <el-input v-model="ruleForm.name" disabled class="form-item-width">
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="首页标题" prop="title">
-                                <el-input v-model="ruleForm.title" class="form-item-width"></el-input>
+                            <el-form-item label="昵称" prop="nickname">
+                                <el-input v-model="ruleForm.nickname" class="form-item-width"></el-input>
                             </el-form-item>
-                            <el-form-item label="缓存时间" prop="expire">
-                                <el-input v-model.number="ruleForm.expire" class="form-item-width"></el-input>
-                                <span>分钟。本地开发一般推荐设置为0，线上环境建议设置为10。</span>
+                            <el-form-item label="性别" prop="sex">
+                                <el-radio-group v-model="ruleForm.sex" size="mini">
+                                    <el-radio-button label="1">男</el-radio-button>
+                                    <el-radio-button label="2">女</el-radio-button>
+                                </el-radio-group>
                             </el-form-item>
-                            <el-form-item label="最大文件上传" prop="fileSize">
-                                <el-input v-model.number="ruleForm.fileSize" class="form-item-width"></el-input>
-                                <span>KB   提示：1M = 1024 KB</span>
+                            <el-form-item label="头像" prop="avatar">
+                                <el-input v-model.number="ruleForm.avatar" class="form-item-width"></el-input>
                             </el-form-item>
-                            <el-form-item label="上传文件类型" prop="fileType">
-                                <el-input v-model="ruleForm.fileType" class="form-item-width"></el-input>
-                            </el-form-item>
-                            <el-form-item label="META关键词" prop="metaKey">
-                                <el-input type="textarea" v-model="ruleForm.metaKey" class="form-item-width"
-                                          placeholder="多个关键词用英文状态,号分割"></el-input>
-                            </el-form-item>
-                            <el-form-item label="META描述" prop="metaDesc">
-                                <el-input type="textarea" v-model="ruleForm.metaDesc"
+                            <el-form-item label="手机" prop="phone">
+                                <el-input maxlength="11" show-word-limit v-model.number="ruleForm.phone"
                                           class="form-item-width"></el-input>
                             </el-form-item>
-                            <el-form-item label="版权信息" prop="copyright">
-                                <el-input type="textarea" v-model="ruleForm.copyright"
+                            <el-form-item label="邮箱" prop="email">
+                                <el-input v-model="ruleForm.email" class="form-item-width"
+                                          placeholder="请输入邮箱"></el-input>
+                            </el-form-item>
+                            <el-form-item label="备注" prop="remark">
+                                <el-input type="textarea" v-model="ruleForm.remark"
                                           class="form-item-width"></el-input>
                             </el-form-item>
                             <el-form-item>
@@ -228,6 +226,7 @@
                                 <el-button @click="resetForm('ruleForm')">重置</el-button>
                             </el-form-item>
                         </el-form>
+
                     </el-card>
 
                 </div>
@@ -318,49 +317,61 @@
         avatar: iseeAvatar
       },
       /*your data*/
+      roleList: [
+        {
+          id: 1,
+          name: '超级管理员'
+        }, {
+          id: 2,
+          name: '编辑人员'
+        }, {
+          id: 3,
+          name: '普通管理员'
+        }, {
+          id: 4,
+          name: '审核员'
+        },
+      ],
       ruleForm: {
-        name: 'iseeAdmin',
-        domain: '56c.net.cn',
-        title: 'iseeAdmin前端后台管理解决方案',
-        expire: 0,
-        fileSize: 2048,
-        fileType: 'png|gif|jpg|jpeg|zip|rar',
-        metaKey: '',
-        metaDesc: 'iseeAdmin是一个前端后台管理解决方案',
-        copyright: '©2019 56c.net.cn MIT license'
+        role: 1,
+        name: 'admin',
+        nickname: '',
+        sex: 2,
+        avatar: 2048,
+        phone: null,
+        email: '46914685@qq.com',
+        remark: '',
       },
       rules: {
+        role: [
+          {required: true, message: '请选择角色', trigger: 'blur'},
+        ],
         name: [
-          {required: true, message: '请输入网站名称', trigger: 'blur'},
+          {required: true, message: '请输入名字', trigger: 'blur'},
           {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
         ],
-        domain: [
-          {required: true, message: '请输入网站域名', trigger: 'blur'},
+        nickname: [
+          {required: true, message: '请输入昵称', trigger: 'blur'},
           {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
         ],
-        title: [
-          {required: true, message: '请输入首页标题', trigger: 'blur'},
-          {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
+        sex: [
+          {required: true, message: '请选择性别', trigger: 'blur'},
         ],
-        expire: [
-          {required: true, message: '请输入过期时间', trigger: 'blur'},
-          {type: 'number', message: '过期时间必须为数字'}
+        phone: [
+          {required: true, message: '请输入手机号码', trigger: 'blur'},
+          {type: 'number', message: '手机号码必须为数字', trigger: 'blur'},
+          {
+            validator:function(rule,value,callback){
+              if(/^1[34578]\d{9}$/.test(value) == false){
+                callback(new Error("请输入正确的手机号"));
+              }else{
+                callback();
+              }
+            }, trigger: 'blur'}
         ],
-        fileSize: [
-          {required: true, message: '请输入最大文件上传值', trigger: 'blur'},
-          {type: 'number', message: '最大文件上传必须为数字'}
-        ],
-        fileType: [
-          {required: true, message: '请输入文件上传类型', trigger: 'blur'},
-        ],
-        metaKey: [
-          {required: true, message: '请输入meta关键字', trigger: 'blur'},
-        ],
-        metaDesc: [
-          {required: true, message: '请输入meta描述', trigger: 'blur'},
-        ],
-        copyright: [
-          {required: true, message: '请输入版权信息', trigger: 'blur'},
+        email: [
+          {required: true, message: '请输入邮箱', trigger: 'blur'},
+          { type: 'email', message: '请输入正确的邮箱', trigger: ['blur', 'change'] }
         ],
       }
     },
@@ -399,6 +410,8 @@
         this.$refs[formName].validate((valid) => {
           if (valid) {
             this.$message.success('校验通过！可以提交');
+            console.log('提交的数据如下')
+            console.log(this.ruleForm)
             // this.$message({
             //   message:'校验通过！可以提交',
             //   type:'success'

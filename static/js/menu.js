@@ -605,6 +605,22 @@ var iseeMenu = [
             children:[]
           }
         ]
+      },{
+        index: '6-1',
+        title: '我的设置',
+        url: '/pages/sets/myset',
+        target: '_self',
+        icon: 'el-icon-setting',
+        children: [
+          {
+            index: '6-1-0',
+            title: '基本资料',
+            url: '/pages/sets/myset/profile.html',
+            target: '_self',
+            icon: '',
+            children:[]
+          }
+        ]
       }
     ],
   }
