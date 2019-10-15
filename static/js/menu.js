@@ -342,7 +342,7 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-1-3',
             title: 'Tag标签',
             url: '/pages/component/data/tag.html',
@@ -377,7 +377,7 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-1-8',
             title: 'Avatar头像',
             url: '/pages/component/data/avatar.html',
@@ -401,28 +401,28 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-2-1',
             title: 'Loading加载',
             url: '/pages/component/notices/loading.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-2-2',
             title: 'Message消息提示',
             url: '/pages/component/notices/message.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-2-3',
             title: 'MessageBox弹框',
             url: '/pages/component/notices/messagebox.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-2-4',
             title: 'Notification通知',
             url: '/pages/component/notices/notification.html',
@@ -446,35 +446,35 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-3-1',
             title: 'Tabs标签页',
             url: '/pages/component/navigation/tabs.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-3-2',
             title: 'Breadcrumb面包屑',
             url: '/pages/component/navigation/breadcrumb.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-3-3',
             title: 'PageHeader页头',
             url: '/pages/component/navigation/pageheader.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-3-4',
             title: 'Dropdown下拉菜单',
             url: '/pages/component/navigation/dropdown.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-3-5',
             title: 'Steps步骤条',
             url: '/pages/component/navigation/steps.html',
@@ -498,77 +498,77 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-4-1',
             title: 'Tooltip文字提示',
             url: '/pages/component/others/tooltip.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-4-2',
             title: 'Popover弹出框',
             url: '/pages/component/others/popover.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-4-3',
             title: 'Card卡片',
             url: '/pages/component/others/card.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-4-4',
             title: 'Carousel走马灯',
             url: '/pages/component/others/carousel.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-4-5',
             title: 'Collapse折叠面板',
             url: '/pages/component/others/collapse.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-4-6',
             title: 'Timeline时间线',
             url: '/pages/component/others/timeline.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-4-7',
             title: 'Divider分割线',
             url: '/pages/component/others/divider.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-4-8',
             title: 'Calendar日历',
             url: '/pages/component/others/calendar.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-4-9',
             title: 'Image图片',
             url: '/pages/component/others/image.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-4-10',
             title: 'InfiniteScroll无限滚动',
             url: '/pages/component/others/infinitescroll.html',
             target: '_self',
             icon: '',
             children: []
-          },{
+          }, {
             index: '5-4-11',
             title: 'Drawer抽屉',
             url: '/pages/component/others/drawer.html',
@@ -580,9 +580,33 @@ var iseeMenu = [
       },
 
 
-
-
-
     ]
+  },
+  {
+    index: '6',
+    title: '设置',
+    url: '/pages/sets',
+    target: '_self',
+    icon: 'el-icon-s-tools' ,
+    children: [
+      {
+        index: '6-0',
+        title: '系统设置',
+        url: '/pages/sets/systemset',
+        target: '_self',
+        icon: 'el-icon-setting',
+        children: [
+          {
+            index: '6-0-0',
+            title: '网站设置',
+            url: '/pages/sets/systemset/webset.html',
+            target: '_self',
+            icon: '',
+            children:[]
+          }
+        ]
+      }
+    ],
   }
+
 ]
