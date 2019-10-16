@@ -626,7 +626,14 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children:[]
-          }
+          },{
+            index: '6-1-1',
+            title: '修改密码',
+            url: '/pages/sets/myset/password.html',
+            target: '_self',
+            icon: '',
+            children:[]
+          },
         ]
       }
     ],
