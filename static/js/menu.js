@@ -308,6 +308,13 @@ var iseeMenu = [
             target: '_self',
             icon: '',
             children: []
+          },{
+            index: '5-0-8',
+            title: 'validator校验',
+            url: '/pages/component/form/validator.html',
+            target: '_self',
+            icon: '',
+            children: []
           },
         ]
       },
