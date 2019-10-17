@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ISeeAdmin 【Avatar 头像】 </title>
+    <title>ISeeAdmin 【会员管理】 </title>
     <!--    <link rel="stylesheet" href="/static/element/index.css">-->
     <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/iconfont/iconfont.css">
@@ -21,6 +21,19 @@
     <!--    <script src="/static/element/index.js"></script>-->
     <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
     <!--    <script src="/static/js/axios.min.js"></script>-->
+    <style>
+        .form-item-width {
+            width: 300px;
+        }
+
+        .el-select .el-input {
+            width: 100px;
+        }
+
+        .input-with-select .el-input-group__prepend {
+            background-color: #fff;
+        }
+    </style>
 </head>
 <body>
 <div id="app" v-cloak>
@@ -175,92 +188,130 @@
 
             <el-main>
                 <!--                主内容展示-->
-                <div style="margin-right: 10px">
+                <div>
                     <el-card class="box-card">
-                        Avatar 头像
-                        <el-link type="primary" target="_blank"
-                                 href="https://element.eleme.cn/#/zh-CN/component/avatar">
-                            官方文档 https://element.eleme.cn/#/zh-CN/component/avatar
-                        </el-link>
-                    </el-card>
-                </div>
-                <div style="display: flex">
-                    <el-card class="box-card">
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">基本用法 <el-tooltip
-                                content="通过 shape 和 size 设置头像的形状和大小。 " placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-                        <template>
-                            <el-row style="line-height: 40px;text-align: center">
-                                <el-col :span="12">circle</el-col>
-                                <el-col :span="12">square</el-col>
-                            </el-row>
-                            <el-row>
-                                <el-col :span="3">
-                                    <el-avatar :size="50" :src="circleUrl"></el-avatar>
-                                </el-col>
-                                <el-col :span="3" v-for="size in sizeList" :key="size">
-                                    <el-avatar :size="size" :src="circleUrl"></el-avatar>
-                                </el-col>
-                                <el-col :span="3">
-                                    <el-avatar shape="square" :size="50" :src="squareUrl"></el-avatar>
-                                </el-col>
+                        <p style="padding: 8px 16px;font-size: 14px;border-radius:4px;border-left: 5px solid #50bfff ">
+                            会员管理
+                        </p>
+                        <el-divider></el-divider>
 
-                                <el-col :span="3" v-for="size in sizeList" :key="size">
-                                    <el-avatar shape="square" :size="size" :src="squareUrl"></el-avatar>
-                                </el-col>
-                            </el-row>
-                        </template>
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">展示类型 <el-tooltip
-                                content="支持三种类型：图标、图片和字符 " placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-                        <template>
-                            <el-row>
-                                <el-col :span="6">
-                                    <el-avatar icon="el-icon-user-solid"></el-avatar>
-                                </el-col>
-                                <el-col :span="6">
-                                    <el-avatar src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"></el-avatar>
-                                </el-col>
-                                <el-col :span="6">
-                                    <el-avatar> user </el-avatar>
-                                </el-col>
-                            </el-row>
-                        </template>
-
-                    </el-card>
-
-                    <el-card class="box-card">
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">图片加载失败的 fallback 行为 <el-tooltip
-                                content="当展示类型为图片的时候，图片加载失败的 fallback 行为 "
-                                placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-                        <template>
-                            <div class="demo-type">
-                                <el-avatar :size="60" src="https://empty" @error="errorHandler">
-                                    <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
-                                </el-avatar>
+                        <div style="display: flex;">
+                            <div style="width: 80%">
+                                <el-button-group>
+                                    <el-button round size="mini" type="danger" @click="del" icon="el-icon-delete">删除
+                                    </el-button>
+                                    <el-button round size="mini" type="primary" @click="add"
+                                               icon="el-icon-circle-plus-outline">添加
+                                    </el-button>
+                                </el-button-group>
                             </div>
-                        </template>
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">图片如何适应容器框 <el-tooltip
-                                content="当展示类型为图片的时候，使用 fit 属性定义图片如何适应容器框，同原生 object-fit。 "
-                                placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-                        <template>
-                            <div style="display: flex">
-                                <div v-for="fit in fits" :key="fit" style="margin: 10px">
-                                    <p style="text-align: center;font-size: 14px">{{ fit }}</p>
-                                    <el-avatar shape="square" :size="100" :fit="fit" :src="url"></el-avatar>
-                                </div>
+                            <div>
+                                <el-input size="mini" placeholder="请输入内容" v-model="searchData.searchVal"
+                                          class="input-with-select">
+                                    <el-select v-model="searchData.searchType" slot="prepend" placeholder="请选择">
+                                        <el-option label="用户名" value="1"></el-option>
+                                        <el-option label="手机" value="2"></el-option>
+                                        <el-option label="邮箱" value="3"></el-option>
+                                    </el-select>
+                                    <el-button type="primary" @click="search" slot="append"
+                                               icon="el-icon-search"></el-button>
+                                </el-input>
                             </div>
-                        </template>
-
+                        </div>
                     </el-card>
+                    <el-card class="box-card">
+                        <template>
+                            <el-table
+                                    ref="multipleTable"
+                                    :data="listData.data"
+                                    tooltip-effect="dark"
+                                    style="width: 100%"
+                                    size="mini"
+                                    height="360"
+                                    @selection-change="rowSelect"
+                            >
+                                <el-table-column
+                                        type="selection"
+                                        width="55">
+                                </el-table-column>
+                                <el-table-column
+                                        label="ID"
+                                        width="50">
+                                    <template slot-scope="scope">{{ scope.row.id }}</template>
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="用户名"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="phone"
+                                        label="手机"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="email"
+                                        label="邮箱"
+                                        width="200">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="sex"
+                                        label="性别"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="ip"
+                                        label="IP"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="add_time"
+                                        label="加入时间"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        fixed="right"
+                                        label="操作"
+                                        width="100">
+                                    <template slot-scope="scope">
+                                        <el-button @click="handleClick(scope.row)" type="text" size="small">查看
+                                        </el-button>
+                                        <el-button type="text" size="small">编辑</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+                        <div style="margin: 20px;">
+                            <el-pagination
+                                    background
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="listData.currentPage"
+                                    :page-sizes="listData.pageSizes"
+                                    :page-size="listData.pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="listData.total">
+                            </el-pagination>
+                        </div>
+                    </el-card>
+
+                    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
+                        <el-form :model="form">
+                            <el-form-item label="活动名称" :label-width="formLabelWidth">
+                                <el-input v-model="form.name" autocomplete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="活动区域" :label-width="formLabelWidth">
+                                <el-select v-model="form.region" placeholder="请选择活动区域">
+                                    <el-option label="区域一" value="shanghai"></el-option>
+                                    <el-option label="区域二" value="beijing"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-form>
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="dialogFormVisible = false">取 消</el-button>
+                            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+                        </div>
+                    </el-dialog>
                 </div>
                 <!--                主内容展示 结束-->
             </el-main>
@@ -270,6 +321,138 @@
 
 
 <script>
+  const item = [
+    {
+      id: 1,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 2,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 3,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 4,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 5,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 6,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 7,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 8,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 9,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 10,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 11,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 12,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 13,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 14,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 15,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    }, {
+      id: 16,
+      name: '有蜗壳',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      sex: '男',
+      ip: '127.0.0.1',
+      add_time: '2016-05-02',
+    },
+  ];
+
   const iseeAvatar = {
     url: '/static/images/avatar01.gif',
     size: 32,
@@ -325,6 +508,7 @@
         </template>
     </div>`,
   }
+
   var app = new Vue({
     el: '#app',
     components: {
@@ -349,14 +533,30 @@
         avatar: iseeAvatar
       },
       /*your data*/
-      // circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-      circleUrl: "/static/images/avatar01.gif",
-      // squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
-      squareUrl: "/static/images/avatar01.gif",
-      sizeList: ["large", "medium", "small"],
-      fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
-      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-
+      listData: {
+        currentPage: 2,
+        pageSize: 20,
+        pageSizes: [20, 40, 60, 80, 100],
+        total: 600,
+        data: item,
+      },
+      searchData: {
+        searchType: '1',
+        searchVal: '',
+      },
+      rowSelected: [],
+      dialogFormVisible: false,
+      form: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      formLabelWidth: '120px'
     },
     methods: {
       iseeTagSwitch(url, index, breadcrumb) {
@@ -389,8 +589,36 @@
         flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
       },
       /*your methods*/
-      errorHandler() {
-        return true
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+      },
+      handleClick(row) {
+        console.log(row);
+      },
+      search() {
+        console.log('当前搜索类型：' + this.searchData.searchType)
+        console.log('当前搜索值：' + this.searchData.searchVal)
+      },
+      rowSelect(rowSelected) {
+        console.log('rowSelected')
+        console.log(rowSelected)
+        this.rowSelected = rowSelected;
+      },
+      del() {
+        let ids = []
+        console.log('要删除的ids')
+        this.rowSelected.forEach(row => {
+          console.log('id:' + row.id)
+          ids.push(row.id)
+        })
+        console.log(ids)
+      },
+      add() {
+        console.log('add')
+        this.dialogFormVisible = true
       }
 
     },

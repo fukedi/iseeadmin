@@ -69,37 +69,37 @@ var iseeMenu = [
       },
     ]
   },
-  {
-    index: '3',
-    title: '管理员管理',
-    url: '/pages/manage/',
-    target: '_self',
-    icon: 'el-icon-user',
-    children: [
-      {
-        index: '3-0',
-        title: '基本资料',
-        url: '/pages/manage/profile.html',
-        target: '_self',
-        icon: 'el-icon-tickets',
-        children: []
-      }, {
-        index: '3-1',
-        title: '修改密码',
-        url: '/pages/manage/modify.html',
-        target: '_self',
-        icon: 'el-icon-edit-outline',
-        children: []
-      }, {
-        index: '3-2',
-        title: '安全退出',
-        url: '/pages/manage/logout.html',
-        target: '_self',
-        icon: 'el-icon-switch-button',
-        children: []
-      }
-    ]
-  },
+  // {
+  //   index: '3',
+  //   title: '管理员管理',
+  //   url: '/pages/manage/',
+  //   target: '_self',
+  //   icon: 'el-icon-user',
+  //   children: [
+  //     {
+  //       index: '3-0',
+  //       title: '基本资料',
+  //       url: '/pages/manage/profile.html',
+  //       target: '_self',
+  //       icon: 'el-icon-tickets',
+  //       children: []
+  //     }, {
+  //       index: '3-1',
+  //       title: '修改密码',
+  //       url: '/pages/manage/modify.html',
+  //       target: '_self',
+  //       icon: 'el-icon-edit-outline',
+  //       children: []
+  //     }, {
+  //       index: '3-2',
+  //       title: '安全退出',
+  //       url: '/pages/manage/logout.html',
+  //       target: '_self',
+  //       icon: 'el-icon-switch-button',
+  //       children: []
+  //     }
+  //   ]
+  // },
   {
     index: '4',
     title: '其它页面',
@@ -637,6 +637,37 @@ var iseeMenu = [
         ]
       }
     ],
-  }
+  },
+  {
+    index: '7',
+    title: '用户',
+    url: '/pages/user',
+    target: '_self',
+    icon: 'el-icon-s-tools' ,
+    children: [
+      {
+        index: '7-0',
+        title: '会员管理',
+        url: '/pages/user/member.html',
+        target: '_self',
+        icon: '',
+        children: []
+      },{
+        index: '7-1',
+        title: '后台管理员',
+        url: '/pages/user/admin.html',
+        target: '_self',
+        icon: '',
+        children: []
+      },{
+        index: '7-2',
+        title: '角色管理',
+        url: '/pages/user/role.html',
+        target: '_self',
+        icon: '',
+        children: []
+      },
+    ],
+  },
 
 ]
