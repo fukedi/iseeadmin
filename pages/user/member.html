@@ -23,7 +23,7 @@
     <!--    <script src="/static/js/axios.min.js"></script>-->
     <style>
         .form-item-width {
-            width: 300px;
+            width: 260px;
         }
 
         .el-select .el-input {
@@ -245,6 +245,11 @@
                                         width="120">
                                 </el-table-column>
                                 <el-table-column
+                                        prop="nickname"
+                                        label="昵称"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
                                         prop="phone"
                                         label="手机"
                                         width="120">
@@ -255,9 +260,21 @@
                                         width="200">
                                 </el-table-column>
                                 <el-table-column
-                                        prop="sex"
+                                        prop="sexInfo.name"
                                         label="性别"
                                         width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="levelInfo.name"
+                                        label="会员等级"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        label="会员期限"
+                                        width="180">
+                                    <template slot-scope="scope">{{ scope.row.time_frame[0] }}~{{
+                                        scope.row.time_frame[1] }}
+                                    </template>
                                 </el-table-column>
                                 <el-table-column
                                         prop="ip"
@@ -266,7 +283,7 @@
                                 </el-table-column>
                                 <el-table-column
                                         prop="add_time"
-                                        label="加入时间"
+                                        label="注册时间"
                                         width="120">
                                 </el-table-column>
                                 <el-table-column
@@ -274,9 +291,9 @@
                                         label="操作"
                                         width="100">
                                     <template slot-scope="scope">
-                                        <el-button @click="handleClick(scope.row)" type="text" size="small">查看
+                                        <el-button @click="show(scope.row,scope.$index)" type="text" size="mini">查看
                                         </el-button>
-                                        <el-button type="text" size="small">编辑</el-button>
+                                        <el-button @click="edit(scope.row,scope)" type="text" size="mini">编辑</el-button>
                                     </template>
                                 </el-table-column>
                             </el-table>
@@ -295,22 +312,54 @@
                         </div>
                     </el-card>
 
-                    <el-dialog title="收货地址" :visible.sync="dialogFormVisible">
-                        <el-form :model="form">
-                            <el-form-item label="活动名称" :label-width="formLabelWidth">
-                                <el-input v-model="form.name" autocomplete="off"></el-input>
+                    <el-dialog title="会员信息" :visible.sync="formData.visible" width="450px">
+                        <el-form size="mini" :model="formData" :rules="rules" ref="formData" label-width="100px">
+                            <el-form-item label="用户名" prop="name">
+                                <el-input v-model="formData.name" class="form-item-width">
+                                </el-input>
                             </el-form-item>
-                            <el-form-item label="活动区域" :label-width="formLabelWidth">
-                                <el-select v-model="form.region" placeholder="请选择活动区域">
-                                    <el-option label="区域一" value="shanghai"></el-option>
-                                    <el-option label="区域二" value="beijing"></el-option>
+                            <el-form-item label="昵称" prop="nickname">
+                                <el-input v-model="formData.nickname" class="form-item-width">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="手机" prop="phone">
+                                <el-input maxlength="11" show-word-limit v-model.number="formData.phone"
+                                          class="form-item-width"></el-input>
+                            </el-form-item>
+                            <el-form-item label="邮箱" prop="email">
+                                <el-input v-model="formData.email" class="form-item-width"
+                                          placeholder="请输入邮箱"></el-input>
+                            </el-form-item>
+                            <el-form-item label="性别" prop="sex">
+                                <el-radio-group v-model="formData.sex" size="mini">
+                                    <el-radio-button label="1">男</el-radio-button>
+                                    <el-radio-button label="2">女</el-radio-button>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="会员等级" prop="level">
+                                <el-select v-model="formData.level" placeholder="请选择会员等级">
+                                    <el-option v-for="(item,index) in formData.levelList" :label="item.name"
+                                               :value="item.level"></el-option>
                                 </el-select>
                             </el-form-item>
+                            <el-form-item label="会员期限" prop="timeFrame">
+                                <el-date-picker style="width: 260px"
+                                                v-model="formData.timeFrame"
+                                                format="yyyy.MM.dd"
+                                                value-format="yyyy.MM.dd"
+                                                :editable="false"
+                                                type="daterange"
+                                                size="mini"
+                                                range-separator="至"
+                                                start-placeholder="开始日期"
+                                                end-placeholder="结束日期">
+                                </el-date-picker>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="submitForm('formData')">保存</el-button>
+                                <el-button @click="resetForm('formData')">重置</el-button>
+                            </el-form-item>
                         </el-form>
-                        <div slot="footer" class="dialog-footer">
-                            <el-button @click="dialogFormVisible = false">取 消</el-button>
-                            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-                        </div>
                     </el-dialog>
                 </div>
                 <!--                主内容展示 结束-->
@@ -324,130 +373,322 @@
   const item = [
     {
       id: 1,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 0,
+        name: '普通会员'
+      },
+      time_frame: [
+        '2019.06.16',
+        '2020.03.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 2,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 2,
+        name: '女'
+      },
+      levelInfo: {
+        level: 1,
+        name: '黑铁会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 3,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 2,
+        name: '女'
+      },
+      levelInfo: {
+        level: 2,
+        name: '白银会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 4,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 3,
+        name: '黄金会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 5,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 4,
+        name: '铂金会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 6,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 5,
+        name: '王者会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 7,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 0,
+        name: '普通会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 8,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 0,
+        name: '普通会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 9,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 0,
+        name: '普通会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 10,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 0,
+        name: '普通会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 11,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 0,
+        name: '普通会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 12,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 0,
+        name: '普通会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 13,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 0,
+        name: '普通会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 14,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 0,
+        name: '普通会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 15,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 0,
+        name: '普通会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     }, {
       id: 16,
-      name: '有蜗壳',
+      name: 'iseeAdmin',
+      nickname: '有蜗壳',
       phone: '1877XXXX107',
       email: '46914685@qq.com',
-      sex: '男',
+      sexInfo: {
+        id: 1,
+        name: '男'
+      },
+      levelInfo: {
+        level: 0,
+        name: '普通会员'
+      },
+      time_frame: [
+        '2019.05.18',
+        '2020.05.18',
+      ],
       ip: '127.0.0.1',
       add_time: '2016-05-02',
     },
@@ -545,18 +786,73 @@
         searchVal: '',
       },
       rowSelected: [],
-      dialogFormVisible: false,
-      form: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+      formData: {
+        id: 0,
+        name: 'admin',
+        nickname: 'admin1',
+        sex: 2,
+        phone: null,
+        email: '46914685@qq.com',
+        levelList: {
+          VIP0: {
+            level: 0,
+            name: '普通会员'
+          },
+          VIP1: {
+            level: 1,
+            name: '黑铁会员'
+          },
+          VIP2: {
+            level: 2,
+            name: '白银会员'
+          },
+          VIP3: {
+            level: 3,
+            name: '黄金会员'
+          },
+          VIP4: {
+            level: 4,
+            name: '铂金会员'
+          },
+          VIP5: {
+            level: 5,
+            name: '王者会员'
+          },
+        },
+        level: 0,
+        timeFrame: [
+          '2019.10.08',
+          '2019.10.28',
+        ],
+        visible: false
       },
-      formLabelWidth: '120px'
+      rules: {
+        name: [
+          {required: true, message: '请输入名字', trigger: 'blur'},
+          {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
+        ],
+        nickname: [
+          {required: true, message: '请输入昵称', trigger: 'blur'},
+          {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
+        ],
+        phone: [
+          {required: true, message: '请输入手机号码', trigger: 'blur'},
+          {type: 'number', message: '手机号码必须为数字', trigger: 'blur'},
+          {
+            validator: function (rule, value, callback) {
+              if (/^1[34578]\d{9}$/.test(value) == false) {
+                callback(new Error("请输入正确的手机号"));
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          }
+        ],
+        email: [
+          {required: true, message: '请输入邮箱', trigger: 'blur'},
+          {type: 'email', message: '请输入正确的邮箱', trigger: ['blur', 'change']}
+        ],
+      },
     },
     methods: {
       iseeTagSwitch(url, index, breadcrumb) {
@@ -595,8 +891,45 @@
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
       },
-      handleClick(row) {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$message.success('校验通过！可以提交');
+            console.log('提交的数据如下')
+            console.log(this[formName])
+            this[formName].visible = false
+            this.$message({
+              message: '校验通过！可以提交',
+              type: 'success'
+            });
+          } else {
+            this.$message.error('校验不通过！不能提交')
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      show(row, obj) {
+        console.log('查看');
         console.log(row);
+        console.log(obj);
+        this.formData.id = row.id
+        this.formData.name = row.name
+        this.formData.email = row.email
+        this.formData.level = row.levelInfo.level
+        this.formData.nickname = row.nickname
+        this.formData.phone = row.phone
+        this.formData.sex = row.sexInfo.id
+        this.formData.timeFrame = [row.time_frame[0], row.time_frame[1]]
+
+        this.formData.visible = true
+      },
+      edit(row, obj) {
+        console.log('编辑');
+        console.log(row);
+        console.log(obj);
       },
       search() {
         console.log('当前搜索类型：' + this.searchData.searchType)
@@ -618,7 +951,7 @@
       },
       add() {
         console.log('add')
-        this.dialogFormVisible = true
+        this.formData.visible = true
       }
 
     },
