@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ISeeAdmin 【后台管理员】 </title>
+    <title>ISeeAdmin 【角色管理】 </title>
     <!--    <link rel="stylesheet" href="/static/element/index.css">-->
     <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/iconfont/iconfont.css">
@@ -188,12 +188,12 @@
                 <div>
                     <el-card class="box-card">
                         <p style="padding: 8px 16px;font-size: 14px;border-radius:4px;border-left: 5px solid #50bfff ">
-                            后台管理员
+                            角色管理
                         </p>
                         <el-divider></el-divider>
 
                         <div style="display: flex;">
-                            <div style="width: 35%">
+                            <div style="width: 70%">
                                 <el-button-group>
                                     <el-button round size="mini" type="danger" @click="del" icon="el-icon-delete">删除
                                     </el-button>
@@ -203,24 +203,16 @@
                                 </el-button-group>
                             </div>
                             <div>
-                                <el-form :inline="true" :rules="rulesSearch" :model="searchData" ref="searchData" size="mini">
-                                <el-form-item label="账户" prop="name">
-                                    <el-input clearable v-model="searchData.name" placeholder="请输入账户"></el-input>
-                                </el-form-item>
-                                <el-form-item label="手机" prop="phone">
-                                    <el-input clearable maxlength="11" show-word-limit v-model.number="searchData.phone" placeholder="请输入手机"></el-input>
-                                </el-form-item>
-                                <el-form-item label="邮箱" prop="email">
-                                    <el-input clearable v-model="searchData.email" placeholder="请输入邮箱"></el-input>
-                                </el-form-item>
-                                <el-form-item label="角色">
-                                    <el-select v-model="searchData.roleId" placeholder="请选择角色">
-                                        <el-option v-for="item in roleList" :label="item.name" :value="item.id"></el-option>
-                                    </el-select>
-                                </el-form-item>
-                                <el-form-item>
-                                    <el-button type="primary" icon="el-icon-search" @click="search('searchData')">查询</el-button>
-                                </el-form-item>
+                                <el-form :inline="true" :rules="rulesSearch" :model="searchData" ref="searchData"
+                                         size="mini">
+                                    <el-form-item label="角色名称" prop="name">
+                                        <el-input clearable v-model="searchData.name" placeholder="请输入角色名称"></el-input>
+                                    </el-form-item>
+                                    <el-form-item>
+                                        <el-button type="primary" icon="el-icon-search" @click="search('searchData')">
+                                            查询
+                                        </el-button>
+                                    </el-form-item>
                                 </el-form>
                             </div>
                         </div>
@@ -234,7 +226,7 @@
                                     style="width: 100%"
                                     size="mini"
                                     height="360"
-                                    @selection-change="rowSelect"                            >
+                                    @selection-change="rowSelect">
                                 <el-table-column
                                         type="selection"
                                         width="55">
@@ -246,26 +238,16 @@
                                 </el-table-column>
                                 <el-table-column
                                         prop="name"
-                                        label="账号"
+                                        label="角色名"
                                         width="120">
                                 </el-table-column>
                                 <el-table-column
-                                        prop="phone"
-                                        label="手机"
-                                        width="120">
+                                        prop="remark"
+                                        label="备注"
+                                        width="250">
                                 </el-table-column>
                                 <el-table-column
-                                        prop="email"
-                                        label="邮箱"
-                                        width="200">
-                                </el-table-column>
-                                <el-table-column
-                                        prop="roleInfo.name"
-                                        label="角色"
-                                        width="120">
-                                </el-table-column>
-                                <el-table-column
-                                        label="审核状态"
+                                        label="状态"
                                         width="120">
                                     <template slot-scope="scope">
                                         <el-tag
@@ -273,21 +255,16 @@
                                                 type="success"
                                                 size="mini"
                                                 effect="dark">
-                                            已审核
+                                            启用
                                         </el-tag>
                                         <el-tag
                                                 v-else
                                                 type="danger"
                                                 size="mini"
                                                 effect="dark">
-                                            未审核
+                                            禁用
                                         </el-tag>
                                     </template>
-                                </el-table-column>
-                                <el-table-column
-                                        prop="add_time"
-                                        label="注册时间"
-                                        width="120">
                                 </el-table-column>
                                 <el-table-column
                                         fixed="right"
@@ -315,31 +292,31 @@
                         </div>
                     </el-card>
 
-                    <el-dialog title="管理员信息" :visible.sync="formData.visible" width="450px">
+                    <el-dialog title="角色信息" :visible.sync="formData.visible" width="450px">
                         <el-form size="mini" :model="formData" :rules="rules" ref="formData" label-width="100px">
-                            <el-form-item label="账户" prop="name">
+                            <el-form-item label="角色名称" prop="name">
                                 <el-input clearable v-model="formData.name" class="form-item-width">
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="手机" prop="phone">
-                                <el-input clearable maxlength="11" show-word-limit v-model.number="formData.phone"
-                                          class="form-item-width"></el-input>
-                            </el-form-item>
-                            <el-form-item label="邮箱" prop="email">
-                                <el-input clearable v-model="formData.email" class="form-item-width"
-                                          placeholder="请输入邮箱"></el-input>
-                            </el-form-item>
-                            <el-form-item label="状态" prop="status">
+                            <el-form-item label="是否启用" prop="status">
                                 <el-radio-group v-model="formData.status" size="mini">
                                     <el-radio-button label="1">是</el-radio-button>
-                                    <el-radio-button label="0">否</el-radio-button>
+                                    <el-radio-button type="danger" label="0">否</el-radio-button>
                                 </el-radio-group>
                             </el-form-item>
-                            <el-form-item label="角色">
-                                <el-select v-model="formData.roleId" placeholder="请选择角色">
-                                    <el-option v-for="item in roleList" :label="item.name"
-                                               :value="item.id"></el-option>
-                                </el-select>
+                            <el-form-item label="权限列表" prop="rules">
+                                <el-tree
+                                        :data="ruleList"
+                                        show-checkbox
+                                        ref="ruleTree"
+                                        node-key="id"
+                                        :default-checked-keys="formData.rules"
+                                        :props="defaultProps">
+                                </el-tree>
+                            </el-form-item>
+                            <el-form-item label="备注" prop="remark">
+                                <el-input type="textarea" clearable v-model="formData.remark" class="form-item-width"
+                                          placeholder="请输入备注"></el-input>
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" @click="submitForm('formData')">保存</el-button>
@@ -359,114 +336,38 @@
   const item = [
     {
       id: 1,
-      name: 'iseeAdmin',
-      phone: '1877XXXX107',
-      email: '46914685@qq.com',
-      roleInfo: {
-        id: 1,
-        name: '默认组'
-      },
-      status: '0',
-      add_time: '2016-05-02',
-    },{
+      name: '默认组',
+      remark: '拥有默认的权限',
+      rules: [2, 5, 7],
+      status: '1',
+    },
+    {
       id: 2,
-      name: 'iseeAdmin',
-      phone: '1877XXXX107',
-      email: '46914685@qq.com',
-      roleInfo: {
-        id: 2,
-        name: '超级管理员'
-      },
+      name: '超级管理员',
+      remark: '拥有全部的权限',
+      rules: [1, 2, 9, 10, 22, 5, 6, 3, 7, 8],
       status: '1',
-      add_time: '2016-05-02',
-    },{
+    },
+    {
       id: 3,
-      name: 'iseeAdmin',
-      phone: '1877XXXX107',
-      email: '46914685@qq.com',
-      roleInfo: {
-        id: 3,
-        name: '编辑组'
-      },
+      name: '编辑组',
+      remark: '拥有文章编辑的权限',
+      rules: [2, 10, 22, 5, 6, 3, 7, 8],
       status: '0',
-      add_time: '2016-05-02',
-    },{
+    },
+    {
       id: 4,
-      name: 'iseeAdmin',
-      phone: '1877XXXX107',
-      email: '46914685@qq.com',
-      roleInfo: {
-        id: 4,
-        name: '运营组'
-      },
+      name: '运营组',
+      remark: '拥有运营相关的权限',
+      rules: [1, 2, 9, 10],
       status: '1',
-      add_time: '2016-05-02',
-    },{
+    },
+    {
       id: 5,
-      name: 'iseeAdmin1',
-      phone: '1877XXXX107',
-      email: '46914685@qq.com',
-      roleInfo: {
-        id: 5,
-        name: '采购组'
-      },
-      status: '0',
-      add_time: '2016-05-02',
-    },{
-      id: 6,
-      name: 'iseeAdmin1',
-      phone: '1877XXXX107',
-      email: '46914685@qq.com',
-      roleInfo: {
-        id: 5,
-        name: '采购组'
-      },
-      status: '0',
-      add_time: '2016-05-02',
-    },{
-      id: 7,
-      name: 'iseeAdmin1',
-      phone: '1877XXXX107',
-      email: '46914685@qq.com',
-      roleInfo: {
-        id: 5,
-        name: '采购组'
-      },
-      status: '0',
-      add_time: '2016-05-02',
-    },{
-      id: 8,
-      name: 'iseeAdmin1',
-      phone: '1877XXXX107',
-      email: '46914685@qq.com',
-      roleInfo: {
-        id: 5,
-        name: '采购组'
-      },
-      status: '0',
-      add_time: '2016-05-02',
-    },{
-      id: 9,
-      name: 'iseeAdmin1',
-      phone: '1877XXXX107',
-      email: '46914685@qq.com',
-      roleInfo: {
-        id: 5,
-        name: '采购组'
-      },
-      status: '0',
-      add_time: '2016-05-02',
-    },{
-      id: 10,
-      name: 'iseeAdmin1',
-      phone: '1877XXXX107',
-      email: '46914685@qq.com',
-      roleInfo: {
-        id: 5,
-        name: '采购组'
-      },
-      status: '0',
-      add_time: '2016-05-02',
+      name: '采购组',
+      remark: '拥有采购的权限',
+      rules: [3, 7, 8],
+      status: '1',
     },
   ];
 
@@ -558,41 +459,15 @@
         data: item,
       },
       searchData: {
-        name: '',
-        phone: '',
-        email: '',
-        roleId: null,
+        name: ''
       },
-      roleList:[
-        {
-          id:1,
-          name:'默认组'
-        },
-        {
-          id:2,
-          name:'超级管理员'
-        },
-        {
-          id:3,
-          name:'编辑组'
-        },
-        {
-          id:4,
-          name:'运营组'
-        },
-        {
-          id:5,
-          name:'采购组'
-        },
-      ],
       rowSelected: [],
       formData: {
         id: 0,
         name: '',
         status: 1,
-        phone: null,
-        email: '46914685@qq.com',
-        roleId: 1,
+        rules: [],
+        remark: '',
         visible: false
       },
       rules: {
@@ -600,45 +475,52 @@
           {required: true, message: '请输入账户', trigger: 'blur'},
           {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
         ],
-        phone: [
-          {required: true, message: '请输入手机号码', trigger: 'blur'},
-          {type: 'number', message: '手机号码必须为数字', trigger: 'blur'},
-          {
-            validator: function (rule, value, callback) {
-              if (/^1[34578]\d{9}$/.test(value) == false) {
-                callback(new Error("请输入正确的手机号"));
-              } else {
-                callback();
-              }
-            }, trigger: 'blur'
-          }
-        ],
-        email: [
-          {required: true, message: '请输入邮箱', trigger: 'blur'},
-          {type: 'email', message: '请输入正确的邮箱', trigger: ['blur', 'change']}
-        ],
       },
-      rulesSearch:{
+      rulesSearch: {
         name: [
           {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
         ],
-        phone: [
-          {
-            validator: function (rule, value, callback) {
-console.log('手机号码必须1为数字')
-console.log(value)
-              if (/^1[34578]\d{9}$/.test(value) == false&&value!='') {
-                callback(new Error("请输入正确的手机号"));
-              } else {
-                callback();
-              }
-            }, trigger: 'blur'
-          }
-        ],
-        email: [
-          {type: 'email', message: '请输入正确的邮箱', trigger: ['blur', 'change']}
-        ],
       },
+      ruleList: [{
+        id: 1,
+        label: '内容管理',
+        children: [
+          {
+            id: 2,
+            label: '查看',
+          }, {
+            id: 9,
+            label: '新增',
+          }, {
+            id: 10,
+            label: '修改',
+          },
+        ]
+      }, {
+        id: 22,
+        label: '系统设置',
+        children: [{
+          id: 5,
+          label: '查看'
+        }, {
+          id: 6,
+          label: '修改'
+        }]
+      }, {
+        id: 3,
+        label: '会员管理',
+        children: [{
+          id: 7,
+          label: '查看'
+        }, {
+          id: 8,
+          label: '修改'
+        }]
+      }],
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      }
     },
     methods: {
       iseeTagSwitch(url, index, breadcrumb) {
@@ -683,6 +565,9 @@ console.log(value)
             this.$message.success('校验通过！可以提交');
             console.log('提交的数据如下')
             console.log(this[formName])
+            this.formData.rules = this.$refs.ruleTree.getCheckedKeys()
+            console.log('selected rules')
+            console.log(this.formData.rules)
             this[formName].visible = false
             this.$message({
               message: '校验通过！可以提交',
@@ -703,10 +588,12 @@ console.log(value)
         console.log(obj);
         this.formData.id = row.id
         this.formData.name = row.name
-        this.formData.email = row.email
-        this.formData.roleId = row.roleInfo.id
-        this.formData.phone = row.phone
         this.formData.status = row.status
+        this.formData.remark = row.remark
+        this.formData.rules = row.rules
+        this.$nextTick(function() {
+          this.$refs.ruleTree.setCheckedKeys(this.formData.rules)
+        })
         this.formData.visible = true
       },
       edit(row, obj) {
@@ -730,9 +617,6 @@ console.log(value)
           }
         });
 
-
-
-
         console.log('当前搜索内容：')
         console.log(this.searchData)
       },
@@ -752,6 +636,7 @@ console.log(value)
       },
       add() {
         console.log('add')
+        console.log(this.$refs.ruleTree)
         this.formData.visible = true
       }
 
