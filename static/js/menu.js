@@ -669,5 +669,22 @@ var iseeMenu = [
       },
     ],
   },
+  {
+    index: '8',
+    title: '图表',
+    url: '/pages/chart',
+    target: '_self',
+    icon: 'el-icon-s-tools' ,
+    children: [
+      {
+        index: '7-0',
+        title: '折线图',
+        url: '/pages/chart/brokenline.html',
+        target: '_self',
+        icon: '',
+        children: []
+      },
+    ],
+  },
 
 ]
