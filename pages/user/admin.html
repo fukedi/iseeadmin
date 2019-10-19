@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ISeeAdmin 【后台管理员】 </title>
+    <!--    <link rel="stylesheet" href="/static/element/index.css">-->
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/iconfont/iconfont.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <!--    开发环境-->
+    <!--        <script src="/static/js/iseeadmin.js"></script>-->
+    <!--    正式环境-->
+    <script src="/static/js/iseeadmin.min.js"></script>
+    <script src="/static/js/menu.js"></script>
+    <!--    开发环境-->
+    <!--    <script src="/static/js/vue.js"></script>-->
+    <!--    正式环境-->
+    <!--        <script src="/static/js/vue.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="/static/element/index.js"></script>-->
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="/static/js/axios.min.js"></script>-->
+    <style>
+        .form-item-width {
+            width: 260px;
+        }
+
+        .el-select .el-input {
+            width: 100px;
+        }
+
+        .input-with-select .el-input-group__prepend {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container style="height: 100%;min-height:100vh;">
+        <el-aside v-show="iseeData.asideShow" width="210px">
+            <!--            左侧logo 开始-->
+            <div class="aside-logo">
+                <img class="aside-logo-img" src="/static/images/logo.png"
+                     alt=""> ISeeAdmin
+            </div>
+            <!--            左侧logo 结束-->
+            <!--            左侧菜单 开始-->
+            <el-menu @select="iseeMenuOpen" style="width: 210px;"
+                     unique-opened
+                     :default-active="iseeData.defaultActive"
+                     background-color="#304156"
+                     text-color="#bfcbd9"
+                     active-text-color="#409eff">
+                <iseemenu :menu="iseeData.menu"></iseemenu>
+            </el-menu>
+            <!--            左侧菜单 结束-->
+        </el-aside>
+
+        <el-container>
+            <el-header height="83px">
+                <div class="isee-header-div">
+                    <!--                    面包屑 开始-->
+                    <div style="width: 100%;display: inherit;">
+                        <span class="aside-show" @click="iseeAsideShow">
+                            <i :class="iseeData.asideShowIcon"></i>
+                        </span>
+
+                        <el-breadcrumb style="line-height: 50px" separator="/">
+                            <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <!--                    面包屑 结束-->
+                    <!--                    icon功能列表，可根据需要修改 开始-->
+                    <div>
+                        <ul class="isee-ul">
+                            <li class="isee-li">
+                                <i style="font-size: 20px" class="el-icon-bell"></i>
+                            </li>
+                            <li @click="iseeFullScreen" class="isee-li">
+                                <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
+                            </li>
+                            <li class="isee-li" @click="iseeData.drawer = true">
+                                <span class="iconfont" style="font-size: 20px">&#xe602;</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--                    icon功能列表，可根据需要修改 结束-->
+                    <!--                    avatar显示 开始-->
+                    <div>
+                        <el-dropdown @command="iseeOpenUrl">
+                              <span class="el-dropdown-link">
+                                  <el-avatar style="margin-top: 9px" :size="iseeData.avatar.size"
+                                             :src="iseeData.avatar.url"></el-avatar>
+                              </span>
+
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(item,index) in iseeData.avatar.list" :icon="item.icon"
+                                                  :key="index" :command="index">{{item.title}}
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    avatar显示 结束-->
+                </div>
+                <div style="display: flex">
+                    <!--                    标签页列表 开始-->
+                    <span @click="iseeTagDivMove(1)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-left"></i>
+                    </span>
+                    <div ref="iseeTagDiv" class="isee-tag-div">
+                        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
+                                :key="index"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
+                                :effect="item.effect"
+                                :type="item.type"
+                                @close="iseeTagClose(item.url,index)"
+                                size="medium"
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                        </el-tag>
+                    </div>
+                    <span @click="iseeTagDivMove(2)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-right"></i>
+                    </span>
+                    <!--                    标签页列表 结束-->
+                    <!--                    标签页集中操作 开始-->
+                    <div style="float: right;margin-left: 10px">
+                        <el-dropdown @command="iseeTagCommandClose">
+                          <span class="el-dropdown-link">
+                              <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
+                          </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    标签页集中操作 结束-->
+                </div>
+
+                <!--抽屉式展示-->
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">码云
+                                </el-link>
+                                |
+                                <el-link type="primary" :underline="false" href="https://github.com/fukedi/iseeadmin"
+                                         target="_blank">github
+                                </el-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+                </el-drawer>
+                <!--抽屉式展示 结束-->
+            </el-header>
+
+            <el-main>
+                <!--                主内容展示-->
+                <div>
+                    <el-card class="box-card">
+                        <p style="padding: 8px 16px;font-size: 14px;border-radius:4px;border-left: 5px solid #50bfff ">
+                            后台管理员
+                        </p>
+                        <el-divider></el-divider>
+
+                        <div style="display: flex;">
+                            <div style="width: 35%">
+                                <el-button-group>
+                                    <el-button round size="mini" type="danger" @click="del" icon="el-icon-delete">删除
+                                    </el-button>
+                                    <el-button round size="mini" type="primary" @click="add"
+                                               icon="el-icon-circle-plus-outline">添加
+                                    </el-button>
+                                </el-button-group>
+                            </div>
+                            <div>
+                                <el-form :inline="true" :rules="rulesSearch" :model="searchData" ref="searchData" size="mini">
+                                <el-form-item label="账户" prop="name">
+                                    <el-input clearable v-model="searchData.name" placeholder="请输入账户"></el-input>
+                                </el-form-item>
+                                <el-form-item label="手机" prop="phone">
+                                    <el-input clearable maxlength="11" show-word-limit v-model.number="searchData.phone" placeholder="请输入手机"></el-input>
+                                </el-form-item>
+                                <el-form-item label="邮箱" prop="email">
+                                    <el-input clearable v-model="searchData.email" placeholder="请输入邮箱"></el-input>
+                                </el-form-item>
+                                <el-form-item label="角色">
+                                    <el-select v-model="searchData.roleId" placeholder="请选择角色">
+                                        <el-option v-for="item in roleList" :label="item.name" :value="item.id"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-button type="primary" icon="el-icon-search" @click="search('searchData')">查询</el-button>
+                                </el-form-item>
+                                </el-form>
+                            </div>
+                        </div>
+                    </el-card>
+                    <el-card class="box-card">
+                        <template>
+                            <el-table
+                                    ref="multipleTable"
+                                    :data="listData.data"
+                                    tooltip-effect="dark"
+                                    style="width: 100%"
+                                    size="mini"
+                                    height="360"
+                                    @selection-change="rowSelect"                            >
+                                <el-table-column
+                                        type="selection"
+                                        width="55">
+                                </el-table-column>
+                                <el-table-column
+                                        label="ID"
+                                        width="50">
+                                    <template slot-scope="scope">{{ scope.row.id }}</template>
+                                </el-table-column>
+                                <el-table-column
+                                        prop="name"
+                                        label="账号"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="phone"
+                                        label="手机"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="email"
+                                        label="邮箱"
+                                        width="200">
+                                </el-table-column>
+                                <el-table-column
+                                        prop="roleInfo.name"
+                                        label="角色"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        label="审核状态"
+                                        width="120">
+                                    <template slot-scope="scope">
+                                        <el-tag
+                                                v-if="scope.row.status=='1'"
+                                                type="success"
+                                                size="mini"
+                                                effect="dark">
+                                            已审核
+                                        </el-tag>
+                                        <el-tag
+                                                v-else
+                                                type="danger"
+                                                size="mini"
+                                                effect="dark">
+                                            未审核
+                                        </el-tag>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        prop="add_time"
+                                        label="注册时间"
+                                        width="120">
+                                </el-table-column>
+                                <el-table-column
+                                        fixed="right"
+                                        label="操作"
+                                        width="100">
+                                    <template slot-scope="scope">
+                                        <el-button @click="show(scope.row,scope.$index)" type="text" size="mini">查看
+                                        </el-button>
+                                        <el-button @click="edit(scope.row,scope)" type="text" size="mini">编辑</el-button>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+                        <div style="margin: 20px;">
+                            <el-pagination
+                                    background
+                                    @size-change="handleSizeChange"
+                                    @current-change="handleCurrentChange"
+                                    :current-page="listData.currentPage"
+                                    :page-sizes="listData.pageSizes"
+                                    :page-size="listData.pageSize"
+                                    layout="total, sizes, prev, pager, next, jumper"
+                                    :total="listData.total">
+                            </el-pagination>
+                        </div>
+                    </el-card>
+
+                    <el-dialog title="管理员信息" :visible.sync="formData.visible" width="450px">
+                        <el-form size="mini" :model="formData" :rules="rules" ref="formData" label-width="100px">
+                            <el-form-item label="账户" prop="name">
+                                <el-input clearable v-model="formData.name" class="form-item-width">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="手机" prop="phone">
+                                <el-input clearable maxlength="11" show-word-limit v-model.number="formData.phone"
+                                          class="form-item-width"></el-input>
+                            </el-form-item>
+                            <el-form-item label="邮箱" prop="email">
+                                <el-input clearable v-model="formData.email" class="form-item-width"
+                                          placeholder="请输入邮箱"></el-input>
+                            </el-form-item>
+                            <el-form-item label="状态" prop="status">
+                                <el-radio-group v-model="formData.status" size="mini">
+                                    <el-radio-button label="1">是</el-radio-button>
+                                    <el-radio-button label="0">否</el-radio-button>
+                                </el-radio-group>
+                            </el-form-item>
+                            <el-form-item label="角色">
+                                <el-select v-model="formData.roleId" placeholder="请选择角色">
+                                    <el-option v-for="item in roleList" :label="item.name"
+                                               :value="item.id"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item>
+                                <el-button type="primary" @click="submitForm('formData')">保存</el-button>
+                                <el-button @click="resetForm('formData')">重置</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-dialog>
+                </div>
+                <!--                主内容展示 结束-->
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+
+<script>
+  const item = [
+    {
+      id: 1,
+      name: 'iseeAdmin',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      roleInfo: {
+        id: 1,
+        name: '默认组'
+      },
+      status: '0',
+      add_time: '2016-05-02',
+    },{
+      id: 2,
+      name: 'iseeAdmin',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      roleInfo: {
+        id: 2,
+        name: '超级管理员'
+      },
+      status: '1',
+      add_time: '2016-05-02',
+    },{
+      id: 3,
+      name: 'iseeAdmin',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      roleInfo: {
+        id: 3,
+        name: '编辑组'
+      },
+      status: '0',
+      add_time: '2016-05-02',
+    },{
+      id: 4,
+      name: 'iseeAdmin',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      roleInfo: {
+        id: 4,
+        name: '运营组'
+      },
+      status: '1',
+      add_time: '2016-05-02',
+    },{
+      id: 5,
+      name: 'iseeAdmin1',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      roleInfo: {
+        id: 5,
+        name: '采购组'
+      },
+      status: '0',
+      add_time: '2016-05-02',
+    },{
+      id: 6,
+      name: 'iseeAdmin1',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      roleInfo: {
+        id: 5,
+        name: '采购组'
+      },
+      status: '0',
+      add_time: '2016-05-02',
+    },{
+      id: 7,
+      name: 'iseeAdmin1',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      roleInfo: {
+        id: 5,
+        name: '采购组'
+      },
+      status: '0',
+      add_time: '2016-05-02',
+    },{
+      id: 8,
+      name: 'iseeAdmin1',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      roleInfo: {
+        id: 5,
+        name: '采购组'
+      },
+      status: '0',
+      add_time: '2016-05-02',
+    },{
+      id: 9,
+      name: 'iseeAdmin1',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      roleInfo: {
+        id: 5,
+        name: '采购组'
+      },
+      status: '0',
+      add_time: '2016-05-02',
+    },{
+      id: 10,
+      name: 'iseeAdmin1',
+      phone: '1877XXXX107',
+      email: '46914685@qq.com',
+      roleInfo: {
+        id: 5,
+        name: '采购组'
+      },
+      status: '0',
+      add_time: '2016-05-02',
+    },
+  ];
+
+  const iseeAvatar = {
+    url: '/static/images/avatar01.gif',
+    size: 32,
+    list: [
+      {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-user-solid',
+        url: '',
+        target: '_self',
+        title: 'admin',
+      }, {
+        index: '6-1-0',
+        indexPath: ["6", "6-1", "6-1-0"],
+        icon: 'el-icon-tickets',
+        url: '/pages/sets/myset/profile.html',
+        target: '_self',
+        title: '基本资料',
+      }, {
+        index: '6-1-1',
+        indexPath: ["6", "6-1", "6-1-1"],
+        icon: 'el-icon-edit-outline',
+        url: '/pages/sets/myset/password.html',
+        target: '_self',
+        title: '修改密码',
+      }, {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-switch-button',
+        url: '',
+        target: '_self',
+        title: '安全退出',
+      },
+    ]
+  }
+  var iseemenu = {
+    props: ['menu'],
+    name: 'iseemenu',
+    template: `
+    <div>
+        <template v-for="item in menu">
+            <el-submenu :index="item.index" v-if="item.children.length">
+                <template slot="title">
+                    <i :class="item.icon"></i>
+                    <span slot="title">{{item.title}}</span>
+                </template>
+                <iseemenu :menu="item.children"></iseemenu>
+            </el-submenu>
+            <el-menu-item :index="item.index" v-else>
+                <i :class="item.icon"></i>
+                <span slot="title">{{item.title}}</span>
+            </el-menu-item>
+        </template>
+    </div>`,
+  }
+
+  var app = new Vue({
+    el: '#app',
+    components: {
+      iseemenu
+    },
+    data: {
+      iseeData: {
+        version: iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
+        status: false,
+        show: true,
+        asideShow: iseeAdmin.asideShow,
+        asideShowIcon: iseeAdmin.asideShowIcon,
+        fullscreen: false,
+        fullscreenIcon: '&#xe610;',
+        defaultActive: iseeAdmin.defaultActive,
+        tagList: iseeAdmin.tagList,
+        breadcrumb: iseeAdmin.breadcrumb,
+        menu: iseeMenu,
+        avatar: iseeAvatar
+      },
+      /*your data*/
+      listData: {
+        currentPage: 2,
+        pageSize: 20,
+        pageSizes: [20, 40, 60, 80, 100],
+        total: 600,
+        data: item,
+      },
+      searchData: {
+        name: '',
+        phone: '',
+        email: '',
+        roleId: null,
+      },
+      roleList:[
+        {
+          id:1,
+          name:'默认组'
+        },
+        {
+          id:2,
+          name:'超级管理员'
+        },
+        {
+          id:3,
+          name:'编辑组'
+        },
+        {
+          id:4,
+          name:'运营组'
+        },
+        {
+          id:5,
+          name:'采购组'
+        },
+      ],
+      rowSelected: [],
+      formData: {
+        id: 0,
+        name: '',
+        status: 1,
+        phone: null,
+        email: '46914685@qq.com',
+        roleId: 1,
+        visible: false
+      },
+      rules: {
+        name: [
+          {required: true, message: '请输入账户', trigger: 'blur'},
+          {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
+        ],
+        phone: [
+          {required: true, message: '请输入手机号码', trigger: 'blur'},
+          {type: 'number', message: '手机号码必须为数字', trigger: 'blur'},
+          {
+            validator: function (rule, value, callback) {
+              if (/^1[34578]\d{9}$/.test(value) == false) {
+                callback(new Error("请输入正确的手机号"));
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          }
+        ],
+        email: [
+          {required: true, message: '请输入邮箱', trigger: 'blur'},
+          {type: 'email', message: '请输入正确的邮箱', trigger: ['blur', 'change']}
+        ],
+      },
+      rulesSearch:{
+        name: [
+          {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'}
+        ],
+        phone: [
+          {
+            validator: function (rule, value, callback) {
+console.log('手机号码必须1为数字')
+console.log(value)
+              if (/^1[34578]\d{9}$/.test(value) == false&&value!='') {
+                callback(new Error("请输入正确的手机号"));
+              } else {
+                callback();
+              }
+            }, trigger: 'blur'
+          }
+        ],
+        email: [
+          {type: 'email', message: '请输入正确的邮箱', trigger: ['blur', 'change']}
+        ],
+      },
+    },
+    methods: {
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.iseeData)
+      },
+
+      iseeTagClose(url, index) {
+        iseeAdmin.iseeTagClose(url, index, this.iseeData)
+      },
+
+      iseeTagCommandClose(command) {
+        iseeAdmin.iseeTagCommandClose(command, this.iseeData)
+      },
+
+      iseeMenuOpen(key, keyPath) {
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.iseeData)
+      },
+
+      iseeFullScreen() {
+        iseeAdmin.iseeFullScreen(this.iseeData)
+      },
+
+      iseeAsideShow() {
+        iseeAdmin.iseeAsideShow(this.iseeData)
+      },
+      iseeOpenUrl(command) {
+        iseeAdmin.iseeMenuOpen(this.iseeData.avatar.list[command].index, this.iseeData.avatar.list[command].indexPath, this.iseeData)
+      },
+      iseeTagDivMove(flag) {
+        flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
+      },
+      /*your methods*/
+      handleSizeChange(val) {
+        console.log(`每页 ${val} 条`);
+      },
+      handleCurrentChange(val) {
+        console.log(`当前页: ${val}`);
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$message.success('校验通过！可以提交');
+            console.log('提交的数据如下')
+            console.log(this[formName])
+            this[formName].visible = false
+            this.$message({
+              message: '校验通过！可以提交',
+              type: 'success'
+            });
+          } else {
+            this.$message.error('校验不通过！不能提交')
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      show(row, obj) {
+        console.log('查看');
+        console.log(row);
+        console.log(obj);
+        this.formData.id = row.id
+        this.formData.name = row.name
+        this.formData.email = row.email
+        this.formData.roleId = row.roleInfo.id
+        this.formData.phone = row.phone
+        this.formData.status = row.status
+        this.formData.visible = true
+      },
+      edit(row, obj) {
+        console.log('编辑');
+        console.log(row);
+        console.log(obj);
+      },
+      search(searchData) {
+        this.$refs[searchData].validate((valid) => {
+          if (valid) {
+            this.$message.success('校验通过！可以提交');
+            console.log('搜索的数据如下')
+            console.log(this[searchData])
+            this.$message({
+              message: '校验通过！可以提交',
+              type: 'success'
+            });
+          } else {
+            this.$message.error('校验不通过！不能提交')
+            return false;
+          }
+        });
+
+
+
+
+        console.log('当前搜索内容：')
+        console.log(this.searchData)
+      },
+      rowSelect(rowSelected) {
+        console.log('rowSelected')
+        console.log(rowSelected)
+        this.rowSelected = rowSelected;
+      },
+      del() {
+        let ids = []
+        console.log('要删除的ids')
+        this.rowSelected.forEach(row => {
+          console.log('id:' + row.id)
+          ids.push(row.id)
+        })
+        console.log(ids)
+      },
+      add() {
+        console.log('add')
+        this.formData.visible = true
+      }
+
+    },
+    beforeMount() {
+      iseeAdmin.init(this.iseeData)
+      /*your beforeMount*/
+    },
+    mounted() {
+
+    }
+  });
+</script>
+</body>
+
+</html>
+
