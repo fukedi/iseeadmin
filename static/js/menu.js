@@ -674,12 +674,19 @@ var iseeMenu = [
     title: '图表',
     url: '/pages/chart',
     target: '_self',
-    icon: 'el-icon-s-tools' ,
+    icon: 'el-icon-pie-chart' ,
     children: [
       {
-        index: '7-0',
+        index: '8-0',
         title: '折线图',
         url: '/pages/chart/brokenline.html',
+        target: '_self',
+        icon: '',
+        children: []
+      },{
+        index: '8-1',
+        title: '柱状图',
+        url: '/pages/chart/columnar.html',
         target: '_self',
         icon: '',
         children: []
