@@ -697,6 +697,13 @@ var iseeMenu = [
         target: '_self',
         icon: '',
         children: []
+      },{
+        index: '8-3',
+        title: '仪表盘',
+        url: '/pages/chart/gauge.html',
+        target: '_self',
+        icon: '',
+        children: []
       },
     ],
   },
