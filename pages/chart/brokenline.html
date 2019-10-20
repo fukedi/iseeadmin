@@ -179,7 +179,10 @@
                 <div>
                     <el-card class="box-card">
                         <p style="padding: 8px 16px;font-size: 14px;border-radius:4px;border-left: 5px solid #50bfff ">
-                            折线图
+                            <el-link target="_blank" href="https://www.echartsjs.com/examples/zh/index.html#chart-type-line">折线图
+                        </el-link> <el-tooltip
+                                content="更多效果例子请看官网 " placement="top" effect="light"><i
+                                class="el-icon-info" style="color: gray"></i></el-tooltip>
                         </p>
                     </el-card>
                     <div style="display: flex">
@@ -824,7 +827,7 @@
       var myChart6 = echarts.init(this.$refs.chart6);
       let option6 = null;
       axios.get('/data/aqi-beijing.json').then(res => {
-        let data=res.data
+        let data = res.data
         myChart6.setOption(option6 = {
           title: {
             text: 'Beijing AQI'

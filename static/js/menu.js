@@ -690,6 +690,13 @@ var iseeMenu = [
         target: '_self',
         icon: '',
         children: []
+      },{
+        index: '8-2',
+        title: '饼图',
+        url: '/pages/chart/piechart.html',
+        target: '_self',
+        icon: '',
+        children: []
       },
     ],
   },
