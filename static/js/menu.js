@@ -707,5 +707,22 @@ var iseeMenu = [
       },
     ],
   },
+  {
+    index: '9',
+    title: '内容管理',
+    url: '/pages/article',
+    target: '_self',
+    icon: 'el-icon-notebook-2' ,
+    children: [
+      {
+        index: '9-0',
+        title: '文章列表',
+        url: '/pages/article/list.html',
+        target: '_self',
+        icon: '',
+        children: []
+      },
+    ],
+  },
 
 ]
