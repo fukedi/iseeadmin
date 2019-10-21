@@ -721,6 +721,13 @@ var iseeMenu = [
         target: '_self',
         icon: '',
         children: []
+      },{
+        index: '9-1',
+        title: '分类管理',
+        url: '/pages/article/category.html',
+        target: '_self',
+        icon: '',
+        children: []
       },
     ],
   },

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>ISeeAdmin 【分类管理】 </title>
+    <!--    <link rel="stylesheet" href="/static/element/index.css">-->
+    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/iconfont/iconfont.css">
+    <link rel="stylesheet" href="/static/css/common.css">
+    <!--    开发环境-->
+    <!--        <script src="/static/js/iseeadmin.js"></script>-->
+    <!--    正式环境-->
+    <script src="/static/js/iseeadmin.min.js"></script>
+    <script src="/static/js/menu.js"></script>
+    <!--    开发环境-->
+    <!--    <script src="/static/js/vue.js"></script>-->
+    <!--    正式环境-->
+    <!--        <script src="/static/js/vue.min.js"></script>-->
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="/static/element/index.js"></script>-->
+    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="/static/js/axios.min.js"></script>-->
+    <style>
+        .el-cascader-menu__wrap {
+            height: 100%;
+        }
+
+        .form-item-width {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+<div id="app" v-cloak>
+    <el-container style="height: 100%;min-height:100vh;">
+        <el-aside v-show="iseeData.asideShow" width="210px">
+            <!--            左侧logo 开始-->
+            <div class="aside-logo">
+                <img class="aside-logo-img" src="/static/images/logo.png"
+                     alt=""> ISeeAdmin
+            </div>
+            <!--            左侧logo 结束-->
+            <!--            左侧菜单 开始-->
+            <el-menu @select="iseeMenuOpen" style="width: 210px;"
+                     unique-opened
+                     :default-active="iseeData.defaultActive"
+                     background-color="#304156"
+                     text-color="#bfcbd9"
+                     active-text-color="#409eff">
+                <iseemenu :menu="iseeData.menu"></iseemenu>
+            </el-menu>
+            <!--            左侧菜单 结束-->
+        </el-aside>
+
+        <el-container>
+            <el-header height="83px">
+                <div class="isee-header-div">
+                    <!--                    面包屑 开始-->
+                    <div style="width: 100%;display: inherit;">
+                        <span class="aside-show" @click="iseeAsideShow">
+                            <i :class="iseeData.asideShowIcon"></i>
+                        </span>
+
+                        <el-breadcrumb style="line-height: 50px" separator="/">
+                            <el-breadcrumb-item v-for="(item,index) in iseeData.breadcrumb" :key="index">{{item.title}}
+                            </el-breadcrumb-item>
+                        </el-breadcrumb>
+                    </div>
+                    <!--                    面包屑 结束-->
+                    <!--                    icon功能列表，可根据需要修改 开始-->
+                    <div>
+                        <ul class="isee-ul">
+                            <li class="isee-li">
+                                <i style="font-size: 20px" class="el-icon-bell"></i>
+                            </li>
+                            <li @click="iseeFullScreen" class="isee-li">
+                                <span class="iconfont" style="font-size: 20px" v-html="iseeData.fullscreenIcon"></span>
+                            </li>
+                            <li class="isee-li" @click="iseeData.drawer = true">
+                                <span class="iconfont" style="font-size: 20px">&#xe602;</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--                    icon功能列表，可根据需要修改 结束-->
+                    <!--                    avatar显示 开始-->
+                    <div>
+                        <el-dropdown @command="iseeOpenUrl">
+                              <span class="el-dropdown-link">
+                                  <el-avatar style="margin-top: 9px" :size="iseeData.avatar.size"
+                                             :src="iseeData.avatar.url"></el-avatar>
+                              </span>
+
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(item,index) in iseeData.avatar.list" :icon="item.icon"
+                                                  :key="index" :command="index">{{item.title}}
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    avatar显示 结束-->
+                </div>
+                <div style="display: flex">
+                    <!--                    标签页列表 开始-->
+                    <span @click="iseeTagDivMove(1)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-left"></i>
+                    </span>
+                    <div ref="iseeTagDiv" class="isee-tag-div">
+                        <el-tag style="cursor:pointer;margin-right: 5px;" v-for="(item,index) in iseeData.tagList"
+                                :key="index"
+                                @click="iseeTagSwitch(item.url,item.index,item.breadcrumb)"
+                                :effect="item.effect"
+                                :type="item.type"
+                                @close="iseeTagClose(item.url,index)"
+                                size="medium"
+                                :closable="item.closable"><i v-show="item.show" class="el-icon-view"></i> {{item.title}}
+                        </el-tag>
+                    </div>
+                    <span @click="iseeTagDivMove(2)" class="isee-tag-span">
+                        <i class="el-icon-d-arrow-right"></i>
+                    </span>
+                    <!--                    标签页列表 结束-->
+                    <!--                    标签页集中操作 开始-->
+                    <div style="float: right;margin-left: 10px">
+                        <el-dropdown @command="iseeTagCommandClose">
+                          <span class="el-dropdown-link">
+                              <i class="el-icon-arrow-down isee-el-icon-arrow-down"></i>
+                          </span>
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item command="1">关闭当前标签页</el-dropdown-item>
+                                <el-dropdown-item command="2">关闭其它标签页</el-dropdown-item>
+                                <el-dropdown-item command="3">关闭全部标签页</el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <!--                    标签页集中操作 结束-->
+                </div>
+
+                <!--抽屉式展示-->
+                <el-drawer
+                        title="iseeAdmin"
+                        :visible.sync="iseeData.drawer"
+                        :direction="iseeData.direction"
+                        :show-close="iseeData.showClose"
+                        custom-class="isee-drawer-info"
+                >
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">版本信息</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                当前版本：iseeAdmin-v{{iseeData.version}}
+                            </li>
+                            <li>
+                                基于框架：vue v2.6.10，element v2.12.0
+                            </li>
+                            <li>
+                                下载地址：
+                                <el-link type="primary" :underline="false" href="https://gitee.com/youge/iseeadmin"
+                                         target="_blank">码云
+                                </el-link>
+                                |
+                                <el-link type="primary" :underline="false" href="https://github.com/fukedi/iseeadmin"
+                                         target="_blank">github
+                                </el-link>
+                            </li>
+                        </ul>
+                    </div>
+                    <el-divider></el-divider>
+                    <div style="font-size: 14px">
+                        <p class="isee-title">关于版权</p>
+                        <ul class="isee-drawer-ul">
+                            <li>
+                                iseeAdmin完全开源，可免费使用
+                            </li>
+                            <li>
+                                QQ交流群：927049524
+                            </li>
+                        </ul>
+                    </div>
+                </el-drawer>
+                <!--抽屉式展示 结束-->
+            </el-header>
+
+            <el-main>
+                <!--                主内容展示-->
+                <div>
+                    <el-card class="box-card">
+                        <p style="padding: 8px 16px;font-size: 14px;border-radius:4px;border-left: 5px solid #50bfff ">
+                            分类管理
+                        </p>
+                        <el-divider></el-divider>
+                    </el-card>
+                </div>
+                <div>
+                    <el-dialog title="分类信息" :visible.sync="formData.visible" width="400px">
+                        <el-form size="small" :model="formData" :rules="rules" ref="formData" label-width="100px">
+                            <el-tabs v-model="activeName" @tab-click="handleClick">
+                                <el-tab-pane label="修改" name="1">
+                                    <el-form-item label="分类名称" prop="name">
+                                        <el-input v-model="formData.name" class="form-item-width">
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="父级分类" prop="categoryId">
+                                        <el-cascader
+                                                v-model="formData.categoryId"
+                                                class="form-item-width"
+                                                placeholder="请选择分类"
+                                                :options="categoryList"
+                                                :props="{ checkStrictly: true }"
+                                                ref="categoryCascader"
+                                                clearable>
+
+                                        </el-cascader>
+                                    </el-form-item>
+                                </el-tab-pane>
+
+                                <el-tab-pane label="新增" name="2">
+                                    <el-form-item label="分类名称" prop="name">
+                                        <el-input v-model="formData.name" class="form-item-width">
+                                        </el-input>
+                                    </el-form-item>
+                                    <el-form-item label="父级分类" prop="categoryId">
+                                        <el-cascader
+                                                v-model="formData.categoryId"
+                                                class="form-item-width"
+                                                placeholder="请选择分类"
+                                                :options="categoryList"
+                                                :props="{ checkStrictly: true }"
+                                                ref="categoryCascader"
+                                                clearable>
+
+                                        </el-cascader>
+                                    </el-form-item>
+                                </el-tab-pane>
+                            </el-tabs>
+
+                            <el-form-item>
+                                <el-button type="primary" @click="submitForm('formData')">保存</el-button>
+                                <el-button @click="resetForm('formData')">重置</el-button>
+                            </el-form-item>
+                        </el-form>
+                    </el-dialog>
+
+                    <el-card>
+                        <el-cascader-panel
+                                v-model="formData.categoryId"
+                                @change="selectCategory"
+                                :props="{ checkStrictly: true }"
+                                :options="categoryList">
+
+                        </el-cascader-panel>
+                    </el-card>
+                </div>
+                <!--                主内容展示 结束-->
+            </el-main>
+        </el-container>
+    </el-container>
+</div>
+
+
+<script>
+  const iseeAvatar = {
+    url: '/static/images/avatar01.gif',
+    size: 32,
+    list: [
+      {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-user-solid',
+        url: '',
+        target: '_self',
+        title: 'admin',
+      }, {
+        index: '6-1-0',
+        indexPath: ["6", "6-1", "6-1-0"],
+        icon: 'el-icon-tickets',
+        url: '/pages/sets/myset/profile.html',
+        target: '_self',
+        title: '基本资料',
+      }, {
+        index: '6-1-1',
+        indexPath: ["6", "6-1", "6-1-1"],
+        icon: 'el-icon-edit-outline',
+        url: '/pages/sets/myset/password.html',
+        target: '_self',
+        title: '修改密码',
+      }, {
+        index: '',
+        indexPath: [],
+        icon: 'el-icon-switch-button',
+        url: '',
+        target: '_self',
+        title: '安全退出',
+      },
+    ]
+  }
+  var iseemenu = {
+    props: ['menu'],
+    name: 'iseemenu',
+    template: `
+    <div>
+        <template v-for="item in menu">
+            <el-submenu :index="item.index" v-if="item.children.length">
+                <template slot="title">
+                    <i :class="item.icon"></i>
+                    <span slot="title">{{item.title}}</span>
+                </template>
+                <iseemenu :menu="item.children"></iseemenu>
+            </el-submenu>
+            <el-menu-item :index="item.index" v-else>
+                <i :class="item.icon"></i>
+                <span slot="title">{{item.title}}</span>
+            </el-menu-item>
+        </template>
+    </div>`,
+  }
+
+  var app = new Vue({
+    el: '#app',
+    components: {
+      iseemenu
+    },
+    data: {
+      iseeData: {
+        version: iseeAdmin.version,
+        drawer: false,
+        direction: 'rtl',
+        showClose: false,
+        status: false,
+        show: true,
+        asideShow: iseeAdmin.asideShow,
+        asideShowIcon: iseeAdmin.asideShowIcon,
+        fullscreen: false,
+        fullscreenIcon: '&#xe610;',
+        defaultActive: iseeAdmin.defaultActive,
+        tagList: iseeAdmin.tagList,
+        breadcrumb: iseeAdmin.breadcrumb,
+        menu: iseeMenu,
+        avatar: iseeAvatar
+      },
+      /*your data*/
+      categoryList: [{
+        value: '1',
+        label: '新闻中心',
+        children: [{
+          value: '2',
+          label: '国内新闻',
+          children: [{
+            value: '4',
+            label: '科技'
+          }, {
+            value: '5',
+            label: '汽车'
+          }, {
+            value: '6',
+            label: '房产'
+          }, {
+            value: '7',
+            label: '时尚'
+          }]
+        }, {
+          value: '3',
+          label: '国际新闻',
+          children: [{
+            value: '8',
+            label: '军事'
+          }, {
+            value: '9',
+            label: '财政'
+          }]
+        }]
+      }, {
+        value: '10',
+        label: '产品展示',
+        children: [{
+          value: '11',
+          label: '产品1',
+          children: [{
+            value: '12',
+            label: '产品11-1'
+          }, {
+            value: '13',
+            label: '产品11-2'
+          }, {
+            value: '14',
+            label: '产品11-3'
+          }, {
+            value: '15',
+            label: '产品11-4'
+          }, {
+            value: '16',
+            label: '产品11-5'
+          }]
+        }]
+      }, {
+        value: '17',
+        label: '团队管理',
+        children: [{
+          value: '18',
+          label: '生产中心'
+        }, {
+          value: '19',
+          label: '技术中心'
+        }, {
+          value: '20',
+          label: '信息中心'
+        }]
+      }],
+      formData: {
+        categoryId: [],
+        visible: false
+      },
+      rules: {
+        name: [
+          {required: true, message: '请输入名字', trigger: 'blur'},
+          {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
+        ],
+        author: [
+          {required: true, message: '请输入作者', trigger: 'blur'},
+          {min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
+        ],
+        categoryId: [
+          {required: true, message: '请选择分类', trigger: 'blur'},
+        ],
+      },
+      activeName: '1',
+    },
+    methods: {
+      iseeTagSwitch(url, index, breadcrumb) {
+        iseeAdmin.iseeTagSwitch(url, index, breadcrumb, this.iseeData)
+      },
+
+      iseeTagClose(url, index) {
+        iseeAdmin.iseeTagClose(url, index, this.iseeData)
+      },
+
+      iseeTagCommandClose(command) {
+        iseeAdmin.iseeTagCommandClose(command, this.iseeData)
+      },
+
+      iseeMenuOpen(key, keyPath) {
+        iseeAdmin.iseeMenuOpen(key, keyPath, this.iseeData)
+      },
+
+      iseeFullScreen() {
+        iseeAdmin.iseeFullScreen(this.iseeData)
+      },
+
+      iseeAsideShow() {
+        iseeAdmin.iseeAsideShow(this.iseeData)
+      },
+      iseeOpenUrl(command) {
+        iseeAdmin.iseeMenuOpen(this.iseeData.avatar.list[command].index, this.iseeData.avatar.list[command].indexPath, this.iseeData)
+      },
+      iseeTagDivMove(flag) {
+        flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
+      },
+      /*your methods*/
+      selectCategory(val) {
+        console.log('selectCategory')
+        console.log(val)
+        this.formData.visible = true
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.$message.success('校验通过！可以提交');
+            console.log('提交的数据如下')
+            console.log(this[formName])
+
+
+            this[formName].visible = false
+            this.$message({
+              message: '校验通过！可以提交',
+              type: 'success'
+            });
+          } else {
+            this.$message.error('校验不通过！不能提交')
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      handleClick(tab, event) {
+        // console.log(tab, event);
+      }
+
+
+    },
+    beforeMount() {
+      iseeAdmin.init(this.iseeData)
+      /*your beforeMount*/
+    },
+    mounted() {
+
+    }
+  });
+</script>
+</body>
+
+</html>
+
