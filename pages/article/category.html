@@ -198,15 +198,15 @@
                             <el-tabs v-model="activeName" @tab-click="handleClick">
                                 <el-tab-pane label="修改" name="1">
                                     <el-form-item label="分类名称" prop="name">
-                                        <el-input v-model="formData.name" class="form-item-width">
+                                        <el-input v-model="formData.editData.name" class="form-item-width">
                                         </el-input>
                                     </el-form-item>
-                                    <el-form-item label="父级分类" prop="categoryId">
+                                    <el-form-item label="父级分类" prop="keyPath">
                                         <el-cascader
-                                                v-model="formData.categoryId"
+                                                v-model="formData.editData.keyPath"
                                                 class="form-item-width"
                                                 placeholder="请选择分类"
-                                                :options="categoryList"
+                                                :options="formData.editData.list"
                                                 :props="{ checkStrictly: true }"
                                                 ref="categoryCascader"
                                                 clearable>
@@ -220,12 +220,12 @@
                                         <el-input v-model="formData.name" class="form-item-width">
                                         </el-input>
                                     </el-form-item>
-                                    <el-form-item label="父级分类" prop="categoryId">
+                                    <el-form-item label="父级分类" prop="keyPath">
                                         <el-cascader
-                                                v-model="formData.categoryId"
+                                                v-model="formData.addData.keyPath"
                                                 class="form-item-width"
                                                 placeholder="请选择分类"
-                                                :options="categoryList"
+                                                :options="formData.addData.list"
                                                 :props="{ checkStrictly: true }"
                                                 ref="categoryCascader"
                                                 clearable>
@@ -244,8 +244,8 @@
 
                     <el-card>
                         <el-cascader-panel
-                                v-model="formData.categoryId"
                                 @change="selectCategory"
+                                ref="categoryTree"
                                 :props="{ checkStrictly: true }"
                                 :options="categoryList">
 
@@ -257,7 +257,6 @@
         </el-container>
     </el-container>
 </div>
-
 
 <script>
   const iseeAvatar = {
@@ -408,7 +407,18 @@
         }]
       }],
       formData: {
-        categoryId: [],
+        editData: {
+          id: 0,
+          name: '',
+          keyPath: [],
+          list: []
+        },
+        addData: {
+          id: 0,
+          name: '',
+          keyPath: [],
+          list: []
+        },
         visible: false
       },
       rules: {
@@ -425,6 +435,7 @@
         ],
       },
       activeName: '1',
+
     },
     methods: {
       iseeTagSwitch(url, index, breadcrumb) {
@@ -458,8 +469,17 @@
       },
       /*your methods*/
       selectCategory(val) {
-        console.log('selectCategory')
-        console.log(val)
+        let selectCategory_ = this.$refs.categoryTree.getCheckedNodes()[0]
+        this.formData.editData.name = selectCategory_.label
+        this.formData.editData.id = selectCategory_.value
+        let val_ = []
+        for (let i = 0; i < (val.length - 1); i++) {
+          val_.push(val[i])
+        }
+        val_.length == 0 ? val_.push(0) : ''
+        this.formData.editData.keyPath = val_
+        this.formData.addData.keyPath = val
+
         this.formData.visible = true
       },
       submitForm(formName) {
@@ -468,8 +488,6 @@
             this.$message.success('校验通过！可以提交');
             console.log('提交的数据如下')
             console.log(this[formName])
-
-
             this[formName].visible = false
             this.$message({
               message: '校验通过！可以提交',
@@ -485,13 +503,26 @@
         this.$refs[formName].resetFields();
       },
       handleClick(tab, event) {
-        // console.log(tab, event);
+        console.log('======******')
+
+        if (tab.index == 0) {
+          console.log('00000000')
+        } else {
+          console.log('1111111111111111')
+        }
+
       }
 
 
     },
     beforeMount() {
       iseeAdmin.init(this.iseeData)
+      // this.formData.editData.list=this.categoryList
+      this.formData.editData.list.push({value: 0, label: '顶级分类'})
+      this.categoryList.forEach(obj => {
+        this.formData.editData.list.push(obj)
+      })
+      this.formData.addData.list = this.formData.editData.list
       /*your beforeMount*/
     },
     mounted() {
