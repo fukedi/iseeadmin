@@ -193,53 +193,65 @@
                     </el-card>
                 </div>
                 <div>
-                    <el-dialog title="分类信息" :visible.sync="formData.visible" width="400px">
-                        <el-form size="small" :model="formData" :rules="rules" ref="formData" label-width="100px">
-                            <el-tabs v-model="activeName" @tab-click="handleClick">
-                                <el-tab-pane label="修改" name="1">
+                    <el-dialog title="分类信息" :visible.sync="visible" width="400px">
+
+                        <el-tabs v-model="activeName" @tab-click="handleClick">
+                            <el-tab-pane label="修改" name="1">
+                                <el-form size="small" :model="formEditData" :rules="rulesEdit" ref="formEditData"
+                                         label-width="100px">
                                     <el-form-item label="分类名称" prop="name">
-                                        <el-input v-model="formData.editData.name" class="form-item-width">
+                                        <el-input clearable v-model="formEditData.name" class="form-item-width">
                                         </el-input>
                                     </el-form-item>
                                     <el-form-item label="父级分类" prop="keyPath">
                                         <el-cascader
-                                                v-model="formData.editData.keyPath"
+                                                v-model="formEditData.keyPath"
                                                 class="form-item-width"
                                                 placeholder="请选择分类"
-                                                :options="formData.editData.list"
+                                                :options="formEditData.list"
                                                 :props="{ checkStrictly: true }"
                                                 ref="categoryCascader"
                                                 clearable>
 
                                         </el-cascader>
                                     </el-form-item>
-                                </el-tab-pane>
+                                    <el-form-item>
+                                        <el-button type="primary" @click="submitForm('formEditData')">保存</el-button>
+                                        <el-button @click="resetForm('formEditData')">重置</el-button>
+                                        <el-button  type="danger" @click="del">删除</el-button>
+                                    </el-form-item>
+                                </el-form>
+                            </el-tab-pane>
 
-                                <el-tab-pane label="新增" name="2">
+                            <el-tab-pane label="新增" name="2">
+                                <el-form size="small" :model="formAddData" :rules="rulesAdd" ref="formAddData"
+                                         label-width="100px">
                                     <el-form-item label="分类名称" prop="name">
-                                        <el-input v-model="formData.name" class="form-item-width">
+                                        <el-input clearable v-model="formAddData.name" class="form-item-width">
                                         </el-input>
                                     </el-form-item>
                                     <el-form-item label="父级分类" prop="keyPath">
                                         <el-cascader
-                                                v-model="formData.addData.keyPath"
+                                                v-model="formAddData.keyPath"
                                                 class="form-item-width"
                                                 placeholder="请选择分类"
-                                                :options="formData.addData.list"
+                                                :options="formAddData.list"
                                                 :props="{ checkStrictly: true }"
                                                 ref="categoryCascader"
                                                 clearable>
 
                                         </el-cascader>
                                     </el-form-item>
-                                </el-tab-pane>
-                            </el-tabs>
+                                    <el-form-item>
+                                        <el-button type="primary" @click="submitForm('formAddData')">保存</el-button>
+                                        <el-button @click="resetForm('formAddData')">重置</el-button>
+                                        <el-button type="danger" @click="del">删除</el-button>
+                                    </el-form-item>
+                                </el-form>
+                            </el-tab-pane>
+                        </el-tabs>
 
-                            <el-form-item>
-                                <el-button type="primary" @click="submitForm('formData')">保存</el-button>
-                                <el-button @click="resetForm('formData')">重置</el-button>
-                            </el-form-item>
-                        </el-form>
+
                     </el-dialog>
 
                     <el-card>
@@ -406,35 +418,38 @@
           label: '信息中心'
         }]
       }],
-      formData: {
-        editData: {
-          id: 0,
-          name: '',
-          keyPath: [],
-          list: []
-        },
-        addData: {
-          id: 0,
-          name: '',
-          keyPath: [],
-          list: []
-        },
-        visible: false
+      formEditData: {
+        id: 0,
+        name: '',
+        keyPath: [],
+        list: [],
       },
-      rules: {
+      formAddData: {
+        id: 0,
+        name: '',
+        keyPath: [],
+        list: [],
+      },
+      rulesEdit: {
         name: [
           {required: true, message: '请输入名字', trigger: 'blur'},
           {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
         ],
-        author: [
-          {required: true, message: '请输入作者', trigger: 'blur'},
-          {min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur'}
+        categoryId: [
+          {required: true, message: '请选择分类', trigger: 'blur'},
+        ],
+      },
+      rulesAdd: {
+        name: [
+          {required: true, message: '请输入名字', trigger: 'blur'},
+          {min: 3, max: 30, message: '长度在 3 到 30 个字符', trigger: 'blur'}
         ],
         categoryId: [
           {required: true, message: '请选择分类', trigger: 'blur'},
         ],
       },
       activeName: '1',
+      visible: false
 
     },
     methods: {
@@ -469,18 +484,19 @@
       },
       /*your methods*/
       selectCategory(val) {
+        console.log('val')
+        console.log(val)
         let selectCategory_ = this.$refs.categoryTree.getCheckedNodes()[0]
-        this.formData.editData.name = selectCategory_.label
-        this.formData.editData.id = selectCategory_.value
+        this.formEditData.name = selectCategory_.label
+        this.formEditData.id = selectCategory_.value
         let val_ = []
         for (let i = 0; i < (val.length - 1); i++) {
           val_.push(val[i])
         }
         val_.length == 0 ? val_.push(0) : ''
-        this.formData.editData.keyPath = val_
-        this.formData.addData.keyPath = val
-
-        this.formData.visible = true
+        this.formEditData.keyPath = val_
+        this.formAddData.keyPath = val
+        this.visible = true
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -488,7 +504,7 @@
             this.$message.success('校验通过！可以提交');
             console.log('提交的数据如下')
             console.log(this[formName])
-            this[formName].visible = false
+            this.visible = false
             this.$message({
               message: '校验通过！可以提交',
               type: 'success'
@@ -510,20 +526,23 @@
         } else {
           console.log('1111111111111111')
         }
-
+      },
+      del(){
+        console.log('del method')
+        console.log('id:'+this.formEditData.id)
       }
+
 
 
     },
     beforeMount() {
       iseeAdmin.init(this.iseeData)
-      // this.formData.editData.list=this.categoryList
-      this.formData.editData.list.push({value: 0, label: '顶级分类'})
-      this.categoryList.forEach(obj => {
-        this.formData.editData.list.push(obj)
-      })
-      this.formData.addData.list = this.formData.editData.list
       /*your beforeMount*/
+      this.formEditData.list.push({value: 0, label: '顶级分类'})
+      this.categoryList.forEach(obj => {
+        this.formEditData.list.push(obj)
+      })
+      this.formAddData.list = this.formEditData.list
     },
     mounted() {
 
