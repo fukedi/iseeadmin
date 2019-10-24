@@ -17,34 +17,34 @@ var iseeMenu = [
   },
   {
     index: '1',
-    title: '商品管理',
+    title: '无限分级',
     url: '/pages/goods/',
     target: '_self',
     icon: 'el-icon-message',
     children: [
       {
         index: '1-0',
-        title: '商品分类',
+        title: '一级分类0',
         url: '/pages/goods/category.html',
         target: '_self',
         icon: 'el-icon-message',
         children: []
       }, {
         index: '1-1',
-        title: '商品单位',
+        title: '一级分类1',
         url: '/pages/goods/unit',
         target: '_self',
         icon: '',
         children: [
           {
             index: '1-1-0',
-            title: '商品单位120',
+            title: '一级分类1二级分类0',
             url: '/pages/goods/unit12.html',
             target: '_self',
             icon: '',
             children: [{
               index: '1-1-0-0',
-              title: '商品单位12-0',
+              title: '一级分类1二级分类1',
               url: '/pages/goods/unit22.html',
               target: '_self',
               icon: '',
@@ -52,21 +52,14 @@ var iseeMenu = [
             }]
           }, {
             index: '1-1-1',
-            title: '商品单位22',
+            title: '一级分类1二级分类2',
             url: '/pages/goods/unit22.html',
             target: '_self',
             icon: 'el-icon-setting',
             children: []
           },
         ]
-      }, {
-        index: '1-2',
-        title: '商品列表',
-        url: '/pages/goods/index.html',
-        target: '_self',
-        icon: 'el-icon-setting',
-        children: []
-      },
+      }
     ]
   },
   // {
