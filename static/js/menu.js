@@ -724,5 +724,36 @@ var iseeMenu = [
       },
     ],
   },
+  {
+    index: '10',
+    title: '动画',
+    url: '/pages/animation',
+    target: '_self',
+    icon: 'el-icon-notebook-2' ,
+    children: [
+      {
+        index: '10-0',
+        title: '过渡',
+        url: '/pages/animation/transitions.html',
+        target: '_self',
+        icon: '',
+        children: []
+      },{
+        index: '10-1',
+        title: 'animate',
+        url: '/pages/animation/animate.html',
+        target: '_self',
+        icon: '',
+        children: []
+      },{
+        index: '10-2',
+        title: 'velocity ',
+        url: '/pages/animation/velocity.html',
+        target: '_self',
+        icon: '',
+        children: []
+      },
+    ],
+  },
 
 ]
