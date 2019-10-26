@@ -10,7 +10,7 @@
     </title>
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 {{--    <link rel="stylesheet" href="{{ asset('static/element/index.css') }}">--}}
-    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <link href="https://cdn.staticfile.org/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('static/iconfont/iconfont.css') }}">
     <link rel="stylesheet" href="{{ asset('static/css/common.css') }}">
 {{--    <script src="{{ asset('/static/js/iseeadmin.js') }}"></script>--}}
@@ -18,10 +18,10 @@
     <script src="{{ asset('static/js/menu.js') }}"></script>
 {{--    <script src="{{ asset('static/js/vue.js') }}"></script>--}}
 {{--    <script src="{{ asset('static/js/vue.min.js') }}"></script>--}}
-    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.6.10/vue.min.js"></script>
     <!--    <script src="static/js/axios.min.js"></script>-->
 {{--    <script src="{{ asset('static/element/index.js') }}"></script>--}}
-    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <script src="https://cdn.staticfile.org/element-ui/2.12.0/index.js"></script>
 
     @section('isee_asset_head')
     @show

@@ -5,10 +5,12 @@
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <title>ISeeAdmin 【animate】 </title>
     <!--    <link rel="stylesheet" href="/static/element/index.css">-->
-    <link href="https://cdn.bootcss.com/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
+    <!--    <link href="https://cdn.staticfile.org/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">-->
+    <link href="https://cdn.staticfile.org/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/iconfont/iconfont.css">
     <link rel="stylesheet" href="/static/css/common.css">
-    <link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.min.css" rel="stylesheet">
+    <!--    <link href="https://cdn.bootcss.com/animate.css/3.7.2/animate.min.css" rel="stylesheet">-->
+    <link href="https://cdn.staticfile.org/animate.css/3.7.2/animate.min.css" rel="stylesheet">
     <!--    开发环境-->
     <!--        <script src="/static/js/iseeadmin.js"></script>-->
     <!--    正式环境-->
@@ -18,9 +20,11 @@
     <!--    <script src="/static/js/vue.js"></script>-->
     <!--    正式环境-->
     <!--        <script src="/static/js/vue.min.js"></script>-->
-    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <!--    <script src="https://cdn.staticfile.org/vue/2.6.10/vue.min.js"></script>-->
+    <script src="https://cdn.staticfile.org/vue/2.6.10/vue.min.js"></script>
     <!--    <script src="/static/element/index.js"></script>-->
-    <script src="https://cdn.bootcss.com/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="https://cdn.staticfile.org/element-ui/2.12.0/index.js"></script>-->
+    <script src="https://cdn.staticfile.org/element-ui/2.12.0/index.js"></script>
     <!--    <script src="/static/js/axios.min.js"></script>-->
     <style>
         ol {
@@ -278,18 +282,13 @@
                                 placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
                         <template>
+                            <div style="height: 260px">
+                                <h1 style="line-height: 200px;font-size: 30px;font-weight:bold;text-align: center;color: #67C23A"
+                                    :class="'animated '+value2">iseeAdmin</h1>
 
-                            <transition
-                                    name="custom-classes-transition"
-                                    :enter-active-class="'animated '+ value"
-                            >
-                                <p v-if="show1" style="line-height: 200px;font-size: 20px;font-weight:bold;text-align: center;color: #67C23A">
-                                    iseeAdmin
-                                </p>
-                            </transition>
+                            </div>
 
-
-                            <el-select v-model="value" placeholder="请选择">
+                            <el-select @change="tryEffect" v-model="value1" placeholder="请选择动画，观看效果">
                                 <el-option-group
                                         v-for="group in options"
                                         :key="group.label"
@@ -302,7 +301,7 @@
                                     </el-option>
                                 </el-option-group>
                             </el-select>
-                            <el-button @click="tryEffect" plain type="primary">试试效果</el-button>
+                            <!--                            <el-button @click="tryEffect" plain type="primary">试试效果</el-button>-->
                         </template>
 
                     </el-card>
@@ -395,57 +394,302 @@
       },
       /*your data*/
       show1: true,
-      options: [{
-        label: 'Attention Seekers',
-        options: [{
-          value: 'bounce',
-          label: 'bounce'
-        }, {
-          value: 'flash',
-          label: 'flash'
-        }, {
-          value: 'pulse',
-          label: 'pulse'
-        }, {
-          value: 'rubberBand',
-          label: 'rubberBand'
-        }, {
-          value: 'shake',
-          label: 'shake'
-        }, {
-          value: 'swing',
-          label: 'swing'
-        }, {
-          value: 'tada',
-          label: 'tada'
-        }, {
-          value: 'wobble',
-          label: 'wobble'
-        }, {
-          value: 'jello',
-          label: 'jello'
-        }, {
-          value: 'heartBeat',
-          label: 'heartBeat'
+      options: [
+        {
+          label: 'Attention Seekers',
+          options: [{
+            value: 'bounce',
+            label: 'bounce'
+          }, {
+            value: 'flash',
+            label: 'flash'
+          }, {
+            value: 'pulse',
+            label: 'pulse'
+          }, {
+            value: 'rubberBand',
+            label: 'rubberBand'
+          }, {
+            value: 'shake',
+            label: 'shake'
+          }, {
+            value: 'swing',
+            label: 'swing'
+          }, {
+            value: 'tada',
+            label: 'tada'
+          }, {
+            value: 'wobble',
+            label: 'wobble'
+          }, {
+            value: 'jello',
+            label: 'jello'
+          }, {
+            value: 'heartBeat',
+            label: 'heartBeat'
+          },
+          ]
         },
-        ]
-      }, {
-        label: '城市名',
-        options: [{
-          value: 'Chengdu',
-          label: '成都'
+        {
+          label: 'Bouncing Entrances',
+          options: [{
+            value: 'bounceIn',
+            label: 'bounceIn'
+          }, {
+            value: 'bounceInDown',
+            label: 'bounceInDown'
+          }, {
+            value: 'bounceInLeft',
+            label: 'bounceInLeft'
+          }, {
+            value: 'bounceInRight',
+            label: 'bounceInRight'
+          }, {
+            value: 'bounceInUp',
+            label: 'bounceInUp'
+          },
+          ]
+        },
+        {
+          label: 'Bouncing Exits',
+          options: [{
+            value: 'bounceOut',
+            label: 'bounceOut'
+          }, {
+            value: 'bounceOutDown',
+            label: 'bounceOutDown'
+          }, {
+            value: 'bounceOutLeft',
+            label: 'bounceOutLeft'
+          }, {
+            value: 'bounceOutRight',
+            label: 'bounceOutRight'
+          }, {
+            value: 'bounceOutUp',
+            label: 'bounceOutUp'
+          },
+          ]
         }, {
-          value: 'Shenzhen',
-          label: '深圳'
+          label: 'Fading Entrances',
+          options: [{
+            value: 'fadeIn',
+            label: 'fadeIn'
+          }, {
+            value: 'fadeInDown',
+            label: 'fadeInDown'
+          }, {
+            value: 'fadeInDownBig',
+            label: 'fadeInDownBig'
+          }, {
+            value: 'fadeInLeft',
+            label: 'fadeInLeft'
+          }, {
+            value: 'fadeInLeftBig',
+            label: 'fadeInLeftBig'
+          }, {
+            value: 'fadeInRight',
+            label: 'fadeInRight'
+          }, {
+            value: 'fadeInRightBig',
+            label: 'fadeInRightBig'
+          }, {
+            value: 'fadeInUp',
+            label: 'fadeInUp'
+          }, {
+            value: 'fadeInUpBig',
+            label: 'fadeInUpBig'
+          },
+          ]
         }, {
-          value: 'Guangzhou',
-          label: '广州'
-        }, {
-          value: 'Dalian',
-          label: '大连'
-        }]
-      }],
-      value: ''
+          label: 'Fading Exits',
+          options: [{
+            value: 'fadeOut',
+            label: 'fadeOut'
+          }, {
+            value: 'fadeOutDown',
+            label: 'fadeOutDown'
+          }, {
+            value: 'fadeOutDownBig',
+            label: 'fadeOutDownBig'
+          }, {
+            value: 'fadeOutLeft',
+            label: 'fadeOutLeft'
+          }, {
+            value: 'fadeOutLeftBig',
+            label: 'fadeOutLeftBig'
+          },{
+            value: 'fadeOutRight',
+            label: 'fadeOutRight'
+          },{
+            value: 'fadeOutRightBig',
+            label: 'fadeOutRightBig'
+          },{
+            value: 'fadeOutUp',
+            label: 'fadeOutUp'
+          },{
+            value: 'fadeOutUpBig',
+            label: 'fadeOutUpBig'
+          },
+          ]
+        },{
+          label: 'Flippers',
+          options: [{
+            value: 'flip',
+            label: 'flip'
+          }, {
+            value: 'flipInX',
+            label: 'flipInX'
+          }, {
+            value: 'flipInY',
+            label: 'flipInY'
+          }, {
+            value: 'flipOutX',
+            label: 'flipOutX'
+          }, {
+            value: 'flipOutY',
+            label: 'flipOutY'
+          }
+          ]
+        },{
+          label: 'Lightspeed',
+          options: [{
+            value: 'lightSpeedIn',
+            label: 'lightSpeedIn'
+          }, {
+            value: 'lightSpeedOut',
+            label: 'lightSpeedOut'
+          },
+          ]
+        },{
+          label: 'Rotating Entrances',
+          options: [{
+            value: 'rotateIn',
+            label: 'rotateIn'
+          }, {
+            value: 'rotateInDownLeft',
+            label: 'rotateInDownLeft'
+          }, {
+            value: 'rotateInDownRight',
+            label: 'rotateInDownRight'
+          }, {
+            value: 'rotateInUpLeft',
+            label: 'rotateInUpLeft'
+          }, {
+            value: 'rotateInUpRight',
+            label: 'rotateInUpRight'
+          }
+          ]
+        },{
+          label: 'Rotating Exits',
+          options: [{
+            value: 'rotateOut',
+            label: 'rotateOut'
+          }, {
+            value: 'rotateOutDownLeft',
+            label: 'rotateOutDownLeft'
+          }, {
+            value: 'rotateOutDownRight',
+            label: 'rotateOutDownRight'
+          }, {
+            value: 'rotateOutUpLeft',
+            label: 'rotateOutUpLeft'
+          }, {
+            value: 'rotateOutUpRight',
+            label: 'rotateOutUpRight'
+          }
+          ]
+        },{
+          label: 'Sliding Entrances',
+          options: [{
+            value: 'slideInUp',
+            label: 'slideInUp'
+          }, {
+            value: 'slideInDown',
+            label: 'slideInDown'
+          }, {
+            value: 'slideInLeft',
+            label: 'slideInLeft'
+          }, {
+            value: 'slideInRight',
+            label: 'slideInRight'
+          },
+          ]
+        },{
+          label: 'Sliding Exits',
+          options: [{
+            value: 'slideOutUp',
+            label: 'slideOutUp'
+          }, {
+            value: 'slideOutDown',
+            label: 'slideOutDown'
+          }, {
+            value: 'slideOutLeft',
+            label: 'slideOutLeft'
+          }, {
+            value: 'slideOutRight',
+            label: 'slideOutRight'
+          },
+          ]
+        },{
+          label: 'Zoom Entrances',
+          options: [{
+            value: 'zoomIn',
+            label: 'zoomIn'
+          }, {
+            value: 'zoomInDown',
+            label: 'zoomInDown'
+          }, {
+            value: 'zoomInLeft',
+            label: 'zoomInLeft'
+          }, {
+            value: 'zoomInRight',
+            label: 'zoomInRight'
+          }, {
+            value: 'zoomInUp',
+            label: 'zoomInUp'
+          }
+          ]
+        },{
+          label: 'Zoom Exits',
+          options: [{
+            value: 'zoomOut',
+            label: 'zoomOut'
+          }, {
+            value: 'zoomOutDown',
+            label: 'zoomOutDown'
+          }, {
+            value: 'zoomOutLeft',
+            label: 'zoomOutLeft'
+          }, {
+            value: 'zoomOutRight',
+            label: 'zoomOutRight'
+          }, {
+            value: 'zoomOutUp',
+            label: 'zoomOutUp'
+          }
+          ]
+        },{
+          label: 'Specials',
+          options: [{
+            value: 'hinge',
+            label: 'hinge'
+          }, {
+            value: 'jackInTheBox',
+            label: 'jackInTheBox'
+          }, {
+            value: 'rollIn',
+            label: 'rollIn'
+          }, {
+            value: 'rollOut',
+            label: 'rollOut'
+          },
+          ]
+        },
+
+      ],
+      value: '',
+      value1: '',
+      value2: '',
 
 
     },
@@ -482,7 +726,8 @@
       /*your methods*/
       tryEffect() {
         console.log('tryEffect')
-        console.log(this.value)
+        console.log(this.value1)
+        this.value2 = this.value1
       }
     },
     beforeMount() {
