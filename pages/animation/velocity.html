@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-    <title>ISeeAdmin 【Cascader 级联选择器】 </title>
+    <title>ISeeAdmin 【velocity】 </title>
     <!--    <link rel="stylesheet" href="/static/element/index.css">-->
     <link href="https://cdn.staticfile.org/element-ui/2.12.0/theme-chalk/index.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/iconfont/iconfont.css">
@@ -20,6 +20,8 @@
     <script src="https://cdn.staticfile.org/vue/2.6.10/vue.min.js"></script>
     <!--    <script src="/static/element/index.js"></script>-->
     <script src="https://cdn.staticfile.org/element-ui/2.12.0/index.js"></script>
+    <!--    <script src="https://cdn.staticfile.org/velocity/2.0.5/velocity.min.js"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js"></script>
     <!--    <script src="/static/js/axios.min.js"></script>-->
 </head>
 <body>
@@ -177,79 +179,179 @@
                 <!--                主内容展示-->
                 <div style="margin-right: 10px">
                     <el-card class="box-card">
-                        Cascader 级联选择器
+                        velocity
                         <el-link type="primary" target="_blank"
-                                 href="https://element.eleme.cn/#/zh-CN/component/cascader">
-                            官方文档 https://element.eleme.cn/#/zh-CN/component/cascader
+                                 href="https://github.com/julianshapiro/velocity">
+                            官方文档 https://github.com/julianshapiro/velocity
                         </el-link>
                     </el-card>
                 </div>
                 <div style="display: flex">
                     <el-card class="box-card">
                         <el-divider content-position="left"><span
-                                class="el-divider-span">基础用法 <el-tooltip
-                                content=" " placement="top" effect="light"><i
+                                class="el-divider-span">JavaScript 钩子 <el-tooltip
+                                content="JavaScript 钩子 " placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <p style="padding-left: 10px;border-left: 4px solid #409EFF;border-radius: 4px;line-height: 25px">
+                            可以在属性中声明 JavaScript 钩子
+                        </p>
+                        <div style="font-size: 13.6px;color: #2973b7">
 
 
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">禁用状态 <el-tooltip
-                                content=" " placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                            <p>
+                                &lt;transition
+                            </p>
+                            <p style="padding-left: 40px">
+                                v-on:before-enter="beforeEnter"
+                            </p>
+                            <p style="padding-left: 40px">
+                                v-on:enter="enter"
+                            </p>
+                            <p style="padding-left: 40px">
+                                v-on:after-enter="afterEnter"
+                            </p>
+                            <p style="padding-left: 40px">
+                                v-on:enter-cancelled="enterCancelled"
+                            </p>
+                            <p style="padding-left: 40px">
+                                v-on:before-leave="beforeLeave"
+                            </p>
+                            <p style="padding-left: 40px">
+                                v-on:leave="leave"
+                            </p>
+                            <p style="padding-left: 40px">
+                                v-on:after-leave="afterLeave"
+                            </p>
+                            <p style="padding-left: 40px">
+                                v-on:leave-cancelled="leaveCancelled"
+                            </p>
+                            &gt;
+                            <!-- ... -->
+                            <p>
+                                &lt;/transition&gt;
+                            </p>
 
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">禁用状态 <el-tooltip
-                                content=" " placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
-
+                            <p>
+                                // ...
+                            </p>
+                            <p>
+                                methods: {
+                            </p>
+                            <p>// --------</p>
+                            <p>// 进入中</p>
+                            <p>// --------</p>
+                            <p>beforeEnter: function (el) {</p>
+                            <p>// ...</p>
+                            <p>},</p>
+                            <p>// 当与 CSS 结合使用时</p>
+                            <p>// 回调函数 done 是可选的</p>
+                            <p> enter: function (el, done) {</p>
+                            <p>// ...</p>
+                            <p>done()</p>
+                            <p>},</p>
+                            <p>afterEnter: function (el) {</p>
+                            <p>// ...</p>
+                            <p>},</p>
+                            <p> enterCancelled: function (el) {</p>
+                            <p>// ...</p>
+                            <p>},</p>
+                            <p>// --------</p>
+                            <p>// 离开时</p>
+                            <p>// --------</p>
+                            <p>beforeLeave: function (el) {</p>
+                            <p>// ...</p>
+                            <p>},</p>
+                            <p>// 当与 CSS 结合使用时</p>
+                            <p>// 回调函数 done 是可选的</p>
+                            <p>leave: function (el, done) {</p>
+                            <p> // ...</p>
+                            <p> done()</p>
+                            <p>},</p>
+                            <p>afterLeave: function (el) {</p>
+                            <p>// ...</p>
+                            <p>},</p>
+                            <p>// leaveCancelled 只用于 v-show 中</p>
+                            <p>leaveCancelled: function (el) {</p>
+                            <p>// ...</p>
+                            <p>}</p>
+                            <p>}</p>
+                        </div>
+                        <p>
+                            这些钩子函数可以结合 CSS transitions/animations 使用，也可以单独使用。
+                        </p>
+                        <p style="padding-left: 10px;border-left: 4px solid #409EFF;border-radius: 4px;line-height: 25px">
+                            当只用 JavaScript 过渡的时候，在 enter 和 leave 中必须使用 done 进行回调。否则，它们将被同步调用，过渡会立即完成。
+                        </p>
+                        <p style="padding-left: 10px;border-left: 4px solid #409EFF;border-radius: 4px;line-height: 25px">
+                            推荐对于仅使用 JavaScript 过渡的元素添加 v-bind:css="false"，Vue 会跳过 CSS 的检测。这也可以避免过渡过程中 CSS 的影响。
+                        </p>
                     </el-card>
 
                     <el-card class="box-card">
                         <el-divider content-position="left"><span
-                                class="el-divider-span">可清空单选 <el-tooltip
-                                content=" "
+                                class="el-divider-span">使用 Velocity.js  <el-tooltip
+                                content="使用 Velocity.js 的简单例子 "
                                 placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
+                        <div style="line-height: 200px;height: 200px;text-align: center">
+                            <transition
+                                    @before-enter="beforeEnter"
+                                    @enter="enter"
+                                    @leave="leave"
+                                    :css="false"
+                            >
+                                <p v-if="show">iseeAdmin</p>
+                            </transition>
+                        </div>
+                        <el-button type="primary" @click="show=!show">切换</el-button>
 
                         <el-divider content-position="left"><span
-                                class="el-divider-span">基础多选 <el-tooltip
-                                content=" "
+                                class="el-divider-span">初始渲染的过渡 <el-tooltip
+                                content=" 初始渲染的过渡"
                                 placement="top" effect="light"><i
                                 class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">分组 <el-tooltip
-                                content=" " placement="top"
-                                effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
-
-                    </el-card>
-
-                    <el-card class="box-card">
-
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">可搜索 <el-tooltip
-                                content=" "
-                                placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <p style="padding-left: 10px;border-left: 4px solid #409EFF;border-radius: 4px;line-height: 25px">
+                            可以通过 appear 特性设置节点在初始渲染的过渡
+                        </p>
+                        <span style="padding-left:20px;font-size: 13px;color:#2973b7; ">
+                            &lt;transition appear&gt; <!-- ... -->
+                        &lt;/transition&gt;
+                        </span>
+                        <p style="padding-left: 10px;border-left: 4px solid #409EFF;border-radius: 4px;line-height: 25px">
+                            这里默认和进入/离开过渡一样，同样也可以自定义 CSS 类名。
+                        </p>
 
 
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">远程搜索 <el-tooltip
-                                content=" "
-                                placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
+                        <p style="padding-left:20px;font-size: 13px;color:#2973b7; ">
+                            &lt;transition
+                            <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;appear
+                            <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;appear-class="custom-appear-class"
+                            <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;appear-to-class="custom-appear-to-class"
+                            (2.1.8+)
+                            <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;appear-active-class="custom-appear-active-class"
+                            &gt;
+                            <!-- ... --><br/>
+                            &lt;/transition&gt;
+                        </p>
 
+                        <p style="padding-left: 10px;border-left: 4px solid #409EFF;border-radius: 4px;line-height: 25px">
+                            自定义 JavaScript 钩子：
+                        </p>
 
-                        <el-divider content-position="left"><span
-                                class="el-divider-span">创建条目 <el-tooltip
-                                content=" " placement="top" effect="light"><i
-                                class="el-icon-info" style="color: gray"></i></el-tooltip></span></el-divider>
-
+                        <p style="padding-left:20px;font-size: 13px;color:#2973b7; ">
+                            &lt;transition
+                            <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;appear
+                            <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v-on:before-appear="customBeforeAppearHook"
+                            <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v-on:appear="customAppearHook"
+                            <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v-on:after-appear="customAfterAppearHook"
+                            <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v-on:appear-cancelled="customAppearCancelledHook"
+                            <br/> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&gt;
+                            <!-- ... -->
+                            <br />&lt;/transition&gt;
+                        </p>
+                        <p style="padding-left: 10px;border-left: 4px solid #409EFF;border-radius: 4px;line-height: 25px">
+                            在上面的例子中，无论是 appear 特性还是 v-on:appear 钩子都会生成初始渲染过渡。
+                        </p>
 
                     </el-card>
                 </div>
@@ -340,6 +442,7 @@
         avatar: iseeAvatar
       },
       /*your data*/
+      show: false
 
     },
     methods: {
@@ -373,6 +476,25 @@
         flag == 1 ? this.$refs.iseeTagDiv.scrollLeft += 80 : this.$refs.iseeTagDiv.scrollLeft -= 80
       },
       /*your methods*/
+      beforeEnter(el) {
+        el.style.opacity = 0
+        el.style.transformOrigin = 'left'
+      },
+      enter(el, done) {
+        Velocity(el, {opacity: 1, fontSize: '1.4em'}, {duration: 300})
+        Velocity(el, {fontSize: '1em'}, {complete: done})
+      },
+      leave(el, done) {
+        Velocity(el, {translateX: '15px', rotateZ: '50deg'}, {duration: 600})
+        Velocity(el, {rotateZ: '100deg'}, {loop: 2})
+        Velocity(el, {
+          rotateZ: '45deg',
+          translateY: '30px',
+          translateX: '30px',
+          opacity: 0
+        }, {complete: done})
+      }
+
 
     },
     beforeMount() {
